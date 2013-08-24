@@ -7,15 +7,16 @@ local assert, io_open =
 
 local _M = {}
 
-local function new(typename)
-    local self = { __type = typename }
+-- Creates a new type table.
+local function new_type(name)
+    local self = { _type = name }
     self.__index = self
     return self
 end
 
 --- Access token returned by `luatwit.api:confirm_login`.
 -- It's the result of the user authorizing the app, and contains the keys necessary to make API calls.
-_M.access_token = new("access_token")
+_M.access_token = new_type("access_token")
 
 --- Saves the content of an `access_token` object into a file.
 -- The output file can be loaded with `luatwit.load_keys`.
