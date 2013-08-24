@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local error, loadfile, pcall, setfenv, setmetatable =
-      error, loadfile, pcall, setfenv, setmetatable
+local error, jit, loadfile, pcall, setfenv, setmetatable =
+      error, jit, loadfile, pcall, setfenv, setmetatable
 
 local _M = {}
 
@@ -55,7 +55,7 @@ function _M.load_file(filename, env)
     if not code then
         return env, false, err
     end
-    if setfenv then
+    if setfenv and not jit then
         setfenv(code, env)
     end
     return env, pcall(code)
