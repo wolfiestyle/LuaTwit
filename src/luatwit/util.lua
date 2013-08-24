@@ -27,6 +27,7 @@ end
 -- @return          The <tt>table</tt> argument with <tt>type</tt> as it's metatable.
 function _M.bless(tbl, mt)
     if type(tbl) ~= "table" then return tbl end
+    _M.assertx(type(mt) == "table", "argument #2 must be a table", 2)
     return setmetatable(tbl, mt)
 end
 
