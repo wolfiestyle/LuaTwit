@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_api">Class api </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul>
+  <li><strong>luatwit</strong></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Examples</h2>
+<ul>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>luatwit</code></h1>
+
+<p>Lua library for accessing the Twitter REST API v1.1</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>License</strong>: MIT</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#new">new&nbsp;(args)</a></td>
+	<td class="summary">Creates a new <a href="../modules/luatwit.html#Class_api">api</a>  object with the supplied keys.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#load_keys">load_keys&nbsp;(...)</a></td>
+	<td class="summary">Helper to load OAuth keys from text files.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#resources">resources</a></td>
+	<td class="summary">API resource data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#objects">objects</a></td>
+	<td class="summary">API object definitions.</td>
+	</tr>
+</table>
+<h2><a href="#Class_api">Class api </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#api:raw_call">api:raw_call&nbsp;(decl, args, name)</a></td>
+	<td class="summary">Generic call to the Twitter API.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#api:start_login">api:start_login&nbsp;()</a></td>
+	<td class="summary">Begins the OAuth authorization.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#api:confirm_login">api:confirm_login&nbsp;(pin)</a></td>
+	<td class="summary">Finishes the OAuth authorization.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "new"></a>
+    <strong>new&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Creates a new <a href="../modules/luatwit.html#Class_api">api</a>  object with the supplied keys.
+ An object created with only the consumer keys must call <a href="../modules/luatwit.html#api:start_login">api:start_login</a>  and <a href="../modules/luatwit.html#api:confirm_login">api:confirm_login</a>  to get the access token,
+ otherwise it won't be able to make API calls.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+          Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New instance of the <a href="../modules/luatwit.html#Class_api">api</a>  class.
+    </ol>
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/luatwit.objects.html#access_token">luatwit.objects.access_token</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "load_keys"></a>
+    <strong>load_keys&nbsp;(...)</strong>
+    </dt>
+    <dd>
+    Helper to load OAuth keys from text files.
+ Key files are loaded as Lua files in an empty environment and the values are extracted from their global namespace.
+ It also accepts tables as arguments (useful when using <tt>require</tt>).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+           Filenames (Lua code) or tables with the keys to load.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Table with the keys found.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Fields"></a>Fields</h2>
+    <dl class="function">
+    <dt>
+    <a name = "resources"></a>
+    <strong>resources</strong>
+    </dt>
+    <dd>
+    API resource data.
+
+
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/luatwit.resources.html#">luatwit.resources</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "objects"></a>
+    <strong>objects</strong>
+    </dt>
+    <dd>
+    API object definitions.
+
+
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/luatwit.objects.html#">luatwit.objects</a>
+    </ul>
+
+
+</dd>
+</dl>
+    <h2><a name="Class_api"></a>Class api </h2>
+        Class prototype that implements the API calls.
+ Methods are created on demand from the <a href="../modules/luatwit.html#resources">resources</a>  table.
+    <dl class="function">
+    <dt>
+    <a name = "api:raw_call"></a>
+    <strong>api:raw_call&nbsp;(decl, args, name)</strong>
+    </dt>
+    <dd>
+    Generic call to the Twitter API.
+ This is the backend method that performs all the API calls.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">decl</span>
+          API method declaration. This is taken from the <a href="../modules/luatwit.html#resources">resources</a>  table.</li>
+        <li><span class="parameter">args</span>
+          Table with the method arguments.</li>
+        <li><span class="parameter">name</span>
+          Method name. Used internally for building error messages.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "api:start_login"></a>
+    <strong>api:start_login&nbsp;()</strong>
+    </dt>
+    <dd>
+    Begins the OAuth authorization.
+ This method generates the URL that the user must visit to authorize the app and get the PIN needed for <a href="../modules/luatwit.html#api:confirm_login">api:confirm_login</a> .
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        Authorization URL.</li>
+        <li>
+        HTTP Authorization header.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "api:confirm_login"></a>
+    <strong>api:confirm_login&nbsp;(pin)</strong>
+    </dt>
+    <dd>
+    Finishes the OAuth authorization.
+ This method receives the PIN number obtained in the <a href="../modules/luatwit.html#api:start_login">api:start_login</a>  step and authorizes the client to make API calls.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pin</span>
+           PIN number obtained after the user succefully authorized the app.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        An `access_token` object.</li>
+        <li>
+        HTTP Status line.</li>
+        <li>
+        HTTP result code.</li>
+        <li>
+        HTTP headers.</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3.12</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
