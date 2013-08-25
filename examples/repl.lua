@@ -32,11 +32,10 @@ function get_resource_by_url(url)
     return nil
 end
 
+for _, obj in pairs(twitter.objects) do
+    obj.__tostring = table_inspect_mt.__tostring
+    obj.save = table_inspect_mt.save
+end
+
 oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
 client = twitter.new(oauth_params)
-
-client.raw_call = function(...)
-    local json, status_line, res_code, headers = twitter.api.raw_call(...)
-    util.bless(json, table_inspect_mt)
-    return json, status_line, res_code, headers
-end

@@ -73,6 +73,29 @@ local function check_args(args, rules, res_name)
     return nil
 end
 
+-- Applies type metatables to the json data recursively.
+local function apply_types(node, tname)
+    local type_decl = _M.objects[tname]
+    util.bless(node, type_decl)
+    local st = type_decl._subtypes
+    if st == nil then return end
+    local type_st = type(st)
+    if type_st == "string" then
+        for _, item in pairs(node) do
+            apply_types(item, st)
+        end
+    elseif type_st == "table" then
+        for k, tn in pairs(st) do
+            local item = node[k]
+            if item ~= nil and item ~= json.null then
+                apply_types(item, tn)
+            end
+        end
+    else
+        error("subtype declaration must be string or table")
+    end
+end
+
 --- Generic call to the Twitter API.
 -- This is the backend method that performs all the API calls.
 --
@@ -84,7 +107,7 @@ function _M.api:raw_call(decl, args, name)
     util.assertx(#decl >= 2, "invalid resource declaration", 2)
     args = args or {}
     name = name or "raw_call"
-    local method, url, rules = unpack(decl)
+    local method, url, rules, tname = unpack(decl)
     local err = check_args(args, rules, name)
     util.assertx(not err, err, 3)
     local args_str = {}
@@ -99,6 +122,9 @@ function _M.api:raw_call(decl, args, name)
     url = _M.base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
     local json_data = type(body) == "string" and json.decode(body) or nil
+    if tname and json_data then
+        apply_types(json_data, tname)
+    end
     return json_data, status_line, res_code, headers
 end
 
