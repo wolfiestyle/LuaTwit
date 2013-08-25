@@ -98,8 +98,8 @@ function _M.api:raw_call(decl, args, name)
     end)
     url = _M.base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
-    local json = type(body) == "string" and json.decode(body) or nil
-    return json, status_line, res_code, headers
+    local json_data = type(body) == "string" and json.decode(body) or nil
+    return json_data, status_line, res_code, headers
 end
 
 --- Begins the OAuth authorization.
