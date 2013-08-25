@@ -32,8 +32,7 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Functions">Functions</a></li>
-<li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_access_token">Class access_token </a></li>
 </ul>
 
 
@@ -66,18 +65,11 @@
     </ul>
 
 
-<h2><a href="#Functions">Functions</a></h2>
+<h2><a href="#Class_access_token">Class access_token </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#access_token:save">access_token:save&nbsp;(filename)</a></td>
-	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a>  object into a file.</td>
-	</tr>
-</table>
-<h2><a href="#Fields">Fields</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#access_token">access_token</a></td>
-	<td class="summary">Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .</td>
+	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#Class_access_token">access_token</a>  object into a file.</td>
 	</tr>
 </table>
 
@@ -85,14 +77,16 @@
 <br/>
 
 
-    <h2><a name="Functions"></a>Functions</h2>
+    <h2><a name="Class_access_token"></a>Class access_token </h2>
+        Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .
+ It's the result of the user authorizing the app, and contains the keys necessary to make API calls.
     <dl class="function">
     <dt>
     <a name = "access_token:save"></a>
     <strong>access_token:save&nbsp;(filename)</strong>
     </dt>
     <dd>
-    Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a>  object into a file.
+    Saves the content of an <a href="../modules/luatwit.objects.html#Class_access_token">access_token</a>  object into a file.
  The output file can be loaded with <a href="../modules/luatwit.html#load_keys">luatwit.load_keys</a> .
 
 
@@ -105,25 +99,8 @@
     <h3>Returns:</h3>
     <ol>
 
-        The <a href="../modules/luatwit.objects.html#access_token">access_token</a>  itself.
+        The <a href="../modules/luatwit.objects.html#Class_access_token">access_token</a>  itself.
     </ol>
-
-
-
-
-</dd>
-</dl>
-    <h2><a name="Fields"></a>Fields</h2>
-    <dl class="function">
-    <dt>
-    <a name = "access_token"></a>
-    <strong>access_token</strong>
-    </dt>
-    <dd>
-    Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .
- It's the result of the user authorizing the app, and contains the keys necessary to make API calls.
-
-
 
 
 
