@@ -40,4 +40,22 @@ function _M.access_token:save(filename)
     return self
 end
 
+--- Error description returned by the API calls.
+-- @type error
+new_type("error")
+
+--- Returns the error message.
+--
+-- @return          Error string.
+function _M.error:__tostring()
+    return self.errors[1].message
+end
+
+--- Returns the numeric error code.
+--
+-- @return          Error code.
+function _M.error:code()
+    return self.errors[1].code
+end
+
 return _M

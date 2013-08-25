@@ -33,8 +33,8 @@ function get_resource_by_url(url)
 end
 
 for _, obj in pairs(twitter.objects) do
-    obj.__tostring = table_inspect_mt.__tostring
-    obj.save = table_inspect_mt.save
+    obj.__tostring = obj.__tostring or table_inspect_mt.__tostring
+    obj.save = obj.save or table_inspect_mt.save
 end
 
 oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")

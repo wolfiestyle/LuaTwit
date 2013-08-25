@@ -122,6 +122,9 @@ function _M.api:raw_call(decl, args, name)
     url = _M.base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
     local json_data = type(body) == "string" and json.decode(body) or nil
+    if type(json_data) == "table" and json_data.errors then
+        tname = "error"
+    end
     if tname and json_data then
         apply_types(json_data, tname)
     end
