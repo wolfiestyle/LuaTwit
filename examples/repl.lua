@@ -32,6 +32,29 @@ function get_resource_by_url(url)
     return nil
 end
 
+function twitter.objects.tweet:__tostring()
+    return self.user.screen_name .. "\t| " .. self.id_str .. " | " .. self.text
+end
+
+local user_tmpl = pl.text.Template(
+[[Name: @$screen_name ($name)
+Bio: $description
+Location: $location
+Followers: $followers_count, Following: $friends_count, Listed: $listed_count
+Tweets: $statuses_count
+]])
+
+function twitter.objects.user:__tostring()
+    return user_tmpl:safe_substitute(self)
+end
+
+local function list_tostring(self)
+    return table.concat(pl.tablex.map(tostring, self), "\n") .. "\n"
+end
+
+twitter.objects.user_list.__tostring = list_tostring
+twitter.objects.tweet_list.__tostring = list_tostring
+
 for _, obj in pairs(twitter.objects) do
     obj.__tostring = obj.__tostring or table_inspect_mt.__tostring
     obj.save = obj.save or table_inspect_mt.save
