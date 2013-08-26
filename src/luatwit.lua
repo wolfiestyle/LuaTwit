@@ -106,6 +106,12 @@ end
 -- @param args  Table with the method arguments.
 -- @param name  Method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
+--              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
+-- @return      HTTP status line.
+-- @return      HTTP result code.
+-- @return      HTTP headers.
+-- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
+--              This value is needed to use the `api:parse_json` with the returned string.
 function _M.api:raw_call(decl, args, name)
     util.assertx(#decl >= 2, "invalid resource declaration", 2)
     args = args or {}
@@ -127,14 +133,30 @@ function _M.api:raw_call(decl, args, name)
     end)
     url = _M.base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
-    local json_data = type(body) == "string" and json.decode(body) or nil
-    if type(json_data) == "table" and json_data.errors then
-        tname = "error"
+    if args._raw then
+        if type(body) ~= "string" then body = nil end
+        return body, status_line, res_code, headers, tname
     end
-    if tname and json_data then
-        apply_types(json_data, tname)
+    return self:parse_json(body, tname), status_line, res_code, headers
+end
+
+--- Parses a JSON string and applies type metatables.
+--
+-- @param str   JSON string.
+-- @param tname Type name as defined in `resources`.
+--              If set, the function will set type metatables.
+-- @return      A table with the decoded JSON data.
+function _M.api:parse_json(str, tname)
+    local json_data = type(str) == "string" and json.decode(str) or nil
+    if tname then
+        if type(json_data) == "table" and json_data.errors then
+            tname = "error"
+        end
+        if json_data then
+            apply_types(json_data, tname)
+        end
     end
-    return json_data, status_line, res_code, headers
+    return json_data
 end
 
 --- Begins the OAuth authorization.
