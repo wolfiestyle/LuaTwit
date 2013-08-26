@@ -96,6 +96,10 @@
 	<td class="summary">Generic call to the Twitter API.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#api:parse_json">api:parse_json&nbsp;(str, tname)</a></td>
+	<td class="summary">Parses a JSON string and applies type metatables.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#api:start_login">api:start_login&nbsp;()</a></td>
 	<td class="summary">Begins the OAuth authorization.</td>
 	</tr>
@@ -230,8 +234,44 @@
 
     <h3>Returns:</h3>
     <ol>
-
+        <li>
         A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
+              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.</li>
+        <li>
+        HTTP status line.</li>
+        <li>
+        HTTP result code.</li>
+        <li>
+        HTTP headers.</li>
+        <li>
+        If the option <tt>_raw</tt> is set, the type name from <a href="../modules/luatwit.html#resources">resources</a> .
+              This value is needed to use the <a href="../modules/luatwit.html#api:parse_json">api:parse_json</a>  with the returned string.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "api:parse_json"></a>
+    <strong>api:parse_json&nbsp;(str, tname)</strong>
+    </dt>
+    <dd>
+    Parses a JSON string and applies type metatables.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+           JSON string.</li>
+        <li><span class="parameter">tname</span>
+         Type name as defined in <a href="../modules/luatwit.html#resources">resources</a> .
+              If set, the function will set type metatables.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A table with the decoded JSON data.
     </ol>
 
 
