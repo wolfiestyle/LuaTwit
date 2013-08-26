@@ -58,4 +58,84 @@ function _M.error:code()
     return self.errors[1].code
 end
 
+new_type("user", { status = "tweet" })
+
+new_type("user_list", "user")
+
+new_type("user_cursor", { users = "user_list" })
+
+new_type("tweet", { user = "user" })
+
+new_type("tweet_list", "tweet")
+
+new_type("tweet_search", { statuses = "tweet_list" })
+
+new_type("dm", { recipient = "user", sender = "user" })
+
+new_type("dm_list", "dm")
+
+new_type("oembed")
+
+new_type("userid_list")
+
+new_type("userid_cursor", { ids = "userid_list" })
+
+new_type("friendship")
+
+new_type("friendship_list", "friendship")
+
+new_type("relationship")
+
+new_type("relationship_container", { relationship = "relationship" })
+
+new_type("account_settings", { trend_location = "trend_location" })
+
+new_type("profile_banner")
+
+new_type("suggestion_category", { users = "user_list" })
+
+new_type("suggestion_category_list", "suggestion_category")
+
+new_type("userlist", { user = "user" })
+
+new_type("userlist_list", "userlist")
+
+new_type("userlist_cursor", { lists = "userlist_list" })
+
+new_type("saved_search")
+
+new_type("saved_search_list", "saved_search")
+
+new_type("place")
+
+new_type("place_list", "place")
+
+new_type("place_search", { result = "place_search_result" })
+
+new_type("place_search_result", { places = "place_list" })
+
+new_type("trends", { trends = "trends_elem_list", locations = "trend_location_list" })
+
+new_type("trends_list", "trends")
+
+new_type("trends_elem")
+
+new_type("trends_elem_list", "trends_elem")
+
+new_type("trend_location")
+
+new_type("trend_location_list", "trend_location")
+
+new_type("service_config")
+
+new_type("language")
+
+new_type("language_list", "language")
+
+new_type("privacy")
+
+new_type("tos")
+
+new_type("rate_limit")
+
 return _M
