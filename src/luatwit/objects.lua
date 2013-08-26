@@ -8,19 +8,18 @@ local assert, io_open =
 local _M = {}
 
 -- Creates a new type table.
-local function new_type(name, subtypes)
+local function new_type(subtypes)
     local self = {
-        _type = name,
         _subtypes = subtypes,
     }
     self.__index = self
-    _M[name] = self
+    return self
 end
 
 --- Access token returned by `luatwit.api:confirm_login`.
 -- It's the result of the user authorizing the app, and contains the keys necessary to make API calls.
 -- @type access_token
-new_type("access_token")
+_M.access_token = new_type()
 
 --- Saves the content of an `access_token` object into a file.
 -- The output file can be loaded with `luatwit.load_keys`.
@@ -42,7 +41,7 @@ end
 
 --- Error description returned by the API calls.
 -- @type error
-new_type("error")
+_M.error = new_type()
 
 --- Returns the error message.
 --
@@ -58,84 +57,89 @@ function _M.error:code()
     return self.errors[1].code
 end
 
-new_type("user", { status = "tweet" })
+_M.user = new_type{ status = "tweet" }
 
-new_type("user_list", "user")
+_M.user_list = new_type("user")
 
-new_type("user_cursor", { users = "user_list" })
+_M.user_cursor = new_type{ users = "user_list" }
 
-new_type("tweet", { user = "user" })
+_M.tweet = new_type{ user = "user" }
 
-new_type("tweet_list", "tweet")
+_M.tweet_list = new_type("tweet")
 
-new_type("tweet_search", { statuses = "tweet_list" })
+_M.tweet_search = new_type{ statuses = "tweet_list" }
 
-new_type("dm", { recipient = "user", sender = "user" })
+_M.dm = new_type{ recipient = "user", sender = "user" }
 
-new_type("dm_list", "dm")
+_M.dm_list = new_type("dm")
 
-new_type("oembed")
+_M.oembed = new_type()
 
-new_type("userid_list")
+_M.userid_list = new_type()
 
-new_type("userid_cursor", { ids = "userid_list" })
+_M.userid_cursor = new_type{ ids = "userid_list" }
 
-new_type("friendship")
+_M.friendship = new_type()
 
-new_type("friendship_list", "friendship")
+_M.friendship_list = new_type("friendship")
 
-new_type("relationship")
+_M.relationship = new_type()
 
-new_type("relationship_container", { relationship = "relationship" })
+_M.relationship_container = new_type{ relationship = "relationship" }
 
-new_type("account_settings", { trend_location = "trend_location" })
+_M.account_settings = new_type{ trend_location = "trend_location" }
 
-new_type("profile_banner")
+_M.profile_banner = new_type()
 
-new_type("suggestion_category", { users = "user_list" })
+_M.suggestion_category = new_type{ users = "user_list" }
 
-new_type("suggestion_category_list", "suggestion_category")
+_M.suggestion_category_list = new_type("suggestion_category")
 
-new_type("userlist", { user = "user" })
+_M.userlist = new_type{ user = "user" }
 
-new_type("userlist_list", "userlist")
+_M.userlist_list = new_type("userlist")
 
-new_type("userlist_cursor", { lists = "userlist_list" })
+_M.userlist_cursor = new_type{ lists = "userlist_list" }
 
-new_type("saved_search")
+_M.saved_search = new_type()
 
-new_type("saved_search_list", "saved_search")
+_M.saved_search_list = new_type("saved_search")
 
-new_type("place")
+_M.place = new_type()
 
-new_type("place_list", "place")
+_M.place_list = new_type("place")
 
-new_type("place_search", { result = "place_search_result" })
+_M.place_search = new_type{ result = "place_search_result" }
 
-new_type("place_search_result", { places = "place_list" })
+_M.place_search_result = new_type{ places = "place_list" }
 
-new_type("trends", { trends = "trends_elem_list", locations = "trend_location_list" })
+_M.trends = new_type{ trends = "trends_elem_list", locations = "trend_location_list" }
 
-new_type("trends_list", "trends")
+_M.trends_list = new_type("trends")
 
-new_type("trends_elem")
+_M.trends_elem = new_type()
 
-new_type("trends_elem_list", "trends_elem")
+_M.trends_elem_list = new_type("trends_elem")
 
-new_type("trend_location")
+_M.trend_location = new_type()
 
-new_type("trend_location_list", "trend_location")
+_M.trend_location_list = new_type("trend_location")
 
-new_type("service_config")
+_M.service_config = new_type()
 
-new_type("language")
+_M.language = new_type()
 
-new_type("language_list", "language")
+_M.language_list = new_type("language")
 
-new_type("privacy")
+_M.privacy = new_type()
 
-new_type("tos")
+_M.tos = new_type()
 
-new_type("rate_limit")
+_M.rate_limit = new_type()
+
+-- fill in the _type field
+for name, _ in pairs(_M) do
+    _M[name]._type = name
+end
 
 return _M
