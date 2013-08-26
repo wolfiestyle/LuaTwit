@@ -51,13 +51,15 @@ local function build_required_str(rules)
     return table_concat(res, ", ")
 end
 
+-- Checks if the arguments in a table match the rules.
 local function check_args(args, rules, res_name)
     if type(args) ~= "table" then
         return res_name .. ": arguments must be passed in a table"
     end
     if not rules then return nil end
+    -- check for valid args (names starting with _ are ignored)
     for name, val in pairs(args) do
-        if rules[name] == nil then
+        if rules[name] == nil and name:sub(1, 1) ~= "_" then
             return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
         end
         local val_type = type(val)
@@ -65,6 +67,7 @@ local function check_args(args, rules, res_name)
             return res_name .. ": argument '" .. name .. "' must be a scalar type"
         end
     end
+    -- check if required args are present
     for name, required in pairs(rules) do
         if required and args[name] == nil then
             return res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
@@ -112,7 +115,9 @@ function _M.api:raw_call(decl, args, name)
     util.assertx(not err, err, 3)
     local args_str = {}
     for k, v in pairs(args) do
-        args_str[k] = tostring(v)
+        if k:sub(1, 1) ~= "_" then
+            args_str[k] = tostring(v)
+        end
     end
     url = url:gsub(":([%w_]+)", function(key)
         local val = args_str[key]
