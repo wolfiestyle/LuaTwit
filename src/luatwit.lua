@@ -115,7 +115,8 @@ function _M.api:raw_call(decl, args, name)
         args_str[k] = tostring(v)
     end
     url = url:gsub(":([%w_]+)", function(key)
-        local val = args_str[key].assertx(val ~= nil, "invalid token ':" .. key .. "' in resource URL", 2)
+        local val = args_str[key]
+        util.assertx(val ~= nil, "invalid token ':" .. key .. "' in resource URL", 2)
         args_str[key] = nil
         return val
     end)
