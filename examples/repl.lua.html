@@ -66,7 +66,8 @@ twitter = <span class="global">require</span> <span class="string">"luatwit"</sp
 util = <span class="global">require</span> <span class="string">"luatwit.util"</span>
 <span class="comment">--debug.traceback = require("StackTracePlus").stacktrace
 </span>
-<span class="keyword">local</span> table_inspect_mt = {}
+<span class="comment">-- used to display raw json data
+</span><span class="keyword">local</span> table_inspect_mt = {}
 table_inspect_mt.__index = table_inspect_mt
 
 <span class="keyword">function</span> table_inspect_mt:__tostring()
@@ -79,7 +80,8 @@ table_inspect_mt.__index = table_inspect_mt
     <span class="keyword">return</span> self
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> get_resource_by_url(url)
+<span class="comment">-- get a function name from the resource URL
+</span><span class="keyword">function</span> get_resource_by_url(url)
     <span class="keyword">for</span> name, decl <span class="keyword">in</span> <span class="global">pairs</span>(twitter.resources) <span class="keyword">do</span>
         <span class="keyword">if</span> decl[<span class="number">2</span>] == url <span class="keyword">then</span>
             <span class="keyword">return</span> <span class="global">setmetatable</span>({ name = name, decl = decl }, table_inspect_mt)
@@ -88,11 +90,13 @@ table_inspect_mt.__index = table_inspect_mt
     <span class="keyword">return</span> <span class="keyword">nil</span>
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> twitter.objects.tweet:__tostring()
+<span class="comment">-- used to display tweets
+</span><span class="keyword">function</span> twitter.objects.tweet:__tostring()
     <span class="keyword">return</span> self.user.screen_name .. <span class="string">"\t| "</span> .. self.id_str .. <span class="string">" | "</span> .. self.text
 <span class="keyword">end</span>
 
-<span class="keyword">local</span> user_tmpl = pl.text.Template(
+<span class="comment">-- used to display user profiles
+</span><span class="keyword">local</span> user_tmpl = pl.text.Template(
 <span class="string">[[Name: @$screen_name ($name)
 Bio: $description
 Location: $location
@@ -104,14 +108,16 @@ Tweets: $statuses_count
     <span class="keyword">return</span> user_tmpl:safe_substitute(self)
 <span class="keyword">end</span>
 
-<span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
+<span class="comment">-- used to display user/tweet lists
+</span><span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
     <span class="keyword">return</span> <span class="global">table</span>.concat(pl.tablex.map(<span class="global">tostring</span>, self), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
 <span class="keyword">end</span>
 
 twitter.objects.user_list.__tostring = list_tostring
 twitter.objects.tweet_list.__tostring = list_tostring
 
-<span class="keyword">for</span> _, obj <span class="keyword">in</span> <span class="global">pairs</span>(twitter.objects) <span class="keyword">do</span>
+<span class="comment">-- add default __tostring methods to all objects
+</span><span class="keyword">for</span> _, obj <span class="keyword">in</span> <span class="global">pairs</span>(twitter.objects) <span class="keyword">do</span>
     obj.__tostring = obj.__tostring <span class="keyword">or</span> table_inspect_mt.__tostring
     obj.save = obj.save <span class="keyword">or</span> table_inspect_mt.save
 <span class="keyword">end</span>

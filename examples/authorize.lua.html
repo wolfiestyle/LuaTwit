@@ -62,7 +62,8 @@
 <span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 <span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
 
-<span class="comment">-- load the app consumer keys
+<span class="comment">-- load the app consumer keys from "oauth_app_keys"
+</span><span class="comment">-- you need to fill in valid app keys before using this script
 </span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>)
 <span class="keyword">local</span> client = twitter.new(oauth_params)
 
