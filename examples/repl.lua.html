@@ -88,9 +88,32 @@ table_inspect_mt.__index = table_inspect_mt
     <span class="keyword">return</span> <span class="keyword">nil</span>
 <span class="keyword">end</span>
 
+<span class="keyword">function</span> twitter.objects.tweet:__tostring()
+    <span class="keyword">return</span> self.user.screen_name .. <span class="string">"\t| "</span> .. self.id_str .. <span class="string">" | "</span> .. self.text
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> user_tmpl = pl.text.Template(
+<span class="string">[[Name: @$screen_name ($name)
+Bio: $description
+Location: $location
+Followers: $followers_count, Following: $friends_count, Listed: $listed_count
+Tweets: $statuses_count
+]]</span>)
+
+<span class="keyword">function</span> twitter.objects.user:__tostring()
+    <span class="keyword">return</span> user_tmpl:safe_substitute(self)
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
+    <span class="keyword">return</span> <span class="global">table</span>.concat(pl.tablex.map(<span class="global">tostring</span>, self), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
+<span class="keyword">end</span>
+
+twitter.objects.user_list.__tostring = list_tostring
+twitter.objects.tweet_list.__tostring = list_tostring
+
 <span class="keyword">for</span> _, obj <span class="keyword">in</span> <span class="global">pairs</span>(twitter.objects) <span class="keyword">do</span>
-    obj.__tostring = table_inspect_mt.__tostring
-    obj.save = table_inspect_mt.save
+    obj.__tostring = obj.__tostring <span class="keyword">or</span> table_inspect_mt.__tostring
+    obj.save = obj.save <span class="keyword">or</span> table_inspect_mt.save
 <span class="keyword">end</span>
 
 oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
