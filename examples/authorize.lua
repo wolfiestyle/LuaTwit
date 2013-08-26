@@ -6,7 +6,8 @@ pcall(require, "luarocks.loader")
 package.path = "../src/?.lua;" .. package.path
 local twitter = require "luatwit"
 
--- load the app consumer keys
+-- load the app consumer keys from "oauth_app_keys"
+-- you need to fill in valid app keys before using this script
 local oauth_params = twitter.load_keys("oauth_app_keys")
 local client = twitter.new(oauth_params)
 
