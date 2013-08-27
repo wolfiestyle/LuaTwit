@@ -146,24 +146,24 @@ _M.place_search = new_type{ result = "place_search_result" }
 --- Results of a `place` search.
 _M.place_search_result = new_type{ places = "place_list" }
 
---- Trends object.
-_M.trends = new_type{ trends = "trends_elem_list", locations = "trend_location_list" }
-
---- Container of a `trends` object.
-_M.trends_list = new_type("trends")
-
 --- Trending item.
-_M.trends_elem = new_type()
+_M.trend = new_type()
 
 --- Returns the contents of a trending item.
 --
 -- @return          Trending topic string.
-function _M.trends_elem:__tostring()
+function _M.trend:__tostring()
     return self.name
 end
 
---- List of `trends_elem` objects.
-_M.trends_elem_list = new_type("trends_elem")
+--- List of `trend` objects.
+_M.trend_list = new_type("trend")
+
+--- Trends container object.
+_M.trends_container = new_type{ trends = "trend_list", locations = "trend_location_list" }
+
+--- Contains a single `trends_container` object.
+_M.trends_container_list = new_type("trends_container")
 
 --- Location info for trends.
 _M.trend_location = new_type()

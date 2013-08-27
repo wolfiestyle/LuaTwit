@@ -718,7 +718,7 @@ _M.get_trends = { GET, "trends/place", {
         id = true,
         exclude = false,
     },
-    "trends_list"
+    "trends_container_list"
 }
 _M.get_all_trends_locations = { GET, "trends/available", {
         -- empty
