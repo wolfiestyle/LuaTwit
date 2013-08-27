@@ -180,7 +180,7 @@ _M.send_dm = { POST, "direct_messages/new", {
 _M.get_disabled_rt_ids = { GET, "friendships/no_retweets/ids", {
         stringify_ids = false,
     },
-    "userid_list"
+    "userid_array"
 }
 _M.get_following_ids = { GET, "friends/ids", {
         user_id = false,
@@ -210,13 +210,13 @@ _M.get_incoming_follow_requests = { GET, "friendships/incoming", {
         cursor = false,
         stringify_ids = false,
     },
-    "userid_list"
+    "userid_cursor"
 }
 _M.get_outgoing_follow_requests = { GET, "friendships/outgoing", {
         cursor = false,
         stringify_ids = false,
     },
-    "userid_list"
+    "userid_cursor"
 }
 _M.follow = { POST, "friendships/create", {
         screen_name = false,

@@ -90,10 +90,10 @@ function _M.oembed:__tostring()
 end
 
 --- List of user ids.
-_M.userid_list = new_type()
+_M.userid_array = new_type()
 
 --- Cursor of user ids.
-_M.userid_cursor = new_type{ ids = "userid_list" }
+_M.userid_cursor = new_type{ ids = "userid_array" }
 
 --- Follow relation between the authenticated user and another one.
 _M.friendship = new_type()
