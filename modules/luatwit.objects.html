@@ -80,6 +80,26 @@
 	<td class="name" nowrap><a href="#error:code">error:code&nbsp;()</a></td>
 	<td class="summary">Returns the numeric error code.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the HTML result of the OEmbed response.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend:__tostring">trend:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the contents of a trending item.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#language:__tostring">language:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the language name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#privacy:__tostring">privacy:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the privacy policy content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tos:__tostring">tos:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the terms of service content.</td>
+	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
@@ -124,11 +144,15 @@
 	<td class="summary">List of <a href="../modules/luatwit.objects.html#dm">dm</a>  objects.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#entities">entities</a></td>
+	<td class="summary">Entities object.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#oembed">oembed</a></td>
 	<td class="summary">OEmbed output.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#userid_list">userid_list</a></td>
+	<td class="name" nowrap><a href="#userid_array">userid_array</a></td>
 	<td class="summary">List of user ids.</td>
 	</tr>
 	<tr>
@@ -204,20 +228,20 @@
 	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#place">place</a>  search.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#trends">trends</a></td>
-	<td class="summary">Trends object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trends_list">trends_list</a></td>
-	<td class="summary">Container of a <a href="../modules/luatwit.objects.html#trends">trends</a>  object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trends_elem">trends_elem</a></td>
+	<td class="name" nowrap><a href="#trend">trend</a></td>
 	<td class="summary">Trending item.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#trends_elem_list">trends_elem_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#trends_elem">trends_elem</a>  objects.</td>
+	<td class="name" nowrap><a href="#trend_list">trend_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trends_container">trends_container</a></td>
+	<td class="summary">Trends container object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trends_container_list">trends_container_list</a></td>
+	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend_location">trend_location</a></td>
@@ -314,6 +338,96 @@
     <ol>
 
         Error code.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "oembed:__tostring"></a>
+    <strong>oembed:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the HTML result of the OEmbed response.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        HTML string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "trend:__tostring"></a>
+    <strong>trend:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the contents of a trending item.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Trending topic string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "language:__tostring"></a>
+    <strong>language:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the language name.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Language string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "privacy:__tostring"></a>
+    <strong>privacy:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the privacy policy content.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Privacy policy string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tos:__tostring"></a>
+    <strong>tos:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the terms of service content.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Terms of service string.
     </ol>
 
 
@@ -455,6 +569,19 @@
 
 </dd>
     <dt>
+    <a name = "entities"></a>
+    <strong>entities</strong>
+    </dt>
+    <dd>
+    Entities object.
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "oembed"></a>
     <strong>oembed</strong>
     </dt>
@@ -468,8 +595,8 @@
 
 </dd>
     <dt>
-    <a name = "userid_list"></a>
-    <strong>userid_list</strong>
+    <a name = "userid_array"></a>
+    <strong>userid_array</strong>
     </dt>
     <dd>
     List of user ids.
@@ -715,34 +842,8 @@
 
 </dd>
     <dt>
-    <a name = "trends"></a>
-    <strong>trends</strong>
-    </dt>
-    <dd>
-    Trends object.
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "trends_list"></a>
-    <strong>trends_list</strong>
-    </dt>
-    <dd>
-    Container of a <a href="../modules/luatwit.objects.html#trends">trends</a>  object.
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "trends_elem"></a>
-    <strong>trends_elem</strong>
+    <a name = "trend"></a>
+    <strong>trend</strong>
     </dt>
     <dd>
     Trending item.
@@ -754,11 +855,37 @@
 
 </dd>
     <dt>
-    <a name = "trends_elem_list"></a>
-    <strong>trends_elem_list</strong>
+    <a name = "trend_list"></a>
+    <strong>trend_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#trends_elem">trends_elem</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "trends_container"></a>
+    <strong>trends_container</strong>
+    </dt>
+    <dd>
+    Trends container object.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "trends_container_list"></a>
+    <strong>trends_container_list</strong>
+    </dt>
+    <dd>
+    Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.
 
 
 

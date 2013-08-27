@@ -107,6 +107,10 @@
 	<td class="name" nowrap><a href="#api:confirm_login">api:confirm_login&nbsp;(pin)</a></td>
 	<td class="summary">Finishes the OAuth authorization.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#api:__index">api:__index&nbsp;(key)</a></td>
+	<td class="summary">Constructs an <a href="../modules/luatwit.html#Class_api">api</a>  method from the declarations in <a href="../modules/luatwit.html#resources">resources</a> .</td>
+	</tr>
 </table>
 
 <br/>
@@ -211,7 +215,7 @@
 </dl>
     <h2><a name="Class_api"></a>Class api </h2>
         Class prototype that implements the API calls.
- Methods are created on demand from the <a href="../modules/luatwit.html#resources">resources</a>  table.
+ Methods are created on demand from the definitions in the <a href="../modules/luatwit.html#resources">resources</a>  table.
     <dl class="function">
     <dt>
     <a name = "api:raw_call"></a>
@@ -325,6 +329,29 @@
         HTTP result code.</li>
         <li>
         HTTP headers.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "api:__index"></a>
+    <strong>api:__index&nbsp;(key)</strong>
+    </dt>
+    <dd>
+    Constructs an <a href="../modules/luatwit.html#Class_api">api</a>  method from the declarations in <a href="../modules/luatwit.html#resources">resources</a> .
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+           Function name as defined in <a href="../modules/luatwit.resources.html#">luatwit.resources</a> .</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Function implementation.
     </ol>
 
 
