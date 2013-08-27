@@ -29,7 +29,7 @@ _M.resources = require "luatwit.resources"
 _M.objects = require "luatwit.objects"
 
 --- Class prototype that implements the API calls.
--- Methods are created on demand from the `resources` table.
+-- Methods are created on demand from the definitions in the `resources` table.
 -- @type api
 _M.api = util.new()
 
@@ -182,6 +182,10 @@ function _M.api:confirm_login(pin)
     return util.bless(token, _M.objects.access_token), status_line, res_code, headers
 end
 
+--- Constructs an `api` method from the declarations in `resources`.
+--
+-- @param key   Function name as defined in `luatwit.resources`.
+-- @return      Function implementation.
 function _M.api:__index(key)
     local decl = _M.resources[key]
     if not decl then return nil end
