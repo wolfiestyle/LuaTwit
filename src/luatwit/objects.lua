@@ -82,6 +82,13 @@ _M.dm_list = new_type("dm")
 --- OEmbed output.
 _M.oembed = new_type()
 
+--- Returns the HTML result of the OEmbed response.
+--
+--- @return         HTML string.
+function _M.oembed:__tostring()
+    return self.html
+end
+
 --- List of user ids.
 _M.userid_list = new_type()
 
@@ -148,6 +155,13 @@ _M.trends_list = new_type("trends")
 --- Trending item.
 _M.trends_elem = new_type()
 
+--- Returns the contents of a trending item.
+--
+-- @return          Trending topic string.
+function _M.trends_elem:__tostring()
+    return self.name
+end
+
 --- List of `trends_elem` objects.
 _M.trends_elem_list = new_type("trends_elem")
 
@@ -163,14 +177,35 @@ _M.service_config = new_type()
 --- Language description.
 _M.language = new_type()
 
+--- Returns the language name.
+--
+-- @return          Language string.
+function _M.language:__tostring()
+    return self.name
+end
+
 --- List of `language` objects.
 _M.language_list = new_type("language")
 
 --- Privacy policy.
 _M.privacy = new_type()
 
+--- Returns the privacy policy content.
+--
+-- @return          Privacy policy string.
+function _M.privacy:__tostring()
+    return self.privacy
+end
+
 --- Terms of service.
 _M.tos = new_type()
+
+--- Returns the terms of service content.
+--
+-- @return          Terms of service string.
+function _M.tos:__tostring()
+    return self.tos
+end
 
 --- Rate limit info.
 _M.rate_limit = new_type()
