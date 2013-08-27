@@ -56,7 +56,7 @@ function _M.error:code()
 end
 
 --- User object.
-_M.user = new_type{ status = "tweet" }
+_M.user = new_type{ status = "tweet", entities = "entities" }
 
 --- List of `user` objects.
 _M.user_list = new_type("user")
@@ -65,7 +65,7 @@ _M.user_list = new_type("user")
 _M.user_cursor = new_type{ users = "user_list" }
 
 --- Tweet object.
-_M.tweet = new_type{ user = "user" }
+_M.tweet = new_type{ user = "user", entities = "entities" }
 
 --- List of `tweet` objects.
 _M.tweet_list = new_type("tweet")
@@ -74,10 +74,13 @@ _M.tweet_list = new_type("tweet")
 _M.tweet_search = new_type{ statuses = "tweet_list" }
 
 --- Direct message object.
-_M.dm = new_type{ recipient = "user", sender = "user" }
+_M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }
 
 --- List of `dm` objects.
 _M.dm_list = new_type("dm")
+
+--- Entities object.
+_M.entities = new_type()
 
 --- OEmbed output.
 _M.oembed = new_type()
@@ -209,6 +212,7 @@ end
 
 --- Rate limit info.
 _M.rate_limit = new_type()
+
 
 -- fill in the _type field
 for name, obj in pairs(_M) do
