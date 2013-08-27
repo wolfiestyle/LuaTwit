@@ -10,16 +10,6 @@ local util = require "luatwit.util"
 
 local _M = {}
 
--- Base URL of the Twitter REST API.
-_M.base_url = "https://api.twitter.com/1.1/"
-
--- OAuth endpoints for the Twitter API.
-_M.endpoints = {
-    RequestToken = "https://api.twitter.com/oauth/request_token",
-    AuthorizeUser = { "https://api.twitter.com/oauth/authorize", method = "GET" },
-    AccessToken =  "https://api.twitter.com/oauth/access_token",
-}
-
 --- API resource data.
 -- @see luatwit.resources
 _M.resources = require "luatwit.resources"
@@ -131,7 +121,7 @@ function _M.api:raw_call(decl, args, name)
         args_str[key] = nil
         return val
     end)
-    url = _M.base_url .. url .. ".json"
+    url = _M.resources._base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
     if args._raw then
         if type(body) ~= "string" then body = nil end
@@ -187,6 +177,7 @@ end
 -- @param key   Function name as defined in `luatwit.resources`.
 -- @return      Function implementation.
 function _M.api:__index(key)
+    if key:sub(1, 1) == "_" then return nil end
     local decl = _M.resources[key]
     if not decl then return nil end
     local impl = function(_self, args)
@@ -216,7 +207,7 @@ function _M.new(args)
     local err = check_args(args, oauth_key_args, "new")
     util.assertx(not err, err, 2)
     local self = util.new(_M.api)
-    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, _M.endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
     return self
 end
 

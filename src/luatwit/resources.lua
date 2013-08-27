@@ -7,6 +7,16 @@ local _M = {}
 
 local GET, POST = "GET", "POST"
 
+-- Base URL of the Twitter REST API.
+_M._base_url = "https://api.twitter.com/1.1/"
+
+-- OAuth endpoints for the Twitter API.
+_M._endpoints = {
+    RequestToken = "https://api.twitter.com/oauth/request_token",
+    AuthorizeUser = { "https://api.twitter.com/oauth/authorize", method = GET },
+    AccessToken = "https://api.twitter.com/oauth/access_token",
+}
+
 --( Timeline )--
 _M.get_mentions = { GET, "statuses/mentions_timeline", {
         count = false,
