@@ -65,7 +65,7 @@ _M.user_list = new_type("user")
 _M.user_cursor = new_type{ users = "user_list" }
 
 --- Tweet object.
-_M.tweet = new_type{ user = "user", entities = "entities" }
+_M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "tweet" }
 
 --- List of `tweet` objects.
 _M.tweet_list = new_type("tweet")
