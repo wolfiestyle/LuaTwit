@@ -176,8 +176,8 @@ _M.tos = new_type()
 _M.rate_limit = new_type()
 
 -- fill in the _type field
-for name, _ in pairs(_M) do
-    _M[name]._type = name
+for name, obj in pairs(_M) do
+    obj._type = name
 end
 
 return _M
