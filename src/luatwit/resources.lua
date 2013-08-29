@@ -17,8 +17,14 @@ _M._endpoints = {
     AccessToken = "https://api.twitter.com/oauth/access_token",
 }
 
+-- Hack to prevent ldoc 1.3.12 from parsing tables and producing broken output.
+local function api(tbl)
+    return tbl
+end
+
 --( Timeline )--
-_M.get_mentions = { GET, "statuses/mentions_timeline", {
+
+_M.get_mentions = api{ GET, "statuses/mentions_timeline", {
         count = false,
         since_id = false,
         max_id = false,
@@ -28,7 +34,7 @@ _M.get_mentions = { GET, "statuses/mentions_timeline", {
     },
     "tweet_list"
 }
-_M.get_user_timeline = { GET, "statuses/user_timeline", {
+_M.get_user_timeline = api{ GET, "statuses/user_timeline", {
         user_id = false,
         screen_name = false,
         since_id = false,
@@ -41,7 +47,7 @@ _M.get_user_timeline = { GET, "statuses/user_timeline", {
     },
     "tweet_list"
 }
-_M.get_home_timeline = { GET, "statuses/home_timeline", {
+_M.get_home_timeline = api{ GET, "statuses/home_timeline", {
         count = false,
         since_id = false,
         max_id = false,
@@ -52,7 +58,7 @@ _M.get_home_timeline = { GET, "statuses/home_timeline", {
     },
     "tweet_list"
 }
-_M.get_retweets_of_me = { GET, "statuses/retweets_of_me", {
+_M.get_retweets_of_me = api{ GET, "statuses/retweets_of_me", {
         count = false,
         since_id = false,
         max_id = false,
@@ -64,14 +70,15 @@ _M.get_retweets_of_me = { GET, "statuses/retweets_of_me", {
 }
 
 --( Tweets )--
-_M.get_retweets = { GET, "statuses/retweets/:id", {
+
+_M.get_retweets = api{ GET, "statuses/retweets/:id", {
         id = true,
         count = false,
         trim_user = false,
     },
     "tweet_list"
 }
-_M.get_tweet = { GET, "statuses/show/:id", {
+_M.get_tweet = api{ GET, "statuses/show/:id", {
         id = true,
         trim_user = false,
         include_my_retweet = false,
@@ -79,13 +86,13 @@ _M.get_tweet = { GET, "statuses/show/:id", {
     },
     "tweet"
 }
-_M.delete_tweet = { POST, "statuses/destroy/:id", {
+_M.delete_tweet = api{ POST, "statuses/destroy/:id", {
         id = true,
         trim_user = false,
     },
     "tweet"
 }
-_M.tweet = { POST, "statuses/update", {
+_M.tweet = api{ POST, "statuses/update", {
         status = true,
         in_reply_to_status_id = false,
         lat = false,
@@ -96,14 +103,13 @@ _M.tweet = { POST, "statuses/update", {
     },
     "tweet"
 }
-_M.retweet = { POST, "statuses/retweet/:id", {
+_M.retweet = api{ POST, "statuses/retweet/:id", {
         id = true,
         trim_user = false,
     },
     "tweet"
 }
--- POST statuses/update_with_media      --TODO: requires multipart/form-data request
-_M.oembed = { GET, "statuses/oembed", {
+_M.oembed = api{ GET, "statuses/oembed", {
         id = true,
         --url = false,          -- full tweet url, only useful for web apps
         maxwidth = false,
@@ -116,16 +122,18 @@ _M.oembed = { GET, "statuses/oembed", {
     },
     "oembed"
 }
-_M.get_retweeter_ids = { GET, "statuses/retweeters/ids", {
+_M.get_retweeter_ids = api{ GET, "statuses/retweeters/ids", {
         id = true,
         cursor = false,
         stringify_ids = false,
     },
     "userid_cursor"
 }
+-- POST statuses/update_with_media      --TODO: requires multipart/form-data request
 
 --( Search )--
-_M.search_tweets = { GET, "search/tweets", {
+
+_M.search_tweets = api{ GET, "search/tweets", {
         q = true,
         geocode = false,
         lang = false,
@@ -149,7 +157,8 @@ _M.search_tweets = { GET, "search/tweets", {
 -- GET site
 
 --( Direct Messages )--
-_M.get_received_dms = { GET, "direct_messages", {
+
+_M.get_received_dms = api{ GET, "direct_messages", {
         since_id = false,
         max_id = false,
         count = false,
@@ -158,7 +167,7 @@ _M.get_received_dms = { GET, "direct_messages", {
     },
     "dm_list"
 }
-_M.get_sent_dms = { GET, "direct_messages/sent", {
+_M.get_sent_dms = api{ GET, "direct_messages/sent", {
         since_id = false,
         max_id = false,
         count = false,
@@ -167,18 +176,18 @@ _M.get_sent_dms = { GET, "direct_messages/sent", {
     },
     "dm_list"
 }
-_M.get_dm = { GET, "direct_messages/show", {
+_M.get_dm = api{ GET, "direct_messages/show", {
         id = true,
     },
     "dm"
 }
-_M.delete_dm = { POST, "direct_messages/destroy", {
+_M.delete_dm = api{ POST, "direct_messages/destroy", {
         id = true,
         include_entities = false,
     },
     "dm"
 }
-_M.send_dm = { POST, "direct_messages/new", {
+_M.send_dm = api{ POST, "direct_messages/new", {
         user_id = false,
         screen_name = false,
         text = true,
@@ -187,12 +196,13 @@ _M.send_dm = { POST, "direct_messages/new", {
 }
 
 --( Friends & Followers )--
-_M.get_disabled_rt_ids = { GET, "friendships/no_retweets/ids", {
+
+_M.get_disabled_rt_ids = api{ GET, "friendships/no_retweets/ids", {
         stringify_ids = false,
     },
     "userid_array"
 }
-_M.get_following_ids = { GET, "friends/ids", {
+_M.get_following_ids = api{ GET, "friends/ids", {
         user_id = false,
         screen_name = false,
         cursor = false,
@@ -201,7 +211,7 @@ _M.get_following_ids = { GET, "friends/ids", {
     },
     "userid_cursor"
 }
-_M.get_followers_ids = { GET, "followers/ids", {
+_M.get_followers_ids = api{ GET, "followers/ids", {
         user_id = false,
         screen_name = false,
         cursor = false,
@@ -210,38 +220,38 @@ _M.get_followers_ids = { GET, "followers/ids", {
     },
     "userid_cursor"
 }
-_M.lookup_friendships = { GET, "friendships/lookup", {
+_M.lookup_friendships = api{ GET, "friendships/lookup", {
         screen_name = false,
         user_id = false,
     },
     "friendship_list"
 }
-_M.get_incoming_follow_requests = { GET, "friendships/incoming", {
+_M.get_incoming_follow_requests = api{ GET, "friendships/incoming", {
         cursor = false,
         stringify_ids = false,
     },
     "userid_cursor"
 }
-_M.get_outgoing_follow_requests = { GET, "friendships/outgoing", {
+_M.get_outgoing_follow_requests = api{ GET, "friendships/outgoing", {
         cursor = false,
         stringify_ids = false,
     },
     "userid_cursor"
 }
-_M.follow = { POST, "friendships/create", {
+_M.follow = api{ POST, "friendships/create", {
         screen_name = false,
         user_id = false,
         follow = false,
     },
     "user"
 }
-_M.unfollow = { POST, "friendships/destroy", {
+_M.unfollow = api{ POST, "friendships/destroy", {
         screen_name = false,
         user_id = false,
     },
     "user"
 }
-_M.set_follow_settings = { POST, "friendships/update", {
+_M.set_follow_settings = api{ POST, "friendships/update", {
         screen_name = false,
         user_id = false,
         device = false,
@@ -249,7 +259,7 @@ _M.set_follow_settings = { POST, "friendships/update", {
     },
     "relationship_container"
 }
-_M.get_friendship = { GET, "friendships/show", {
+_M.get_friendship = api{ GET, "friendships/show", {
         source_id = false,
         source_screen_name = false,
         target_id = false,
@@ -257,7 +267,7 @@ _M.get_friendship = { GET, "friendships/show", {
     },
     "relationship_container"
 }
-_M.get_following = { GET, "friends/list", {
+_M.get_following = api{ GET, "friends/list", {
         user_id = false,
         screen_name = false,
         cursor = false,
@@ -266,7 +276,7 @@ _M.get_following = { GET, "friends/list", {
     },
     "user_cursor"
 }
-_M.get_followers = { GET, "followers/list", {
+_M.get_followers = api{ GET, "followers/list", {
         user_id = false,
         screen_name = false,
         cursor = false,
@@ -277,18 +287,19 @@ _M.get_followers = { GET, "followers/list", {
 }
 
 --( Users )--
-_M.get_account_settings = { GET, "account/settings", {
+
+_M.get_account_settings = api{ GET, "account/settings", {
         -- empty
     },
     "account_settings"
 }
-_M.verify_credentials = { GET, "account/verify_credentials", {
+_M.verify_credentials = api{ GET, "account/verify_credentials", {
         include_entities = false,
         skip_status = false,
     },
     "user"
 }
-_M.set_account_settings = { POST, "account/settings", {
+_M.set_account_settings = api{ POST, "account/settings", {
         trend_location_woeid = false,
         sleep_time_enabled = false,
         start_sleep_time = false,
@@ -298,12 +309,12 @@ _M.set_account_settings = { POST, "account/settings", {
     },
     "account_settings"
 }
-_M.update_delivery_device = { POST, "account/update_delivery_device", {
+_M.update_delivery_device = api{ POST, "account/update_delivery_device", {
         device = true,
         include_entities = false,
     }
 }
-_M.update_profile = { POST, "account/update_profile", {
+_M.update_profile = api{ POST, "account/update_profile", {
         name = false,
         url = false,
         location = false,
@@ -313,7 +324,7 @@ _M.update_profile = { POST, "account/update_profile", {
     },
     "user"
 }
-_M.set_profile_background_image = { POST, "account/update_profile_background_image", {
+_M.set_profile_background_image = api{ POST, "account/update_profile_background_image", {
         image = false,
         tile = false,
         include_entities = false,
@@ -322,7 +333,7 @@ _M.set_profile_background_image = { POST, "account/update_profile_background_ima
     },
     "user"
 }
-_M.set_profile_colors = { POST, "account/update_profile_colors", {
+_M.set_profile_colors = api{ POST, "account/update_profile_colors", {
         profile_background_color = false,
         profile_link_color = false,
         profile_sidebar_border_color = false,
@@ -333,27 +344,27 @@ _M.set_profile_colors = { POST, "account/update_profile_colors", {
     },
     "user"
 }
-_M.set_profile_image = { POST, "account/update_profile_image", {
+_M.set_profile_image = api{ POST, "account/update_profile_image", {
         image = true,
         include_entities = false,
         skip_status = false,
     },
     "user"
 }
-_M.get_blocked_users = { GET, "blocks/list", {
+_M.get_blocked_users = api{ GET, "blocks/list", {
         include_entities = false,
         skip_status = false,
         cursor = false,
     },
     "user_cursor"
 }
-_M.get_blocked_ids= { GET, "blocks/ids", {
+_M.get_blocked_ids= api{ GET, "blocks/ids", {
         stringify_ids = false,
         cursor = false,
     },
     "userid_cursor"
 }
-_M.block_user = { POST, "blocks/create", {
+_M.block_user = api{ POST, "blocks/create", {
         screen_name = false,
         user_id = false,
         include_entities = false,
@@ -361,7 +372,7 @@ _M.block_user = { POST, "blocks/create", {
     },
     "user"
 }
-_M.unblock_user = { POST, "blocks/destroy", {
+_M.unblock_user = api{ POST, "blocks/destroy", {
         screen_name = false,
         user_id = false,
         include_entities = false,
@@ -369,21 +380,21 @@ _M.unblock_user = { POST, "blocks/destroy", {
     },
     "user"
 }
-_M.lookup_users = { GET, "users/lookup", {
+_M.lookup_users = api{ GET, "users/lookup", {
         screen_name = false,
         user_id = false,
         include_entities = false,
     },
     "user_list"
 }
-_M.get_user = { GET, "users/show", {
+_M.get_user = api{ GET, "users/show", {
         user_id = false,
         screen_name = false,
         include_entities = false,
     },
     "user"
 }
-_M.search_users = { GET, "users/search", {
+_M.search_users = api{ GET, "users/search", {
         q = true,
         page = false,
         count = false,
@@ -391,7 +402,7 @@ _M.search_users = { GET, "users/search", {
     },
     "user_list"
 }
-_M.get_contributees = { GET, "users/contributees", {
+_M.get_contributees = api{ GET, "users/contributees", {
         user_id = false,
         screen_name = false,
         include_entities = false,
@@ -399,7 +410,7 @@ _M.get_contributees = { GET, "users/contributees", {
     },
     "user_list"
 }
-_M.get_contributors = { GET, "users/contributors", {
+_M.get_contributors = api{ GET, "users/contributors", {
         user_id = false,
         screen_name = false,
         include_entities = false,
@@ -407,11 +418,11 @@ _M.get_contributors = { GET, "users/contributors", {
     },
     "user_list"
 }
-_M.remove_profile_banner = { POST, "account/remove_profile_banner", {
+_M.remove_profile_banner = api{ POST, "account/remove_profile_banner", {
         -- empty
     }
 }
-_M.set_profile_banner = { POST, "account/update_profile_banner", {
+_M.set_profile_banner = api{ POST, "account/update_profile_banner", {
         banner = true,
         width = false,
         height = false,
@@ -419,7 +430,7 @@ _M.set_profile_banner = { POST, "account/update_profile_banner", {
         offset_top = false,
     }
 }
-_M.get_profile_banner = { GET, "users/profile_banner", {
+_M.get_profile_banner = api{ GET, "users/profile_banner", {
         user_id = false,
         screen_name = false,
     },
@@ -427,25 +438,27 @@ _M.get_profile_banner = { GET, "users/profile_banner", {
 }
 
 --( Suggested Users )--
-_M.get_suggestion_category = { GET, "users/suggestions/:slug", {
+
+_M.get_suggestion_category = api{ GET, "users/suggestions/:slug", {
         slug = true,
         lang = false,
     },
     "suggestion_category"
 }
-_M.get_suggestion_categories = { GET, "users/suggestions", {
+_M.get_suggestion_categories = api{ GET, "users/suggestions", {
         lang = false,
     },
     "suggestion_category_list"
 }
-_M.get_suggestion_users = { GET, "users/suggestions/:slug/members", {
+_M.get_suggestion_users = api{ GET, "users/suggestions/:slug/members", {
         slug = true,
     },
     "user_list"
 }
 
 --( Favorites )--
-_M.get_favorites = { GET, "favorites/list", {
+
+_M.get_favorites = api{ GET, "favorites/list", {
         user_id = false,
         screen_name = false,
         count = false,
@@ -455,13 +468,13 @@ _M.get_favorites = { GET, "favorites/list", {
     },
     "tweet_list"
 }
-_M.unset_favorite = { POST, "favorites/destroy", {
+_M.unset_favorite = api{ POST, "favorites/destroy", {
         id = true,
         include_entities = false,
     },
     "tweet"
 }
-_M.set_favorite = { POST, "favorites/create", {
+_M.set_favorite = api{ POST, "favorites/create", {
         id = true,
         include_entities = false,
     },
@@ -469,14 +482,15 @@ _M.set_favorite = { POST, "favorites/create", {
 }
 
 --( Lists )--
-_M.get_all_lists = { GET, "lists/list", {
+
+_M.get_all_lists = api{ GET, "lists/list", {
         user_id = false,
         screen_name = false,
         reverse = false,
     },
     "userlist_list"
 }
-_M.get_list_timeline = { GET, "lists/statuses", {
+_M.get_list_timeline = api{ GET, "lists/statuses", {
         list_id = false,
         slug = false,
         owner_screen_name = false,
@@ -489,7 +503,7 @@ _M.get_list_timeline = { GET, "lists/statuses", {
     },
     "tweet_list"
 }
-_M.remove_list_member = { POST, "lists/members/destroy", {
+_M.remove_list_member = api{ POST, "lists/members/destroy", {
         list_id = false,
         slug = false,
         user_id = false,
@@ -499,7 +513,7 @@ _M.remove_list_member = { POST, "lists/members/destroy", {
     },
     "userlist"
 }
-_M.get_lists_following_user = { GET, "lists/memberships", {
+_M.get_lists_following_user = api{ GET, "lists/memberships", {
         user_id = false,
         screen_name = false,
         cursor = false,
@@ -507,7 +521,7 @@ _M.get_lists_following_user = { GET, "lists/memberships", {
     },
     "userlist_cursor"
 }
-_M.get_list_followers = { GET, "lists/subscribers", {
+_M.get_list_followers = api{ GET, "lists/subscribers", {
         list_id = false,
         slug = false,
         owner_screen_name = false,
@@ -518,7 +532,7 @@ _M.get_list_followers = { GET, "lists/subscribers", {
     },
     "user_cursor"
 }
-_M.follow_list = { POST, "lists/subscribers/create", {
+_M.follow_list = api{ POST, "lists/subscribers/create", {
         owner_screen_name = false,
         owner_id = false,
         list_id = false,
@@ -526,7 +540,7 @@ _M.follow_list = { POST, "lists/subscribers/create", {
     },
     "userlist"
 }
-_M.is_following_list = { GET, "lists/subscribers/show", {
+_M.is_following_list = api{ GET, "lists/subscribers/show", {
         owner_screen_name = false,
         owner_id = false,
         list_id = false,
@@ -538,7 +552,7 @@ _M.is_following_list = { GET, "lists/subscribers/show", {
     },
     "user"
 }
-_M.unfollow_list = { POST, "lists/subscribers/destroy", {
+_M.unfollow_list = api{ POST, "lists/subscribers/destroy", {
         list_id = false,
         slug = false,
         owner_screen_name = false,
@@ -546,7 +560,7 @@ _M.unfollow_list = { POST, "lists/subscribers/destroy", {
     },
     "userlist"
 }
-_M.list_add_multiple_users = { POST, "lists/members/create_all", {
+_M.list_add_multiple_users = api{ POST, "lists/members/create_all", {
         list_id = false,
         slug = false,
         user_id = false,
@@ -556,7 +570,7 @@ _M.list_add_multiple_users = { POST, "lists/members/create_all", {
     },
     "userlist"
 }
-_M.is_member_of_list = { GET, "lists/members/show", {
+_M.is_member_of_list = api{ GET, "lists/members/show", {
         list_id = false,
         slug = false,
         user_id = false,
@@ -568,7 +582,7 @@ _M.is_member_of_list = { GET, "lists/members/show", {
     },
     "user"
 }
-_M.get_list_members = { GET, "lists/members", {
+_M.get_list_members = api{ GET, "lists/members", {
         list_id = false,
         slug = false,
         owner_screen_name = false,
@@ -579,7 +593,7 @@ _M.get_list_members = { GET, "lists/members", {
     },
     "user_cursor"
 }
-_M.add_list_member = { POST, "lists/members/create", {
+_M.add_list_member = api{ POST, "lists/members/create", {
         list_id = false,
         slug = false,
         user_id = false,
@@ -589,7 +603,7 @@ _M.add_list_member = { POST, "lists/members/create", {
     },
     "userlist"
 }
-_M.delete_list = { POST, "lists/destroy", {
+_M.delete_list = api{ POST, "lists/destroy", {
         owner_screen_name = false,
         owner_id = false,
         list_id = false,
@@ -597,7 +611,7 @@ _M.delete_list = { POST, "lists/destroy", {
     },
     "userlist"
 }
-_M.update_list = { POST, "lists/update", {
+_M.update_list = api{ POST, "lists/update", {
         list_id = false,
         slug = false,
         name = false,
@@ -608,14 +622,14 @@ _M.update_list = { POST, "lists/update", {
     },
     "userlist"
 }
-_M.create_list = { POST, "lists/create", {
+_M.create_list = api{ POST, "lists/create", {
         name = true,
         mode = false,
         description = false,
     },
     "userlist"
 }
-_M.get_list = { GET, "lists/show", {
+_M.get_list = api{ GET, "lists/show", {
         list_id = false,
         slug = false,
         owner_screen_name = false,
@@ -623,7 +637,7 @@ _M.get_list = { GET, "lists/show", {
     },
     "userlist"
 }
-_M.get_followed_lists = { GET, "lists/subscriptions", {
+_M.get_followed_lists = api{ GET, "lists/subscriptions", {
         user_id = false,
         screen_name = false,
         count = false,
@@ -631,7 +645,7 @@ _M.get_followed_lists = { GET, "lists/subscriptions", {
     },
     "userlist_cursor"
 }
-_M.remove_multiple_list_members = { POST, "lists/members/destroy_all", {
+_M.remove_multiple_list_members = api{ POST, "lists/members/destroy_all", {
         list_id = false,
         slug = false,
         user_id = false,
@@ -641,7 +655,7 @@ _M.remove_multiple_list_members = { POST, "lists/members/destroy_all", {
     },
     "userlist"
 }
-_M.get_own_lists = { GET, "lists/ownerships", {
+_M.get_own_lists = api{ GET, "lists/ownerships", {
         user_id = false,
         screen_name = false,
         count = false,
@@ -651,34 +665,36 @@ _M.get_own_lists = { GET, "lists/ownerships", {
 }
 
 --( Saved Searches )--
-_M.get_saved_searches = { GET, "saved_searches/list", {
+
+_M.get_saved_searches = api{ GET, "saved_searches/list", {
         -- empty
     },
     "saved_search_list"
 }
-_M.get_saved_search = { GET, "saved_searches/show/:id", {
+_M.get_saved_search = api{ GET, "saved_searches/show/:id", {
         id = true,
     },
     "saved_search"
 }
-_M.create_saved_search = { POST, "saved_searches/create", {
+_M.create_saved_search = api{ POST, "saved_searches/create", {
         query = true,
     },
     "saved_search"
 }
-_M.delete_saved_search = { POST, "saved_searches/destroy/:id", {
+_M.delete_saved_search = api{ POST, "saved_searches/destroy/:id", {
         id = true,
     },
     "saved_search"
 }
 
 --( Places & Geo )--
-_M.get_place = { GET, "geo/id/:place_id", {
+
+_M.get_place = api{ GET, "geo/id/:place_id", {
         place_id = true,
     },
     "place"
 }
-_M.reverse_geocode = { GET, "geo/reverse_geocode", {
+_M.reverse_geocode = api{ GET, "geo/reverse_geocode", {
         lat = true,
         long = true,
         accuracy = false,
@@ -688,7 +704,7 @@ _M.reverse_geocode = { GET, "geo/reverse_geocode", {
     },
     "place_search"
 }
-_M.search_places = { GET, "geo/search", {
+_M.search_places = api{ GET, "geo/search", {
         lat = false,
         long = false,
         query = false,
@@ -702,7 +718,7 @@ _M.search_places = { GET, "geo/search", {
     },
     "place_search"
 }
-_M.get_similar_places = { GET, "geo/similar_places", {
+_M.get_similar_places = api{ GET, "geo/similar_places", {
         lat = true,
         long = true,
         name = true,
@@ -712,7 +728,7 @@ _M.get_similar_places = { GET, "geo/similar_places", {
     },
     "place_search"
 }
-_M.create_place = { POST, "geo/place", {
+_M.create_place = api{ POST, "geo/place", {
         name = true,
         contained_within = true,
         token = true,
@@ -724,18 +740,19 @@ _M.create_place = { POST, "geo/place", {
 }
 
 --( Trends )--
-_M.get_trends = { GET, "trends/place", {
+
+_M.get_trends = api{ GET, "trends/place", {
         id = true,
         exclude = false,
     },
     "trends_container_list"
 }
-_M.get_all_trends_locations = { GET, "trends/available", {
+_M.get_all_trends_locations = api{ GET, "trends/available", {
         -- empty
     },
     "trend_location_list"
 }
-_M.find_trends_location = { GET, "trends/closest", {
+_M.find_trends_location = api{ GET, "trends/closest", {
         lat = true,
         long = true,
     },
@@ -743,34 +760,36 @@ _M.find_trends_location = { GET, "trends/closest", {
 }
 
 --( Spam Reporting )--
-_M.report_spam = { POST, "users/report_spam", {
+
+_M.report_spam = api{ POST, "users/report_spam", {
         screen_name = false,
         user_id = false,
     }
 }
 
 --( Help )--
-_M.get_service_config = { GET, "help/configuration", {
+
+_M.get_service_config = api{ GET, "help/configuration", {
         -- empty
     },
     "service_config"
 }
-_M.get_languages = { GET, "help/languages", {
+_M.get_languages = api{ GET, "help/languages", {
         -- empty
     },
     "language_list"
 }
-_M.get_privacy_policy = { GET, "help/privacy", {
+_M.get_privacy_policy = api{ GET, "help/privacy", {
         -- empty
     },
     "privacy"
 }
-_M.get_tos = { GET, "help/tos", {
+_M.get_tos = api{ GET, "help/tos", {
         -- empty
     },
     "tos"
 }
-_M.get_rate_limit = { GET, "application/rate_limit_status", {
+_M.get_rate_limit = api{ GET, "application/rate_limit_status", {
         resources = false,
     },
     "rate_limit"
