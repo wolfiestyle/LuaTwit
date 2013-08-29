@@ -13,3 +13,4 @@ luac.out
 doc/
 out/
 examples/local_auth
+tools/api_desc
