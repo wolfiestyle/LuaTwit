@@ -62,4 +62,14 @@ function _M.load_file(filename, env)
     return env, pcall(code)
 end
 
+--- Creates a function object.
+--
+-- @param fn        Function.
+-- @return          Table with the <tt>__call</tt> metamethod set to the provided function.
+function _M.make_functor(fn)
+    local self = {}
+    self.__call = fn
+    return setmetatable(self, self)
+end
+
 return _M

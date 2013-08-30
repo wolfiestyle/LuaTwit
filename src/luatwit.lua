@@ -180,9 +180,11 @@ function _M.api:__index(key)
     if key:sub(1, 1) == "_" then return nil end
     local decl = _M.resources[key]
     if not decl then return nil end
-    local impl = function(_self, args)
-        return _self:raw_call(decl, args, key)
-    end
+    local impl = util.make_functor(function(_self, parent, args)
+        return parent:raw_call(decl, args, key)
+    end)
+    impl._type = "api"
+    impl.url = decl[2]
     self[key] = impl
     return impl
 end
