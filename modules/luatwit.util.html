@@ -83,6 +83,10 @@
 	<td class="name" nowrap><a href="#load_file">load_file&nbsp;(filename, env)</a></td>
 	<td class="summary">Loads a Lua chunk from a file and executes it on it's own environment.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_functor">make_functor&nbsp;(fn)</a></td>
+	<td class="summary">Creates a function object.</td>
+	</tr>
 </table>
 
 <br/>
@@ -187,6 +191,29 @@
         <tt>true</tt> if no errors found when executing the code.</li>
         <li>
         Value(s) returned by the Lua chunk, or the error message.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "make_functor"></a>
+    <strong>make_functor&nbsp;(fn)</strong>
+    </dt>
+    <dd>
+    Creates a function object.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fn</span>
+                Function.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Table with the <tt>__call</tt> metamethod set to the provided function.
     </ol>
 
 

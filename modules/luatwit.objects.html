@@ -100,6 +100,10 @@
 	<td class="name" nowrap><a href="#tos:__tostring">tos:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the terms of service content.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rate_limit:get_for">rate_limit:get_for&nbsp;(obj)</a></td>
+	<td class="summary">Get the rate limit info of the specified object.</td>
+	</tr>
 </table>
 <h2><a href="#Fields">Fields</a></h2>
 <table class="function_list">
@@ -428,6 +432,29 @@
     <ol>
 
         Terms of service string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "rate_limit:get_for"></a>
+    <strong>rate_limit:get_for&nbsp;(obj)</strong>
+    </dt>
+    <dd>
+    Get the rate limit info of the specified object.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">obj</span>
+               Endpoint URL, Resource declaration (<a href="../modules/luatwit.resources.html#">luatwit.resources</a>  field) or API method (<a href="../modules/luatwit.html#Class_api">luatwit.api</a>  field).</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Table with rate limit info.
     </ol>
 
 
