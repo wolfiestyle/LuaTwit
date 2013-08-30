@@ -52,17 +52,16 @@ function twitter.objects.user:__tostring()
     return user_tmpl:safe_substitute(self)
 end
 
--- used to display user/tweet lists
+-- used to display object lists
 local function list_tostring(self)
     return table.concat(pl.tablex.map(tostring, self), "\n") .. "\n"
 end
 
-twitter.objects.user_list.__tostring = list_tostring
-twitter.objects.tweet_list.__tostring = list_tostring
-
 -- add default __tostring methods to all objects
-for _, obj in pairs(twitter.objects) do
-    obj.__tostring = obj.__tostring or table_inspect_mt.__tostring
+for name, obj in pairs(twitter.objects) do
+    if not obj.__tostring then
+        obj.__tostring = name:match("_list$") and list_tostring or table_inspect_mt.__tostring
+    end
     obj.save = obj.save or table_inspect_mt.save
 end
 
