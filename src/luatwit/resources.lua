@@ -17,8 +17,9 @@ _M._endpoints = {
     AccessToken = "https://api.twitter.com/oauth/access_token",
 }
 
--- Hack to prevent ldoc 1.3.12 from parsing tables and producing broken output.
+-- Adds a default _type field.
 local function api(tbl)
+    tbl._type = "resource"
     return tbl
 end
 

@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.objects
 -- @license MIT
-local assert, io_open =
-      assert, io.open
+local assert, io_open, pairs, type =
+      assert, io.open, pairs, type
 
 local _M = {}
 
@@ -212,6 +212,33 @@ end
 
 --- Rate limit info.
 _M.rate_limit = new_type()
+
+--- Get the rate limit info of the specified object.
+--
+-- @param obj       Endpoint URL, Resource declaration (`luatwit.resources` field) or API method (`luatwit.api` field).
+-- @return          Table with rate limit info.
+function _M.rate_limit:get_for(obj)
+    local url
+    if type(obj) == "string" then
+        url = obj
+    elseif type(obj) == "table" then
+        if obj._type == "api" then
+            url = obj.url
+        elseif obj._type == "resource" then
+            url = obj[2]
+        end
+    end
+    assert(url, "invalid argument")
+    for _, category in pairs(self.resources) do
+        for name, item in pairs(category) do
+            name = name:gsub("^/", "")
+            if name == url then
+                return item
+            end
+        end
+    end
+    return nil
+end
 
 
 -- fill in the _type field
