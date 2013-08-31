@@ -38,6 +38,20 @@ function _M.access_token:save(filename)
     return self
 end
 
+--- HTTP Headers returned by the API calls.
+_M.headers = new_type()
+
+--- Extracts the rate limit info from the HTTP headers.
+--
+-- @return          Table with rate limit values.
+function _M.headers:get_rate_limit()
+    return {
+        remaining = self["x-rate-limit-remaining"],
+        limit = self["x-rate-limit-limit"],
+        reset = self["x-rate-limit-reset"],
+    }
+end
+
 --- Error description returned by the API calls.
 _M.error = new_type()
 

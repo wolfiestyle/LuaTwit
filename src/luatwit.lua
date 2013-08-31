@@ -123,6 +123,7 @@ function _M.api:raw_call(decl, args, name)
     end)
     url = _M.resources._base_url .. url .. ".json"
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
+    util.bless(headers, _M.objects.headers)
     if args._raw then
         if type(body) ~= "string" then body = nil end
         return body, status_line, res_code, headers, tname
