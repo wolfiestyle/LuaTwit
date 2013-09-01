@@ -95,6 +95,7 @@ end
 -- @param decl  API method declaration. This is taken from the `resources` table.
 -- @param args  Table with the method arguments.
 -- @param name  Method name. Used internally for building error messages.
+-- @param defaults  Default method arguments.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
 --              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
 -- @return      HTTP status line.
@@ -102,7 +103,7 @@ end
 -- @return      HTTP headers.
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
-function _M.api:raw_call(decl, args, name)
+function _M.api:raw_call(decl, args, name, defaults)
     util.assertx(#decl >= 2, "invalid resource declaration", 2)
     args = args or {}
     name = name or "raw_call"
@@ -110,6 +111,11 @@ function _M.api:raw_call(decl, args, name)
     local err = check_args(args, rules, name)
     util.assertx(not err, err, 3)
     local args_str = {}
+    if defaults then
+        for k, v in pairs(defaults) do
+            args_str[k] = tostring(v)
+        end
+    end
     for k, v in pairs(args) do
         if k:sub(1, 1) ~= "_" then
             args_str[k] = tostring(v)
@@ -182,7 +188,7 @@ function _M.api:__index(key)
     local decl = _M.resources[key]
     if not decl then return nil end
     local impl = util.make_functor(function(_self, parent, args)
-        return parent:raw_call(decl, args, key)
+        return parent:raw_call(decl, args, key, _self.defaults)
     end)
     impl._type = "api"
     impl.url = decl[2]
