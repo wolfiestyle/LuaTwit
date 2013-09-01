@@ -73,6 +73,10 @@
 	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a>  object into a file.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#headers:get_rate_limit">headers:get_rate_limit&nbsp;()</a></td>
+	<td class="summary">Extracts the rate limit info from the HTTP headers.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#error:__tostring">error:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the error message.</td>
 	</tr>
@@ -110,6 +114,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#access_token">access_token</a></td>
 	<td class="summary">Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#headers">headers</a></td>
+	<td class="summary">HTTP Headers returned by the API calls.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#error">error</a></td>
@@ -313,6 +321,24 @@
 
 </dd>
     <dt>
+    <a name = "headers:get_rate_limit"></a>
+    <strong>headers:get_rate_limit&nbsp;()</strong>
+    </dt>
+    <dd>
+    Extracts the rate limit info from the HTTP headers.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Table with rate limit values.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "error:__tostring"></a>
     <strong>error:__tostring&nbsp;()</strong>
     </dt>
@@ -471,6 +497,19 @@
     <dd>
     Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .
  It's the result of the user authorizing the app, and contains the keys necessary to make API calls.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "headers"></a>
+    <strong>headers</strong>
+    </dt>
+    <dd>
+    HTTP Headers returned by the API calls.
 
 
 
