@@ -121,6 +121,9 @@ Tweets: $statuses_count
     obj.save = obj.save <span class="keyword">or</span> table_inspect_mt.save
 <span class="keyword">end</span>
 
+<span class="comment">-- avoid headers spam
+</span>twitter.objects.headers.__tostring = <span class="keyword">nil</span>
+
 oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 client = twitter.new(oauth_params)</pre>
 

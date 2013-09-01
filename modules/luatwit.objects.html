@@ -85,8 +85,32 @@
 	<td class="summary">Returns the numeric error code.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#user_cursor:next">user_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_cursor:prev">user_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user cursored request.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the HTML result of the OEmbed response.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor:next">userid_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user id cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor:prev">userid_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user id cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user list cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor:prev">userlist_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user list cursored request.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend:__tostring">trend:__tostring&nbsp;()</a></td>
@@ -375,6 +399,42 @@
 
 </dd>
     <dt>
+    <a name = "user_cursor:next"></a>
+    <strong>user_cursor:next&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Next <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user_cursor:prev"></a>
+    <strong>user_cursor:prev&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Previous <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "oembed:__tostring"></a>
     <strong>oembed:__tostring&nbsp;()</strong>
     </dt>
@@ -386,6 +446,78 @@
     <ol>
 
         HTML string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userid_cursor:next"></a>
+    <strong>userid_cursor:next&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user id cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Next <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userid_cursor:prev"></a>
+    <strong>userid_cursor:prev&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user id cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Previous <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist_cursor:next"></a>
+    <strong>userlist_cursor:next&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user list cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Next <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist_cursor:prev"></a>
+    <strong>userlist_cursor:prev&nbsp;()</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user list cursored request.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Previous <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
     </ol>
 
 
