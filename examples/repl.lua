@@ -65,5 +65,8 @@ for name, obj in pairs(twitter.objects) do
     obj.save = obj.save or table_inspect_mt.save
 end
 
+-- avoid headers spam
+twitter.objects.headers.__tostring = nil
+
 oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
 client = twitter.new(oauth_params)
