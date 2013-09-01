@@ -201,6 +201,9 @@ function _M.api:__index(key)
     end)
     impl._type = "api"
     impl.url = decl[2]
+    if decl[3].stringify_ids ~= nil then
+        impl.defaults = { stringify_ids = true }
+    end
     self[key] = impl
     return impl
 end
