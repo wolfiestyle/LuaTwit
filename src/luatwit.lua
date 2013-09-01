@@ -134,7 +134,16 @@ function _M.api:raw_call(decl, args, name, defaults)
         if type(body) ~= "string" then body = nil end
         return body, status_line, res_code, headers, tname
     end
-    return self:parse_json(body, tname), status_line, res_code, headers
+    local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
+    if type(json_data) == "table" then
+        json_data._context = {
+            client = self,
+            source_method = function(_args)
+                return self:raw_call(decl, _args, name, args_str)
+            end,
+        }
+    end
+    return json_data, status_line, res_code, headers
 end
 
 --- Parses a JSON string and applies type metatables.
@@ -144,7 +153,7 @@ end
 --              If set, the function will set type metatables.
 -- @return      A table with the decoded JSON data.
 function _M.api:parse_json(str, tname)
-    local json_data = type(str) == "string" and json.decode(str) or nil
+    local json_data = json.decode(str)
     if tname then
         if type(json_data) == "table" and json_data.errors then
             tname = "error"
