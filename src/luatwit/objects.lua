@@ -98,6 +98,71 @@ end
 --- Tweet object.
 _M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "tweet" }
 
+--- Sends a tweet as a reply to this tweet.
+--
+-- @param args      Extra arguments for the <tt>tweet</tt> API method.
+--                  The reply must text is passed in the <tt>status</tt> field.
+--                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.
+-- @return          A `tweet` object.
+function _M.tweet:reply(args)
+    util.assertx(type(args) == "table" and args.status, "must provide reply text in 'status' argument", 2)
+    args.in_reply_to_status_id = self.id_str
+    if args._mention then
+        args.status = "@" .. self.user.screen_name .. " " .. args.status
+    end
+    return self._context.client:tweet(args)
+end
+
+--- Retweets this tweet.
+--
+-- @param args      Extra arguments for the <tt>retweet</tt> API method.
+-- @return          A `tweet` object.
+function _M.tweet:retweet(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._context.client:retweet(args)
+end
+
+--- Delete this tweet.
+--
+-- @param args      Extra arguments for the <tt>delete_tweet</tt> API method.
+-- @return          A `tweet` object.
+function _M.tweet:delete(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._context.client:delete_tweet(args)
+end
+
+--- Get a list of retweets of this tweet.
+--
+-- @param args      Extra arguments for the <tt>get_retweets</tt> API method.
+-- @return          A `tweet_list` object.
+function _M.tweet:get_retweets(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._context.client:get_retweets(args)
+end
+
+--- Get a list of user ids who retweeted this tweet.
+--
+-- @param args      Extra arguments for the <tt>get_retweeter_ids</tt> API method.
+-- @return          An `userid_cursor` object.
+function _M.tweet:get_retweeter_ids(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._context.client:get_retweeter_ids(args)
+end
+
+--- Generates an OEmbed object for this tweet.
+--
+-- @param args      Extra arguments for the <tt>oembed</tt> API method.
+-- @return          An `oembed` object.
+function _M.tweet:oembed(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._context.client:oembed(args)
+end
+
 --- List of `tweet` objects.
 _M.tweet_list = new_type("tweet")
 
