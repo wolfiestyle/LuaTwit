@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local error, jit, loadfile, pcall, setfenv, setmetatable =
-      error, jit, loadfile, pcall, setfenv, setmetatable
+local error, jit, loadfile, pcall, setfenv, setmetatable, type =
+      error, jit, loadfile, pcall, setfenv, setmetatable, type
 
 local _M = {}
 
@@ -70,6 +70,19 @@ function _M.make_functor(fn)
     local self = {}
     self.__call = fn
     return setmetatable(self, self)
+end
+
+--- Gets the type of the supplied object or the _type value if present.
+--
+-- @param obj       Any value.
+-- @return          The type of the supplied object.
+function _M.type(obj)
+    local t_obj = type(obj)
+    if t_obj == "table" then
+        return obj._type or t_obj
+    else
+        return t_obj
+    end
 end
 
 return _M

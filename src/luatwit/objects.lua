@@ -4,6 +4,7 @@
 -- @license MIT
 local assert, io_open, pairs, type =
       assert, io.open, pairs, type
+local util = require "luatwit.util"
 
 local _M = {}
 
@@ -281,16 +282,15 @@ _M.rate_limit = new_type()
 -- @return          Table with rate limit info.
 function _M.rate_limit:get_for(obj)
     local url
-    if type(obj) == "string" then
+    local t_obj = util.type(obj)
+    if t_obj == "string" then
         url = obj
-    elseif type(obj) == "table" then
-        if obj._type == "api" then
-            url = obj.url
-        elseif obj._type == "resource" then
-            url = obj[2]
-        end
+    elseif t_obj == "api" then
+        url = obj.url
+    elseif t_obj == "resource" then
+        url = obj[2]
     end
-    assert(url, "invalid argument")
+    util.assertx(url, "invalid argument", 2)
     for _, category in pairs(self.resources) do
         for name, item in pairs(category) do
             name = name:gsub("^/", "")
