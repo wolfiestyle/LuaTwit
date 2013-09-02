@@ -93,6 +93,30 @@
 	<td class="summary">Loads the previous page of an user cursored request.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#tweet:reply">tweet:reply&nbsp;(args)</a></td>
+	<td class="summary">Sends a tweet as a reply to this tweet.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:retweet">tweet:retweet&nbsp;(args)</a></td>
+	<td class="summary">Retweets this tweet.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:delete">tweet:delete&nbsp;(args)</a></td>
+	<td class="summary">Delete this tweet.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:get_retweets">tweet:get_retweets&nbsp;(args)</a></td>
+	<td class="summary">Get a list of retweets of this tweet.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:get_retweeter_ids">tweet:get_retweeter_ids&nbsp;(args)</a></td>
+	<td class="summary">Get a list of user ids who retweeted this tweet.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:oembed">tweet:oembed&nbsp;(args)</a></td>
+	<td class="summary">Generates an OEmbed object for this tweet.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the HTML result of the OEmbed response.</td>
 	</tr>
@@ -428,6 +452,146 @@
     <ol>
 
         Previous <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:reply"></a>
+    <strong>tweet:reply&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sends a tweet as a reply to this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>tweet</tt> API method.
+                  The reply must text is passed in the <tt>status</tt> field.
+                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:retweet"></a>
+    <strong>tweet:retweet&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Retweets this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>retweet</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:delete"></a>
+    <strong>tweet:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Delete this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>delete_tweet</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_retweets"></a>
+    <strong>tweet:get_retweets&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get a list of retweets of this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_retweets</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_retweeter_ids"></a>
+    <strong>tweet:get_retweeter_ids&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get a list of user ids who retweeted this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_retweeter_ids</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:oembed"></a>
+    <strong>tweet:oembed&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Generates an OEmbed object for this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>oembed</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#oembed">oembed</a>  object.
     </ol>
 
 
