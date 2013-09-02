@@ -89,6 +89,18 @@ local function apply_types(node, tname)
     end
 end
 
+-- Sets the _context field of the json data recursively.
+local function apply_context(node, ctx)
+    for _, item in pairs(node) do
+        if type(item) == "table" and item._type then
+            apply_context(item, ctx)
+        end
+    end
+    if node._context == nil then
+        node._context = ctx
+    end
+end
+
 --- Generic call to the Twitter API.
 -- This is the backend method that performs all the API calls.
 --
@@ -142,6 +154,11 @@ function _M.api:raw_call(decl, args, name, defaults)
                 return self:raw_call(decl, _args, name, args_str)
             end,
         }
+        -- source_method is only correct for the root node
+        local child_ctx = {
+            client = self,
+        }
+        apply_context(json_data, child_ctx)
     end
     return json_data, status_line, res_code, headers
 end
