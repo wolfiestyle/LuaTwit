@@ -67,37 +67,25 @@ local function check_args(args, rules, res_name)
 end
 
 -- Applies type metatables to the json data recursively.
-local function apply_types(node, tname)
-    local type_decl = _M.objects[tname]
+local function apply_types(node, tname, objects)
+    local type_decl = objects[tname]
     util.bless(node, type_decl)
     local st = type_decl._subtypes
     if st == nil then return end
     local type_st = type(st)
     if type_st == "string" then
         for _, item in pairs(node) do
-            apply_types(item, st)
+            apply_types(item, st, objects)
         end
     elseif type_st == "table" then
         for k, tn in pairs(st) do
             local item = node[k]
             if item ~= nil and item ~= json.null then
-                apply_types(item, tn)
+                apply_types(item, tn, objects)
             end
         end
     else
         error("subtype declaration must be string or table")
-    end
-end
-
--- Sets the _context field of the json data recursively.
-local function apply_context(node, ctx)
-    for _, item in pairs(node) do
-        if type(item) == "table" and item._type then
-            apply_context(item, ctx)
-        end
-    end
-    if node._context == nil then
-        node._context = ctx
     end
 end
 
@@ -148,17 +136,9 @@ function _M.api:raw_call(decl, args, name, defaults)
     end
     local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
     if type(json_data) == "table" then
-        json_data._context = {
-            client = self,
-            source_method = function(_args)
-                return self:raw_call(decl, _args, name, args_str)
-            end,
-        }
-        -- source_method is only correct for the root node
-        local child_ctx = {
-            client = self,
-        }
-        apply_context(json_data, child_ctx)
+        json_data._source_method = function(_args)
+            return self:raw_call(decl, _args, name, args_str)
+        end
     end
     return json_data, status_line, res_code, headers
 end
@@ -176,7 +156,7 @@ function _M.api:parse_json(str, tname)
             tname = "error"
         end
         if json_data then
-            apply_types(json_data, tname)
+            apply_types(json_data, tname, self.objects)
         end
     end
     return json_data
@@ -246,6 +226,20 @@ function _M.new(args)
     util.assertx(not err, err, 2)
     local self = util.new(_M.api)
     self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    -- create per-client copies of _M.objects items with an extra _client field
+    self.objects = setmetatable({}, {
+        __index = function(_self, key)
+            local mt = _M.objects[key]
+            if mt == nil then return nil end
+            local obj = {
+                _client = self,
+            }
+            obj.__index = obj
+            util.inherit_mt(obj, mt)
+            _self[key] = setmetatable(obj, mt)
+            return obj
+        end
+    })
     return self
 end
 

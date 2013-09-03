@@ -84,7 +84,7 @@ _M.user_cursor = new_type{ users = "user_list" }
 -- @return          Next `user_cursor` page, or <tt>nil</tt> if the current page is the last.
 function _M.user_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.next_cursor_str }
+    return self._source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user cursored request.
@@ -92,7 +92,7 @@ end
 -- @return          Previous `user_cursor` page, or <tt>nil</tt> if the current page is the first.
 function _M.user_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.previous_cursor_str }
+    return self._source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Tweet object.
@@ -110,7 +110,7 @@ function _M.tweet:reply(args)
     if args._mention then
         args.status = "@" .. self.user.screen_name .. " " .. args.status
     end
-    return self._context.client:tweet(args)
+    return self._client:tweet(args)
 end
 
 --- Retweets this tweet.
@@ -120,7 +120,7 @@ end
 function _M.tweet:retweet(args)
     args = args or {}
     args.id = self.id_str
-    return self._context.client:retweet(args)
+    return self._client:retweet(args)
 end
 
 --- Delete this tweet.
@@ -130,7 +130,7 @@ end
 function _M.tweet:delete(args)
     args = args or {}
     args.id = self.id_str
-    return self._context.client:delete_tweet(args)
+    return self._client:delete_tweet(args)
 end
 
 --- Get a list of retweets of this tweet.
@@ -140,7 +140,7 @@ end
 function _M.tweet:get_retweets(args)
     args = args or {}
     args.id = self.id_str
-    return self._context.client:get_retweets(args)
+    return self._client:get_retweets(args)
 end
 
 --- Get a list of user ids who retweeted this tweet.
@@ -150,7 +150,7 @@ end
 function _M.tweet:get_retweeter_ids(args)
     args = args or {}
     args.id = self.id_str
-    return self._context.client:get_retweeter_ids(args)
+    return self._client:get_retweeter_ids(args)
 end
 
 --- Generates an OEmbed object for this tweet.
@@ -160,7 +160,7 @@ end
 function _M.tweet:oembed(args)
     args = args or {}
     args.id = self.id_str
-    return self._context.client:oembed(args)
+    return self._client:oembed(args)
 end
 
 --- List of `tweet` objects.
@@ -199,7 +199,7 @@ _M.userid_cursor = new_type{ ids = "userid_array" }
 -- @return          Next `userid_cursor` page, or <tt>nil</tt> if the current page is the last.
 function _M.userid_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.next_cursor_str }
+    return self._source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user id cursored request.
@@ -207,7 +207,7 @@ end
 -- @return          Previous `userid_cursor` page, or <tt>nil</tt> if the current page is the first.
 function _M.userid_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.previous_cursor_str }
+    return self._source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Follow relation between the authenticated user and another one.
@@ -248,7 +248,7 @@ _M.userlist_cursor = new_type{ lists = "userlist_list" }
 -- @return          Next `userlist_cursor` page, or <tt>nil</tt> if the current page is the last.
 function _M.userlist_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.next_cursor_str }
+    return self._source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user list cursored request.
@@ -256,7 +256,7 @@ end
 -- @return          Previous `userlist_cursor` page, or <tt>nil</tt> if the current page is the first.
 function _M.userlist_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._context.source_method{ cursor = self.previous_cursor_str }
+    return self._source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Saved search object.

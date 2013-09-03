@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local error, jit, loadfile, pcall, setfenv, setmetatable, type =
-      error, jit, loadfile, pcall, setfenv, setmetatable, type
+local error, jit, loadfile, pairs, pcall, setfenv, setmetatable, type =
+      error, jit, loadfile, pairs, pcall, setfenv, setmetatable, type
 
 local _M = {}
 
@@ -82,6 +82,20 @@ function _M.type(obj)
         return obj._type or t_obj
     else
         return t_obj
+    end
+end
+
+local metamethods = {"__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__eq", "__lt", "__le", "__index", "__newindex", "__call", "__tostring"}
+
+--- Inherits methamethods from one table to another by copying them.
+--
+-- @param dest      Destination table.
+-- @param src       Source table.
+function _M.inherit_mt(dest, src)
+    for _, name in pairs(metamethods) do
+        if dest[name] == nil then
+            dest[name] = src[name]
+        end
     end
 end
 
