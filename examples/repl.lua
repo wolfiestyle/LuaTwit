@@ -36,7 +36,12 @@ end
 
 -- used to display tweets
 function twitter.objects.tweet:__tostring()
-    return self.user.screen_name .. "\t| " .. self.id_str .. " | " .. self.text
+    return "<" .. self.user.screen_name .. "> " .. self.text
+end
+
+-- used to display DMs
+function twitter.objects.dm:__tostring()
+    return "<" .. self.sender.screen_name .. "> (to: " .. self.recipient.screen_name .. ") " .. self.text
 end
 
 -- used to display user profiles
@@ -54,7 +59,7 @@ end
 
 -- used to display object lists
 local function list_tostring(self)
-    return table.concat(pl.tablex.map(tostring, self), "\n") .. "\n"
+    return table.concat(pl.tablex.pairmap(function(k, v) return k .. ": " .. tostring(v) end, self), "\n") .. "\n"
 end
 
 -- add default __tostring methods to all objects
