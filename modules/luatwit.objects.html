@@ -105,6 +105,14 @@
 	<td class="summary">Delete this tweet.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#tweet:set_favorite">tweet:set_favorite&nbsp;(args)</a></td>
+	<td class="summary">Add this tweet to favorites.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet:unset_favorite">tweet:unset_favorite&nbsp;(args)</a></td>
+	<td class="summary">Remove this tweet from favorites.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#tweet:get_retweets">tweet:get_retweets&nbsp;(args)</a></td>
 	<td class="summary">Get a list of retweets of this tweet.</td>
 	</tr>
@@ -517,6 +525,52 @@
     <ul>
         <li><span class="parameter">args</span>
               Extra arguments for the <tt>delete_tweet</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:set_favorite"></a>
+    <strong>tweet:set_favorite&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Add this tweet to favorites.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>set_favorite</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:unset_favorite"></a>
+    <strong>tweet:unset_favorite&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Remove this tweet from favorites.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>unset_favorite</tt> API method.</li>
     </ul>
 
     <h3>Returns:</h3>
