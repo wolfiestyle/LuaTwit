@@ -92,7 +92,12 @@ table_inspect_mt.__index = table_inspect_mt
 
 <span class="comment">-- used to display tweets
 </span><span class="keyword">function</span> twitter.objects.tweet:__tostring()
-    <span class="keyword">return</span> self.user.screen_name .. <span class="string">"\t| "</span> .. self.id_str .. <span class="string">" | "</span> .. self.text
+    <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.user.screen_name .. <span class="string">"&gt; "</span> .. self.text
+<span class="keyword">end</span>
+
+<span class="comment">-- used to display DMs
+</span><span class="keyword">function</span> twitter.objects.dm:__tostring()
+    <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.sender.screen_name .. <span class="string">"&gt; (to: "</span> .. self.recipient.screen_name .. <span class="string">") "</span> .. self.text
 <span class="keyword">end</span>
 
 <span class="comment">-- used to display user profiles
@@ -110,7 +115,7 @@ Tweets: $statuses_count
 
 <span class="comment">-- used to display object lists
 </span><span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
-    <span class="keyword">return</span> <span class="global">table</span>.concat(pl.tablex.map(<span class="global">tostring</span>, self), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
+    <span class="keyword">return</span> <span class="global">table</span>.concat(pl.tablex.pairmap(<span class="keyword">function</span>(k, v) <span class="keyword">return</span> k .. <span class="string">": "</span> .. <span class="global">tostring</span>(v) <span class="keyword">end</span>, self), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
 <span class="keyword">end</span>
 
 <span class="comment">-- add default __tostring methods to all objects
