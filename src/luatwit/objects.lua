@@ -133,6 +133,26 @@ function _M.tweet:delete(args)
     return self._client:delete_tweet(args)
 end
 
+--- Add this tweet to favorites.
+--
+-- @param args      Extra arguments for the <tt>set_favorite</tt> API method.
+-- @return          A `tweet` object.
+function _M.tweet:set_favorite(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._client:set_favorite(args)
+end
+
+--- Remove this tweet from favorites.
+--
+-- @param args      Extra arguments for the <tt>unset_favorite</tt> API method.
+-- @return          A `tweet` object.
+function _M.tweet:unset_favorite(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._client:unset_favorite(args)
+end
+
 --- Get a list of retweets of this tweet.
 --
 -- @param args      Extra arguments for the <tt>get_retweets</tt> API method.
