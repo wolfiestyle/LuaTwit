@@ -45,3 +45,8 @@ The returned data has a metatable (from `luatwit.objects`) that describes the ob
     print(result._type)         -- "tweet_list"
     print(result[1]._type)      -- "tweet"
     print(result[1].user._type) -- "user"
+
+The type metatables also provide convenience methods:
+
+    result[1]:set_favorite():retweet()
+    result[1]:reply{ status = "answer!", _mention = true }
