@@ -5,6 +5,7 @@
 local assert, io_open, pairs, type =
       assert, io.open, pairs, type
 local util = require "luatwit.util"
+local json = require "cjson"
 
 local _M = {}
 
@@ -181,6 +182,18 @@ function _M.tweet:oembed(args)
     args = args or {}
     args.id = self.id_str
     return self._client:oembed(args)
+end
+
+--- Get the next tweet in a conversation thread.
+--
+-- @param args      Extra arguments for the <tt>get_tweet</tt> API method.
+-- @return          A `tweet` object, or <tt>nil</tt> if this tweet is the first in the reply chain.
+function _M.tweet:get_next_in_thread(args)
+    local reply_id = self.in_reply_to_status_id_str
+    if reply_id == nil or reply_id == json.null then return nil end
+    args = args or {}
+    args.id = reply_id
+    return self._client:get_tweet(args)
 end
 
 --- List of `tweet` objects.
