@@ -87,4 +87,21 @@ function _M.inherit_mt(dest, src)
     end
 end
 
+--- Copies key-value pairs from one table to another and applies a function to the values.
+-- @param dest      Destination table.
+-- @param src       Source table.
+-- @param fn        Function applied to values before assigning them.
+--                  It's called as <tt>fn(value, key)</tt> for each key in <tt>src</tt>,
+--                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.
+-- @return          The <tt>dest</tt> argument.
+function _M.map_copy(dest, src, fn)
+    for k, v in pairs(src) do
+        local res = fn(v, k)
+        if res ~= nil then
+            dest[k] = res
+        end
+    end
+    return dest
+end
+
 return _M

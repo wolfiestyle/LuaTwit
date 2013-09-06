@@ -112,15 +112,11 @@ function _M.api:raw_call(decl, args, name, defaults)
     assert(not err, err)
     local args_str = {}
     if defaults then
-        for k, v in pairs(defaults) do
-            args_str[k] = tostring(v)
-        end
+        util.map_copy(args_str, defaults, tostring)
     end
-    for k, v in pairs(args) do
-        if k:sub(1, 1) ~= "_" then
-            args_str[k] = tostring(v)
-        end
-    end
+    util.map_copy(args_str, args, function(v, k)
+        return k:sub(1, 1) ~= "_" and tostring(v) or nil
+    end)
     url = url:gsub(":([%w_]+)", function(key)
         local val = args_str[key]
         assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
