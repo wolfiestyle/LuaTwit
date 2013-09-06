@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local error, jit, loadfile, pairs, pcall, setfenv, setmetatable, type =
-      error, jit, loadfile, pairs, pcall, setfenv, setmetatable, type
+local assert, jit, loadfile, pairs, pcall, setfenv, setmetatable, type =
+      assert, jit, loadfile, pairs, pcall, setfenv, setmetatable, type
 
 local _M = {}
 
@@ -27,20 +27,8 @@ end
 -- @return          The <tt>table</tt> argument with <tt>type</tt> as it's metatable.
 function _M.bless(tbl, mt)
     if type(tbl) ~= "table" then return tbl end
-    _M.assertx(type(mt) == "table", "argument #2 must be a table", 2)
+    assert(type(mt) == "table", "argument #2 must be a table")
     return setmetatable(tbl, mt)
-end
-
---- Assert implementation with an extra 'level' argument.
---
--- @param cond      Condition that must be <tt>true</tt>. If false it triggers an error.
--- @param message   Error message to display when <tt>cond</tt> is <tt>false</tt>.
--- @param level     Call stack level that the <tt>error</tt> function uses to display the error source.
-function _M.assertx(cond, message, level)
-    if not cond then
-        level = level or 1
-        error(message, level ~= 0 and level + 1 or 0)
-    end
 end
 
 --- Loads a Lua chunk from a file and executes it on it's own environment.

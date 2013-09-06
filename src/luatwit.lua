@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT
-local error, pairs, select, setmetatable, table_concat, tostring, type, unpack =
-      error, pairs, select, setmetatable, table.concat, tostring, type, unpack
+local assert, error, pairs, select, setmetatable, table_concat, tostring, type, unpack =
+      assert, error, pairs, select, setmetatable, table.concat, tostring, type, unpack
 local oauth = require "OAuth"
 local json = require "cjson"
 local util = require "luatwit.util"
@@ -104,12 +104,12 @@ end
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
 function _M.api:raw_call(decl, args, name, defaults)
-    util.assertx(#decl >= 2, "invalid resource declaration", 2)
+    assert(#decl >= 2, "invalid resource declaration")
     args = args or {}
     name = name or "raw_call"
     local method, url, rules, tname = unpack(decl)
     local err = check_args(args, rules, name)
-    util.assertx(not err, err, 3)
+    assert(not err, err)
     local args_str = {}
     if defaults then
         for k, v in pairs(defaults) do
@@ -123,7 +123,7 @@ function _M.api:raw_call(decl, args, name, defaults)
     end
     url = url:gsub(":([%w_]+)", function(key)
         local val = args_str[key]
-        util.assertx(val ~= nil, "invalid token ':" .. key .. "' in resource URL", 2)
+        assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
         args_str[key] = nil
         return val
     end)
@@ -223,7 +223,7 @@ local oauth_key_args = {
 -- @see luatwit.objects.access_token
 function _M.new(args)
     local err = check_args(args, oauth_key_args, "new")
-    util.assertx(not err, err, 2)
+    assert(not err, err)
     local self = util.new(_M.api)
     self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
     -- create per-client copies of _M.objects items with an extra _client field
@@ -260,7 +260,7 @@ function _M.load_keys(...)
             end
         elseif ts == "string" then
             local _, err, res = util.load_file(source, env)
-            util.assertx(err, res, 2)
+            assert(err, res)
         else
             error("argument #" .. i .. ": invalid type " .. ts, 2)
         end

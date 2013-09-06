@@ -105,7 +105,7 @@ _M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "t
 --                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.
 -- @return          A `tweet` object.
 function _M.tweet:reply(args)
-    util.assertx(type(args) == "table" and args.status, "must provide reply text in 'status' argument", 2)
+    assert(type(args) == "table" and args.status, "must provide reply text in 'status' argument")
     args.in_reply_to_status_id = self.id_str
     if args._mention then
         args.status = "@" .. self.user.screen_name .. " " .. args.status
@@ -375,7 +375,7 @@ function _M.rate_limit:get_for(obj)
     elseif t_obj == "resource" then
         url = obj[2]
     end
-    util.assertx(url, "invalid argument", 2)
+    assert(url, "invalid argument")
     for _, category in pairs(self.resources) do
         for name, item in pairs(category) do
             name = name:gsub("^/", "")
