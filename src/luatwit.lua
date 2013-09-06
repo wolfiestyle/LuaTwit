@@ -66,6 +66,28 @@ local function check_args(args, rules, res_name)
     return nil
 end
 
+-- Builds the request url and arguments for the OAuth call.
+local function build_request(decl, args, name, defaults)
+    local method, url, rules, tname = unpack(decl)
+    local err = check_args(args, rules, name)
+    assert(not err, err)
+    local args_str = {}
+    if defaults then
+        util.map_copy(args_str, defaults, tostring)
+    end
+    util.map_copy(args_str, args, function(v, k)
+        return k:sub(1, 1) ~= "_" and tostring(v) or nil
+    end)
+    url = url:gsub(":([%w_]+)", function(key)
+        local val = args_str[key]
+        assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
+        args_str[key] = nil
+        return val
+    end)
+    url = _M.resources._base_url .. url .. ".json"
+    return method, url, args_str, tname
+end
+
 -- Applies type metatables to the json data recursively.
 local function apply_types(node, tname, objects)
     local type_decl = objects[tname]
@@ -107,23 +129,7 @@ function _M.api:raw_call(decl, args, name, defaults)
     assert(#decl >= 2, "invalid resource declaration")
     args = args or {}
     name = name or "raw_call"
-    local method, url, rules, tname = unpack(decl)
-    local err = check_args(args, rules, name)
-    assert(not err, err)
-    local args_str = {}
-    if defaults then
-        util.map_copy(args_str, defaults, tostring)
-    end
-    util.map_copy(args_str, args, function(v, k)
-        return k:sub(1, 1) ~= "_" and tostring(v) or nil
-    end)
-    url = url:gsub(":([%w_]+)", function(key)
-        local val = args_str[key]
-        assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
-        args_str[key] = nil
-        return val
-    end)
-    url = _M.resources._base_url .. url .. ".json"
+    local method, url, args_str, tname = build_request(decl, args, name, defaults)
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
     util.bless(headers, _M.objects.headers)
     if args._raw then
