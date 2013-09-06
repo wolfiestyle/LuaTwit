@@ -125,6 +125,10 @@
 	<td class="summary">Generates an OEmbed object for this tweet.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#tweet:get_next_in_thread">tweet:get_next_in_thread&nbsp;(args)</a></td>
+	<td class="summary">Get the next tweet in a conversation thread.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the HTML result of the OEmbed response.</td>
 	</tr>
@@ -646,6 +650,29 @@
     <ol>
 
         An <a href="../modules/luatwit.objects.html#oembed">oembed</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_next_in_thread"></a>
+    <strong>tweet:get_next_in_thread&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get the next tweet in a conversation thread.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_tweet</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object, or <tt>nil</tt> if this tweet is the first in the reply chain.
     </ol>
 
 

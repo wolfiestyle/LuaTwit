@@ -76,10 +76,6 @@
 	<td class="summary">Converts a table into a class instance of the supplied type.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#assertx">assertx&nbsp;(cond, message, level)</a></td>
-	<td class="summary">Assert implementation with an extra 'level' argument.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#load_file">load_file&nbsp;(filename, env)</a></td>
 	<td class="summary">Loads a Lua chunk from a file and executes it on it's own environment.</td>
 	</tr>
@@ -94,6 +90,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#inherit_mt">inherit_mt&nbsp;(dest, src)</a></td>
 	<td class="summary">Inherits methamethods from one table to another by copying them.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#map_copy">map_copy&nbsp;(dest, src, fn)</a></td>
+	<td class="summary">Copies key-value pairs from one table to another and applies a function to the values.</td>
 	</tr>
 </table>
 
@@ -149,28 +149,6 @@
 
         The <tt>table</tt> argument with <tt>type</tt> as it's metatable.
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "assertx"></a>
-    <strong>assertx&nbsp;(cond, message, level)</strong>
-    </dt>
-    <dd>
-    Assert implementation with an extra 'level' argument.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">cond</span>
-              Condition that must be <tt>true</tt>. If false it triggers an error.</li>
-        <li><span class="parameter">message</span>
-           Error message to display when <tt>cond</tt> is <tt>false</tt>.</li>
-        <li><span class="parameter">level</span>
-             Call stack level that the <tt>error</tt> function uses to display the error source.</li>
-    </ul>
-
 
 
 
@@ -266,6 +244,35 @@
                Source table.</li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "map_copy"></a>
+    <strong>map_copy&nbsp;(dest, src, fn)</strong>
+    </dt>
+    <dd>
+    Copies key-value pairs from one table to another and applies a function to the values.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dest</span>
+              Destination table.</li>
+        <li><span class="parameter">src</span>
+               Source table.</li>
+        <li><span class="parameter">fn</span>
+                Function applied to values before assigning them.
+                  It's called as <tt>fn(value, key)</tt> for each key in <tt>src</tt>,
+                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The <tt>dest</tt> argument.
+    </ol>
 
 
 
