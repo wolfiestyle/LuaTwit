@@ -3,6 +3,9 @@
 --
 -- @module  luatwit.resources
 -- @license MIT
+local setmetatable =
+      setmetatable
+
 local _M = {}
 
 local GET, POST = "GET", "POST"
@@ -17,10 +20,18 @@ _M._endpoints = {
     AccessToken = "https://api.twitter.com/oauth/access_token",
 }
 
--- Adds a default _type field.
+-- Default members for all resources.
+_M._resource_base = {
+    _type = "resource",
+}
+
+local resource_mt = {
+    __index = _M._resource_base,
+}
+
+-- Sets the mt of each resource.
 local function api(tbl)
-    tbl._type = "resource"
-    return tbl
+    return setmetatable(tbl, resource_mt)
 end
 
 --( Timeline )--
