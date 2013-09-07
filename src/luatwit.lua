@@ -18,6 +18,9 @@ _M.resources = require "luatwit.resources"
 -- @see luatwit.objects
 _M.objects = require "luatwit.objects"
 
+--- JSON null value.
+_M.null = json.null
+
 --- Class prototype that implements the API calls.
 -- Methods are created on demand from the definitions in the `resources` table.
 -- @type api
