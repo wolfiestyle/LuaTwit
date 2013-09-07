@@ -23,6 +23,9 @@ _M._endpoints = {
 -- Default members for all resources.
 _M._resource_base = {
     _type = "resource",
+    default_args = {
+        stringify_ids = true,
+    },
 }
 
 local resource_mt = {

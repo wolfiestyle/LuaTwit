@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT
-local assert, error, pairs, select, setmetatable, table_concat, tostring, type, unpack =
-      assert, error, pairs, select, setmetatable, table.concat, tostring, type, unpack
+local assert, error, next, pairs, select, setmetatable, table_concat, tostring, type, unpack =
+      assert, error, next, pairs, select, setmetatable, table.concat, tostring, type, unpack
 local oauth = require "OAuth"
 local json = require "cjson"
 local util = require "luatwit.util"
@@ -200,8 +200,14 @@ function _M.api:__index(key)
     end)
     impl._type = "api"
     impl.url = decl[2]
-    if decl[3].stringify_ids ~= nil then
-        impl.defaults = { stringify_ids = true }
+    if decl.default_args then
+        local def = util.map_copy({}, decl.default_args, function(v, k)
+            if decl[3][k] ~= nil then return v end
+            return nil
+        end)
+        if next(def) ~= nil then
+            impl.defaults = def
+        end
     end
     self[key] = impl
     return impl
