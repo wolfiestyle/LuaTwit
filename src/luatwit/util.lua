@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local assert, jit, loadfile, pairs, pcall, setfenv, setmetatable, type =
-      assert, jit, loadfile, pairs, pcall, setfenv, setmetatable, type
+local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, setfenv, setmetatable, type =
+      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, setfenv, setmetatable, type
 
 local _M = {}
 
@@ -102,6 +102,27 @@ function _M.map_copy(dest, src, fn)
         end
     end
     return dest
+end
+
+--- Creates a lazy table that loads its contents on field access.
+--
+-- @param fn        Function that returns the table content.
+--                  This function will be called on the first field read attempt.
+--                  The returned table fields will be copied to this table.
+-- @return          New lazy table.
+function _M.lazy_loader(fn)
+    return setmetatable({}, {
+        __index = function(self, key)
+            local obj = fn()
+            for k, v in pairs(obj) do
+                if rawget(self, k) == nil then
+                    self[k] = v
+                end
+            end
+            setmetatable(self, getmetatable(obj))
+            return self[key]
+        end
+    })
 end
 
 return _M

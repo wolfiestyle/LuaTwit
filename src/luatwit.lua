@@ -251,6 +251,12 @@ function _M.new(args)
             return obj
         end
     })
+    -- get info about the authenticated user
+    self.me = util.lazy_loader(function()
+        local res = self:verify_credentials()
+        assert(not res.errors, tostring(res))
+        return res
+    end)
     return self
 end
 
