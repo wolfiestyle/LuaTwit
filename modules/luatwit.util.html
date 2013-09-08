@@ -95,6 +95,10 @@
 	<td class="name" nowrap><a href="#map_copy">map_copy&nbsp;(dest, src, fn)</a></td>
 	<td class="summary">Copies key-value pairs from one table to another and applies a function to the values.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lazy_loader">lazy_loader&nbsp;(fn)</a></td>
+	<td class="summary">Creates a lazy table that loads its contents on field access.</td>
+	</tr>
 </table>
 
 <br/>
@@ -272,6 +276,31 @@
     <ol>
 
         The <tt>dest</tt> argument.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lazy_loader"></a>
+    <strong>lazy_loader&nbsp;(fn)</strong>
+    </dt>
+    <dd>
+    Creates a lazy table that loads its contents on field access.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fn</span>
+                Function that returns the table content.
+                  This function will be called on the first field read attempt.
+                  The returned table fields will be copied to this table.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New lazy table.
     </ol>
 
 

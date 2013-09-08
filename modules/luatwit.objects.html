@@ -129,6 +129,14 @@
 	<td class="summary">Get the next tweet in a conversation thread.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#dm:reply">dm:reply&nbsp;(args)</a></td>
+	<td class="summary">Sends a reply to this DM.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dm:delete">dm:delete&nbsp;(args)</a></td>
+	<td class="summary">Deletes this DM.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the HTML result of the OEmbed response.</td>
 	</tr>
@@ -673,6 +681,52 @@
     <ol>
 
         A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object, or <tt>nil</tt> if this tweet is the first in the reply chain.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dm:reply"></a>
+    <strong>dm:reply&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sends a reply to this DM.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>send_dm</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dm:delete"></a>
+    <strong>dm:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Deletes this DM.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>delete_dm</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
     </ol>
 
 
