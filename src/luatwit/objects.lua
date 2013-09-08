@@ -205,6 +205,26 @@ _M.tweet_search = new_type{ statuses = "tweet_list" }
 --- Direct message object.
 _M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }
 
+--- Sends a reply to this DM.
+--
+-- @param args      Extra arguments for the <tt>send_dm</tt> API method.
+-- @return          A `dm` object.
+function _M.dm:reply(args)
+    assert(type(args) == "table" and args.text, "must provide reply text in 'text' argument")
+    args.user_id = self.sender_id_str
+    return self._client:send_dm(args)
+end
+
+--- Deletes this DM.
+--
+-- @param args      Extra arguments for the <tt>delete_dm</tt> API method.
+-- @return          A `dm` object.
+function _M.dm:delete(args)
+    args = args or {}
+    args.id = self.id_str
+    return self._client:delete_dm(args)
+end
+
 --- List of `dm` objects.
 _M.dm_list = new_type("dm")
 
