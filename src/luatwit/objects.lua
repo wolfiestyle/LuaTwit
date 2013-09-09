@@ -99,6 +99,14 @@ end
 --- Tweet object.
 _M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "tweet" }
 
+-- Calls an API method referencing this tweet.
+local function tweet_method(self, fn, args)
+    args = args or {}
+    args.id = self.id_str
+    local client = self._client
+    return client[fn](client, args)
+end
+
 --- Sends a tweet as a reply to this tweet.
 --
 -- @param args      Extra arguments for the <tt>tweet</tt> API method.
@@ -119,9 +127,7 @@ end
 -- @param args      Extra arguments for the <tt>retweet</tt> API method.
 -- @return          A `tweet` object.
 function _M.tweet:retweet(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:retweet(args)
+    return tweet_method(self, "retweet", args)
 end
 
 --- Delete this tweet.
@@ -129,9 +135,7 @@ end
 -- @param args      Extra arguments for the <tt>delete_tweet</tt> API method.
 -- @return          A `tweet` object.
 function _M.tweet:delete(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:delete_tweet(args)
+    return tweet_method(self, "delete_tweet", args)
 end
 
 --- Add this tweet to favorites.
@@ -139,9 +143,7 @@ end
 -- @param args      Extra arguments for the <tt>set_favorite</tt> API method.
 -- @return          A `tweet` object.
 function _M.tweet:set_favorite(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:set_favorite(args)
+    return tweet_method(self, "set_favorite", args)
 end
 
 --- Remove this tweet from favorites.
@@ -149,9 +151,7 @@ end
 -- @param args      Extra arguments for the <tt>unset_favorite</tt> API method.
 -- @return          A `tweet` object.
 function _M.tweet:unset_favorite(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:unset_favorite(args)
+    return tweet_method(self, "unset_favorite", args)
 end
 
 --- Get a list of retweets of this tweet.
@@ -159,9 +159,7 @@ end
 -- @param args      Extra arguments for the <tt>get_retweets</tt> API method.
 -- @return          A `tweet_list` object.
 function _M.tweet:get_retweets(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:get_retweets(args)
+    return tweet_method(self, "get_retweets", args)
 end
 
 --- Get a list of user ids who retweeted this tweet.
@@ -169,9 +167,7 @@ end
 -- @param args      Extra arguments for the <tt>get_retweeter_ids</tt> API method.
 -- @return          An `userid_cursor` object.
 function _M.tweet:get_retweeter_ids(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:get_retweeter_ids(args)
+    return tweet_method(self, "get_retweeter_ids", args)
 end
 
 --- Generates an OEmbed object for this tweet.
@@ -179,9 +175,7 @@ end
 -- @param args      Extra arguments for the <tt>oembed</tt> API method.
 -- @return          An `oembed` object.
 function _M.tweet:oembed(args)
-    args = args or {}
-    args.id = self.id_str
-    return self._client:oembed(args)
+    return tweet_method(self, "oembed", args)
 end
 
 --- Get the next tweet in a conversation thread.
