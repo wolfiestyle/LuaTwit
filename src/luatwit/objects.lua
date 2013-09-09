@@ -74,6 +74,192 @@ end
 --- User object.
 _M.user = new_type{ status = "tweet", entities = "entities" }
 
+-- Calls an API method referencing this user.
+local function user_method(self, fn, args)
+    args = args or {}
+    args.user_id = self.id_str
+    local client = self._client
+    return client[fn](client, args)
+end
+
+--- Gets a list of tweets posted by this user.
+--
+-- @param args      Extra arguments for the <tt>get_user_timeline</tt> API method.
+-- @return          A `tweet_list` object.
+function _M.user:get_tweets(args)
+    return user_method(self, "get_user_timeline", args)
+end
+
+--- Sends a DM to this user.
+--
+-- @param args      Extra arguments for the <tt>send_dm</tt> API method.
+-- @return          A `dm` object.
+function _M.user:send_dm(args)
+    return user_method(self, "send_dm", args)
+end
+
+--- Gets the users this user follows.
+--
+-- @param args      Extra arguments for the <tt>get_following</tt> API method.
+-- @return          An `user_cursor` object.
+function _M.user:get_following(args)
+    return user_method(self, "get_following", args)
+end
+
+--- Gets the followers of this user.
+--
+-- @param args      Extra arguments for the <tt>get_followers</tt> API method.
+-- @return          An `user_cursor` object.
+function _M.user:get_followers(args)
+    return user_method(self, "get_followers", args)
+end
+
+--- Gets the users this user follows as a list of ids.
+--
+-- @param args      Extra arguments for the <tt>get_following_ids</tt> API method.
+-- @return          An `userid_cursor` object.
+function _M.user:get_following_ids(args)
+    return user_method(self, "get_following_ids", args)
+end
+
+--- Gets the followers of this user as a list of ids.
+--
+-- @param args      Extra arguments for the <tt>get_followers_ids</tt> API method.
+-- @return          An `userid_cursor` object.
+function _M.user:get_followers_ids(args)
+    return user_method(self, "get_followers_ids", args)
+end
+
+--- Follows this user.
+--
+-- @param args      Extra arguments for the <tt>follow</tt> API method.
+-- @return          An `user` object.
+function _M.user:follow(args)
+    return user_method(self, "follow", args)
+end
+
+--- Unfollows this user.
+--
+-- @param args      Extra arguments for the <tt>unfollow</tt> API method.
+-- @return          An `user` object.
+function _M.user:unfollow(args)
+    return user_method(self, "unfollow", args)
+end
+
+--- Sets the follow settings of this user.
+--
+-- @param args      Extra arguments for the <tt>set_follow_settings</tt> API method.
+-- @return          A `relationship_container` object.
+function _M.user:set_follow_settings(args)
+    return user_method(self, "set_follow_settings", args)
+end
+
+--- Blocks this user.
+--
+-- @param args      Extra arguments for the <tt>block_user</tt> API method.
+-- @return          An `user` object.
+function _M.user:block(args)
+    return user_method(self, "block_user", args)
+end
+
+--- Unblocks this user.
+--
+-- @param args      Extra arguments for the <tt>unblock_user</tt> API method.
+-- @return          An `user` object.
+function _M.user:unblock(args)
+    return user_method(self, "unblock_user", args)
+end
+
+--- Gets the profile banner of this user.
+--
+-- @param args      Extra arguments for the <tt>get_profile_banner</tt> API method.
+-- @return          A `profile_banner` object.
+function _M.user:get_profile_banner(args)
+    return user_method(self, "get_profile_banner", args)
+end
+
+--- Gets the favorites of this user.
+--
+-- @param args      Extra arguments for the <tt>get_favorites</tt> API method.
+-- @return          A `tweet_list` object.
+function _M.user:get_favorites(args)
+    return user_method(self, "get_favorites", args)
+end
+
+--- Gets all suscribed and own lists of this user.
+--
+-- @param args      Extra arguments for the <tt>get_all_lists</tt> API method.
+-- @return          An `userlist_list` object.
+function _M.user:get_all_lists(args)
+    return user_method(self, "get_all_lists", args)
+end
+
+--- Gets all suscribed lists of this user.
+--
+-- @param args      Extra arguments for the <tt>get_followed_lists</tt> API method.
+-- @return          An `userlist_cursor` object.
+function _M.user:get_followed_lists(args)
+    return user_method(self, "get_followed_lists", args)
+end
+
+--- Gets all own lists of this user.
+--
+-- @param args      Extra arguments for the <tt>get_own_lists</tt> API method.
+-- @return          An `userlist_cursor` object.
+function _M.user:get_own_lists(args)
+    return user_method(self, "get_own_lists", args)
+end
+
+--- Gets all lists following this user.
+--
+-- @param args      Extra arguments for the <tt>get_lists_following_user</tt> API method.
+-- @return          An `userlist_cursor` object.
+function _M.user:get_lists_following_this(args)
+    return user_method(self, "get_lists_following_user", args)
+end
+
+--- Checks if this user is following the specified list.
+--
+-- @param args      Extra arguments for the <tt>is_following_list</tt> API method.
+-- @return          An `user` object.
+function _M.user:is_following_list(args)
+    return user_method(self, "is_following_list", args)
+end
+
+--- Checks if this user is member of the specified list.
+--
+-- @param args      Extra arguments for the <tt>is_member_of_list</tt> API method.
+-- @return          An `user` object.
+function _M.user:is_member_of_list(args)
+    return user_method(self, "is_member_of_list", args)
+end
+
+--- Adds this user to the specified list.
+--
+-- @param args      Extra arguments for the <tt>add_list_member</tt> API method.
+-- @return          An `userlist` object.
+function _M.user:add_to_list(args)
+    return user_method(self, "add_list_member", args)
+end
+
+--- Reports this user as a spam account.
+--
+-- @param args      Extra arguments for the <tt>report_spam</tt> API method.
+-- @return          An `user` object.
+function _M.user:report_spam(args)
+    return user_method(self, "report_spam", args)
+end
+
+--- Gets the friendship status bewteen the authenticated user and this user.
+--
+-- @param args      Extra arguments for the <tt>get_friendship</tt> API method.
+-- @return          A `relationship_container` object.
+function _M.user:get_friendship(args)
+    args = args or {}
+    args.target_id = self.id_str
+    return self._client:get_friendship(args)
+end
+
 --- List of `user` objects.
 _M.user_list = new_type("user")
 
