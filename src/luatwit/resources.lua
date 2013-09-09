@@ -866,7 +866,8 @@ _M.find_trends_location = api{ GET, "trends/closest", {
 _M.report_spam = api{ POST, "users/report_spam", {
         screen_name = false,
         user_id = false,
-    }
+    },
+    "user"
 }
 
 --( Help )--
