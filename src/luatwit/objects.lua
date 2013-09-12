@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.objects
 -- @license MIT
-local assert, io_open, pairs, type =
-      assert, io.open, pairs, type
+local assert, io_open, pairs, table_concat, type =
+      assert, io.open, pairs, table.concat, type
 local util = require "luatwit.util"
 local json = require "cjson"
 
@@ -423,6 +423,16 @@ end
 
 --- List of user ids.
 _M.userid_array = new_type()
+
+--- Requests a list of users from the ids in this object.
+--
+-- @param args      Extra arguments for the <tt>lookup_users</tt> API method.
+-- @return          An `user_list` object.
+function _M.userid_array:get_users(args)
+    args = args or {}
+    args.user_id = table_concat(self, ",")
+    return self._client:lookup_users(args)
+end
 
 --- Cursor of user ids.
 _M.userid_cursor = new_type{ ids = "userid_array" }
