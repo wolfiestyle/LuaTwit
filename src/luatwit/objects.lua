@@ -505,6 +505,16 @@ end
 --- Saved search object.
 _M.saved_search = new_type()
 
+--- Performs a tweet search using the query on this saved search.
+--
+-- @param args      Extra arguments for the <tt>search_tweets</tt> API method.
+-- @return          A `tweet_search` object.
+function _M.saved_search:do_search(args)
+    args = args or {}
+    args.q = self.query
+    return self._client:search_tweets(args)
+end
+
 --- List of `saved_search` objects.
 _M.saved_search_list = new_type("saved_search")
 
