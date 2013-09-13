@@ -540,6 +540,16 @@ function _M.trend:__tostring()
     return self.name
 end
 
+--- Performs a tweet search using the query on this trending topic.
+--
+-- @param args      Extra arguments for the <tt>search_tweets</tt> API method.
+-- @return          A `tweet_search` object.
+function _M.trend:do_search(args)
+    args = args or {}
+    args.q = self.query
+    return self._client:search_tweets(args)
+end
+
 --- List of `trend` objects.
 _M.trend_list = new_type("trend")
 
@@ -551,6 +561,16 @@ _M.trends_container_list = new_type("trends_container")
 
 --- Location info for trends.
 _M.trend_location = new_type()
+
+--- Gets the trending topics for this location.
+--
+-- @param args      Extra arguments for the <tt>get_trends</tt> API method.
+-- @return          A `trends_container_list` object.
+function _M.trend_location:get_trends(args)
+    args = args or {}
+    args.id = self.woeid
+    return self._client:get_trends(args)
+end
 
 --- List of `trend_location` objects.
 _M.trend_location_list = new_type("trend_location")
