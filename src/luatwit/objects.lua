@@ -474,6 +474,14 @@ _M.profile_banner = new_type()
 --- Suggestion category.
 _M.suggestion_category = new_type{ users = "user_list" }
 
+--- Gets the user list of this suggestion category.
+--
+-- @return          An `user_list` object.
+function _M.suggestion_category:get_users()
+    if self.users then return self.users end
+    return self._client:get_suggestion_users{ slug = self.slug }
+end
+
 --- List of `suggestion_category` objects.
 _M.suggestion_category_list = new_type("suggestion_category")
 
