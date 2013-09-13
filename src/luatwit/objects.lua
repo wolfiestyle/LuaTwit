@@ -488,6 +488,110 @@ _M.suggestion_category_list = new_type("suggestion_category")
 --- User list.
 _M.userlist = new_type{ user = "user" }
 
+-- Calls an API method referencing this user list.
+local function userlist_method(self, fn, args)
+    args = args or {}
+    args.list_id = self.id_str
+    local client = self._client
+    return client[fn](client, args)
+end
+
+--- Gets the tweet timeline of this list.
+--
+-- @param args      Extra arguments for the <tt>get_list_timeline</tt> API method.
+-- @return          A `tweet_list` object.
+function _M.userlist:get_tweets(args)
+    return userlist_method(self, "get_list_timeline", args)
+end
+
+--- Gets the members of this list.
+--
+-- @param args      Extra arguments for the <tt>get_list_members</tt> API method.
+-- @return          An `user_cursor` object.
+function _M.userlist:get_members(args)
+    return userlist_method(self, "get_list_members", args)
+end
+
+--- Adds a member to this list.
+--
+-- @param args      Extra arguments for the <tt>add_list_member</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:add_member(args)
+    return userlist_method(self, "add_list_member", args)
+end
+
+--- Removes a member from this list.
+--
+-- @param args      Extra arguments for the <tt>remove_list_member</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:remove_member(args)
+    return userlist_method(self, "remove_list_member", args)
+end
+
+--- Adds multiple members to this list.
+--
+-- @param args      Extra arguments for the <tt>add_multiple_list_members</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:add_multiple_members(args)
+    return userlist_method(self, "add_multiple_list_members", args)
+end
+
+--- Removes multiple members from this list.
+--
+-- @param args      Extra arguments for the <tt>remove_multiple_list_members</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:remove_multiple_members(args)
+    return userlist_method(self, "remove_multiple_list_members", args)
+end
+
+--- Check if the specified user is a member of this list.
+--
+-- @param args      Extra arguments for the <tt>is_member_of_list</tt> API method.
+-- @return          An `user` object.
+function _M.userlist:has_member(args)
+    return userlist_method(self, "is_member_of_list", args)
+end
+
+--- Gets the followers of this list.
+--
+-- @param args      Extra arguments for the <tt>get_list_followers</tt> API method.
+-- @return          An `user_cursor` object.
+function _M.userlist:get_followers(args)
+    return userlist_method(self, "get_list_followers", args)
+end
+
+--- Follows this list.
+--
+-- @param args      Extra arguments for the <tt>follow_list</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:follow(args)
+    return userlist_method(self, "follow_list", args)
+end
+
+--- Unfollows this list.
+--
+-- @param args      Extra arguments for the <tt>unfollow_list</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:unfollow(args)
+    return userlist_method(self, "unfollow_list", args)
+end
+
+--- Updates this list.
+--
+-- @param args      Extra arguments for the <tt>update_list</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:update(args)
+    return userlist_method(self, "update_list", args)
+end
+
+--- Deletes this list.
+--
+-- @param args      Extra arguments for the <tt>delete_list</tt> API method.
+-- @return          An `userlist` object.
+function _M.userlist:delete(args)
+    return userlist_method(self, "delete_list", args)
+end
+
 --- List of `userlist` objects.
 _M.userlist_list = new_type("userlist")
 
