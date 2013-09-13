@@ -245,6 +245,54 @@
 	<td class="summary">Gets the user list of this suggestion category.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#userlist:get_tweets">userlist:get_tweets&nbsp;(args)</a></td>
+	<td class="summary">Gets the tweet timeline of this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:get_members">userlist:get_members&nbsp;(args)</a></td>
+	<td class="summary">Gets the members of this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:add_member">userlist:add_member&nbsp;(args)</a></td>
+	<td class="summary">Adds a member to this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:remove_member">userlist:remove_member&nbsp;(args)</a></td>
+	<td class="summary">Removes a member from this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:add_multiple_members">userlist:add_multiple_members&nbsp;(args)</a></td>
+	<td class="summary">Adds multiple members to this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:remove_multiple_members">userlist:remove_multiple_members&nbsp;(args)</a></td>
+	<td class="summary">Removes multiple members from this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:has_member">userlist:has_member&nbsp;(args)</a></td>
+	<td class="summary">Check if the specified user is a member of this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:get_followers">userlist:get_followers&nbsp;(args)</a></td>
+	<td class="summary">Gets the followers of this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:follow">userlist:follow&nbsp;(args)</a></td>
+	<td class="summary">Follows this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:unfollow">userlist:unfollow&nbsp;(args)</a></td>
+	<td class="summary">Unfollows this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:update">userlist:update&nbsp;(args)</a></td>
+	<td class="summary">Updates this list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist:delete">userlist:delete&nbsp;(args)</a></td>
+	<td class="summary">Deletes this list.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next&nbsp;()</a></td>
 	<td class="summary">Loads the next page of an user list cursored request.</td>
 	</tr>
@@ -1436,6 +1484,282 @@
     <ol>
 
         An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:get_tweets"></a>
+    <strong>userlist:get_tweets&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the tweet timeline of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_list_timeline</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:get_members"></a>
+    <strong>userlist:get_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the members of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_list_members</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:add_member"></a>
+    <strong>userlist:add_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Adds a member to this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>add_list_member</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:remove_member"></a>
+    <strong>userlist:remove_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Removes a member from this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>remove_list_member</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:add_multiple_members"></a>
+    <strong>userlist:add_multiple_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Adds multiple members to this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>add_multiple_list_members</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:remove_multiple_members"></a>
+    <strong>userlist:remove_multiple_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Removes multiple members from this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>remove_multiple_list_members</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:has_member"></a>
+    <strong>userlist:has_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Check if the specified user is a member of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>is_member_of_list</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:get_followers"></a>
+    <strong>userlist:get_followers&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the followers of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_list_followers</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:follow"></a>
+    <strong>userlist:follow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Follows this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>follow_list</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:unfollow"></a>
+    <strong>userlist:unfollow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Unfollows this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>unfollow_list</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:update"></a>
+    <strong>userlist:update&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Updates this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>update_list</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:delete"></a>
+    <strong>userlist:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Deletes this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>delete_list</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
     </ol>
 
 
