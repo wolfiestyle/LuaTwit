@@ -639,7 +639,7 @@ _M.unfollow_list = api{ POST, "lists/subscribers/destroy", {
     "userlist"
 }
 --- Adds multiple members to a list, by specifying a comma-separated list of member ids or screen names.
-_M.list_add_multiple_users = api{ POST, "lists/members/create_all", {
+_M.add_multiple_list_members = api{ POST, "lists/members/create_all", {
         list_id = false,
         slug = false,
         user_id = false,
