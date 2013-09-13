@@ -241,6 +241,10 @@
 	<td class="summary">Loads the previous page of an user id cursored request.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#suggestion_category:get_users">suggestion_category:get_users&nbsp;()</a></td>
+	<td class="summary">Gets the user list of this suggestion category.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next&nbsp;()</a></td>
 	<td class="summary">Loads the next page of an user list cursored request.</td>
 	</tr>
@@ -249,8 +253,20 @@
 	<td class="summary">Loads the previous page of an user list cursored request.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#saved_search:do_search">saved_search:do_search&nbsp;(args)</a></td>
+	<td class="summary">Performs a tweet search using the query on this saved search.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#trend:__tostring">trend:__tostring&nbsp;()</a></td>
 	<td class="summary">Returns the contents of a trending item.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend:do_search">trend:do_search&nbsp;(args)</a></td>
+	<td class="summary">Performs a tweet search using the query on this trending topic.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend_location:get_trends">trend_location:get_trends&nbsp;(args)</a></td>
+	<td class="summary">Gets the trending topics for this location.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#language:__tostring">language:__tostring&nbsp;()</a></td>
@@ -1409,6 +1425,24 @@
 
 </dd>
     <dt>
+    <a name = "suggestion_category:get_users"></a>
+    <strong>suggestion_category:get_users&nbsp;()</strong>
+    </dt>
+    <dd>
+    Gets the user list of this suggestion category.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "userlist_cursor:next"></a>
     <strong>userlist_cursor:next&nbsp;()</strong>
     </dt>
@@ -1445,6 +1479,29 @@
 
 </dd>
     <dt>
+    <a name = "saved_search:do_search"></a>
+    <strong>saved_search:do_search&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Performs a tweet search using the query on this saved search.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>search_tweets</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "trend:__tostring"></a>
     <strong>trend:__tostring&nbsp;()</strong>
     </dt>
@@ -1456,6 +1513,52 @@
     <ol>
 
         Trending topic string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "trend:do_search"></a>
+    <strong>trend:do_search&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Performs a tweet search using the query on this trending topic.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>search_tweets</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "trend_location:get_trends"></a>
+    <strong>trend_location:get_trends&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the trending topics for this location.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <tt>get_trends</tt> API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#trends_container_list">trends_container_list</a>  object.
     </ol>
 
 
