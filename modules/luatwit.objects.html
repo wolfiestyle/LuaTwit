@@ -34,6 +34,10 @@
 <ul>
 <li><a href="#Functions">Functions</a></li>
 <li><a href="#Fields">Fields</a></li>
+<li><a href="#Class_user">Class user </a></li>
+<li><a href="#Class_tweet">Class tweet </a></li>
+<li><a href="#Class_dm">Class dm </a></li>
+<li><a href="#Class_userlist">Class userlist </a></li>
 </ul>
 
 
@@ -84,6 +88,256 @@
 	<td class="name" nowrap><a href="#error:code">error:code&nbsp;()</a></td>
 	<td class="summary">Returns the numeric error code.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_cursor:next">user_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_cursor:prev">user_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the HTML result of the OEmbed response.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_array:get_users">userid_array:get_users&nbsp;(args)</a></td>
+	<td class="summary">Requests a list of users from the ids in this object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor:next">userid_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user id cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor:prev">userid_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user id cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#friendship:get_user">friendship:get_user&nbsp;(args)</a></td>
+	<td class="summary">Gets the user profile referenced by this object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#relationship:get_source_user">relationship:get_source_user&nbsp;(args)</a></td>
+	<td class="summary">Gets the user profile referenced by the source field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#relationship:get_target_user">relationship:get_target_user&nbsp;(args)</a></td>
+	<td class="summary">Gets the user profile referenced by the target field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#suggestion_category:get_users">suggestion_category:get_users&nbsp;()</a></td>
+	<td class="summary">Gets the user list of this suggestion category.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next&nbsp;()</a></td>
+	<td class="summary">Loads the next page of an user list cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor:prev">userlist_cursor:prev&nbsp;()</a></td>
+	<td class="summary">Loads the previous page of an user list cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#saved_search:do_search">saved_search:do_search&nbsp;(args)</a></td>
+	<td class="summary">Performs a tweet search using the query on this saved search.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#place_search:create_place">place_search:create_place&nbsp;(args)</a></td>
+	<td class="summary">Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a> .</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend:__tostring">trend:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the contents of a trending item.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend:do_search">trend:do_search&nbsp;(args)</a></td>
+	<td class="summary">Performs a tweet search using the query on this trending topic.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend_location:get_trends">trend_location:get_trends&nbsp;(args)</a></td>
+	<td class="summary">Gets the trending topics for this location.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#language:__tostring">language:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the language name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#privacy:__tostring">privacy:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the privacy policy content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tos:__tostring">tos:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the terms of service content.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rate_limit:get_for">rate_limit:get_for&nbsp;(obj)</a></td>
+	<td class="summary">Get the rate limit info of the specified object.</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#access_token">access_token</a></td>
+	<td class="summary">Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#headers">headers</a></td>
+	<td class="summary">HTTP Headers returned by the API calls.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#error">error</a></td>
+	<td class="summary">Error description returned by the API calls.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_list">user_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#Class_user">user</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_cursor">user_cursor</a></td>
+	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#Class_user">user</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet_list">tweet_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet_search">tweet_search</a></td>
+	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  search.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dm_list">dm_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#Class_dm">dm</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#entities">entities</a></td>
+	<td class="summary">Entities object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#oembed">oembed</a></td>
+	<td class="summary">OEmbed output.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_array">userid_array</a></td>
+	<td class="summary">List of user ids.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor">userid_cursor</a></td>
+	<td class="summary">Cursor of user ids.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#friendship">friendship</a></td>
+	<td class="summary">Follow relation between the authenticated user and another one.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#friendship_list">friendship_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#friendship">friendship</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#relationship">relationship</a></td>
+	<td class="summary">Follow relation between two users.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#relationship_container">relationship_container</a></td>
+	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a>  object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#account_settings">account_settings</a></td>
+	<td class="summary">Account settings info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#profile_banner">profile_banner</a></td>
+	<td class="summary">Profile banner.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#suggestion_category">suggestion_category</a></td>
+	<td class="summary">Suggestion category.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#suggestion_category_list">suggestion_category_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_list">userlist_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor">userlist_cursor</a></td>
+	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#saved_search">saved_search</a></td>
+	<td class="summary">Saved search object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#saved_search_list">saved_search_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#place">place</a></td>
+	<td class="summary">Place object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#place_list">place_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#place">place</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#place_search">place_search</a></td>
+	<td class="summary">Container of a <a href="../modules/luatwit.objects.html#place">place</a>  search with query info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#place_search_result">place_search_result</a></td>
+	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#place">place</a>  search.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend">trend</a></td>
+	<td class="summary">Trending item.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend_list">trend_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trends_container">trends_container</a></td>
+	<td class="summary">Trends container object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trends_container_list">trends_container_list</a></td>
+	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend_location">trend_location</a></td>
+	<td class="summary">Location info for trends.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#trend_location_list">trend_location_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service_config">service_config</a></td>
+	<td class="summary">Service config info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#language">language</a></td>
+	<td class="summary">Language description.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#language_list">language_list</a></td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#language">language</a>  objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#privacy">privacy</a></td>
+	<td class="summary">Privacy policy.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tos">tos</a></td>
+	<td class="summary">Terms of service.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rate_limit">rate_limit</a></td>
+	<td class="summary">Rate limit info.</td>
+	</tr>
+</table>
+<h2><a href="#Class_user">Class user </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#user:get_tweets">user:get_tweets&nbsp;(args)</a></td>
 	<td class="summary">Gets a list of tweets posted by this user.</td>
@@ -172,14 +426,9 @@
 	<td class="name" nowrap><a href="#user:get_friendship">user:get_friendship&nbsp;(args)</a></td>
 	<td class="summary">Gets the friendship status bewteen the authenticated user and this user.</td>
 	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user_cursor:next">user_cursor:next&nbsp;()</a></td>
-	<td class="summary">Loads the next page of an user cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user_cursor:prev">user_cursor:prev&nbsp;()</a></td>
-	<td class="summary">Loads the previous page of an user cursored request.</td>
-	</tr>
+</table>
+<h2><a href="#Class_tweet">Class tweet </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#tweet:reply">tweet:reply&nbsp;(args)</a></td>
 	<td class="summary">Sends a tweet as a reply to this tweet.</td>
@@ -216,6 +465,9 @@
 	<td class="name" nowrap><a href="#tweet:get_next_in_thread">tweet:get_next_in_thread&nbsp;(args)</a></td>
 	<td class="summary">Get the next tweet in a conversation thread.</td>
 	</tr>
+</table>
+<h2><a href="#Class_dm">Class dm </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#dm:reply">dm:reply&nbsp;(args)</a></td>
 	<td class="summary">Sends a reply to this DM.</td>
@@ -224,26 +476,9 @@
 	<td class="name" nowrap><a href="#dm:delete">dm:delete&nbsp;(args)</a></td>
 	<td class="summary">Deletes this DM.</td>
 	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#oembed:__tostring">oembed:__tostring&nbsp;()</a></td>
-	<td class="summary">Returns the HTML result of the OEmbed response.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_array:get_users">userid_array:get_users&nbsp;(args)</a></td>
-	<td class="summary">Requests a list of users from the ids in this object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_cursor:next">userid_cursor:next&nbsp;()</a></td>
-	<td class="summary">Loads the next page of an user id cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_cursor:prev">userid_cursor:prev&nbsp;()</a></td>
-	<td class="summary">Loads the previous page of an user id cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#suggestion_category:get_users">suggestion_category:get_users&nbsp;()</a></td>
-	<td class="summary">Gets the user list of this suggestion category.</td>
-	</tr>
+</table>
+<h2><a href="#Class_userlist">Class userlist </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#userlist:get_tweets">userlist:get_tweets&nbsp;(args)</a></td>
 	<td class="summary">Gets the tweet timeline of this list.</td>
@@ -291,225 +526,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#userlist:delete">userlist:delete&nbsp;(args)</a></td>
 	<td class="summary">Deletes this list.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next&nbsp;()</a></td>
-	<td class="summary">Loads the next page of an user list cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_cursor:prev">userlist_cursor:prev&nbsp;()</a></td>
-	<td class="summary">Loads the previous page of an user list cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#saved_search:do_search">saved_search:do_search&nbsp;(args)</a></td>
-	<td class="summary">Performs a tweet search using the query on this saved search.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend:__tostring">trend:__tostring&nbsp;()</a></td>
-	<td class="summary">Returns the contents of a trending item.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend:do_search">trend:do_search&nbsp;(args)</a></td>
-	<td class="summary">Performs a tweet search using the query on this trending topic.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend_location:get_trends">trend_location:get_trends&nbsp;(args)</a></td>
-	<td class="summary">Gets the trending topics for this location.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#language:__tostring">language:__tostring&nbsp;()</a></td>
-	<td class="summary">Returns the language name.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#privacy:__tostring">privacy:__tostring&nbsp;()</a></td>
-	<td class="summary">Returns the privacy policy content.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#tos:__tostring">tos:__tostring&nbsp;()</a></td>
-	<td class="summary">Returns the terms of service content.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#rate_limit:get_for">rate_limit:get_for&nbsp;(obj)</a></td>
-	<td class="summary">Get the rate limit info of the specified object.</td>
-	</tr>
-</table>
-<h2><a href="#Fields">Fields</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#access_token">access_token</a></td>
-	<td class="summary">Access token returned by <a href="../modules/luatwit.html#api:confirm_login">luatwit.api:confirm_login</a> .</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#headers">headers</a></td>
-	<td class="summary">HTTP Headers returned by the API calls.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#error">error</a></td>
-	<td class="summary">Error description returned by the API calls.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user">user</a></td>
-	<td class="summary">User object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user_list">user_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#user">user</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user_cursor">user_cursor</a></td>
-	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#user">user</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#tweet">tweet</a></td>
-	<td class="summary">Tweet object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#tweet_list">tweet_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#tweet">tweet</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#tweet_search">tweet_search</a></td>
-	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a>  search.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#dm">dm</a></td>
-	<td class="summary">Direct message object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#dm_list">dm_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#dm">dm</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#entities">entities</a></td>
-	<td class="summary">Entities object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#oembed">oembed</a></td>
-	<td class="summary">OEmbed output.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_array">userid_array</a></td>
-	<td class="summary">List of user ids.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_cursor">userid_cursor</a></td>
-	<td class="summary">Cursor of user ids.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#friendship">friendship</a></td>
-	<td class="summary">Follow relation between the authenticated user and another one.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#friendship_list">friendship_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#friendship">friendship</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#relationship">relationship</a></td>
-	<td class="summary">Follow relation between two users.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#relationship_container">relationship_container</a></td>
-	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a>  object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#account_settings">account_settings</a></td>
-	<td class="summary">Account settings info.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#profile_banner">profile_banner</a></td>
-	<td class="summary">Profile banner.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#suggestion_category">suggestion_category</a></td>
-	<td class="summary">Suggestion category.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#suggestion_category_list">suggestion_category_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist">userlist</a></td>
-	<td class="summary">User list.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_list">userlist_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_cursor">userlist_cursor</a></td>
-	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#saved_search">saved_search</a></td>
-	<td class="summary">Saved search object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#saved_search_list">saved_search_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#place">place</a></td>
-	<td class="summary">Place object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#place_list">place_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#place">place</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#place_search">place_search</a></td>
-	<td class="summary">Container of a <a href="../modules/luatwit.objects.html#place">place</a>  search with query info.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#place_search_result">place_search_result</a></td>
-	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#place">place</a>  search.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend">trend</a></td>
-	<td class="summary">Trending item.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend_list">trend_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trends_container">trends_container</a></td>
-	<td class="summary">Trends container object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trends_container_list">trends_container_list</a></td>
-	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend_location">trend_location</a></td>
-	<td class="summary">Location info for trends.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#trend_location_list">trend_location_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#service_config">service_config</a></td>
-	<td class="summary">Service config info.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#language">language</a></td>
-	<td class="summary">Language description.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#language_list">language_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#language">language</a>  objects.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#privacy">privacy</a></td>
-	<td class="summary">Privacy policy.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#tos">tos</a></td>
-	<td class="summary">Terms of service.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#rate_limit">rate_limit</a></td>
-	<td class="summary">Rate limit info.</td>
 	</tr>
 </table>
 
@@ -599,512 +615,6 @@
 
 </dd>
     <dt>
-    <a name = "user:get_tweets"></a>
-    <strong>user:get_tweets&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets a list of tweets posted by this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_user_timeline</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:send_dm"></a>
-    <strong>user:send_dm&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Sends a DM to this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>send_dm</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_following"></a>
-    <strong>user:get_following&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the users this user follows.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_following</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_followers"></a>
-    <strong>user:get_followers&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the followers of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_followers</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_following_ids"></a>
-    <strong>user:get_following_ids&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the users this user follows as a list of ids.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_following_ids</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_followers_ids"></a>
-    <strong>user:get_followers_ids&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the followers of this user as a list of ids.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_followers_ids</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:follow"></a>
-    <strong>user:follow&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Follows this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>follow</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:unfollow"></a>
-    <strong>user:unfollow&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Unfollows this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>unfollow</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:set_follow_settings"></a>
-    <strong>user:set_follow_settings&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Sets the follow settings of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>set_follow_settings</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:block"></a>
-    <strong>user:block&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Blocks this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>block_user</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:unblock"></a>
-    <strong>user:unblock&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Unblocks this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>unblock_user</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_profile_banner"></a>
-    <strong>user:get_profile_banner&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the profile banner of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_profile_banner</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#profile_banner">profile_banner</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_favorites"></a>
-    <strong>user:get_favorites&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the favorites of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_favorites</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_all_lists"></a>
-    <strong>user:get_all_lists&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets all suscribed and own lists of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_all_lists</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist_list">userlist_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_followed_lists"></a>
-    <strong>user:get_followed_lists&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets all suscribed lists of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_followed_lists</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_own_lists"></a>
-    <strong>user:get_own_lists&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets all own lists of this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_own_lists</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_lists_following_this"></a>
-    <strong>user:get_lists_following_this&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets all lists following this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_lists_following_user</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:is_following_list"></a>
-    <strong>user:is_following_list&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Checks if this user is following the specified list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>is_following_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:is_member_of_list"></a>
-    <strong>user:is_member_of_list&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Checks if this user is member of the specified list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>is_member_of_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:add_to_list"></a>
-    <strong>user:add_to_list&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Adds this user to the specified list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>add_list_member</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:report_spam"></a>
-    <strong>user:report_spam&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Reports this user as a spam account.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>report_spam</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user:get_friendship"></a>
-    <strong>user:get_friendship&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the friendship status bewteen the authenticated user and this user.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_friendship</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "user_cursor:next"></a>
     <strong>user_cursor:next&nbsp;()</strong>
     </dt>
@@ -1141,261 +651,6 @@
 
 </dd>
     <dt>
-    <a name = "tweet:reply"></a>
-    <strong>tweet:reply&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Sends a tweet as a reply to this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>tweet</tt> API method.
-                  The reply must text is passed in the <tt>status</tt> field.
-                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:retweet"></a>
-    <strong>tweet:retweet&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Retweets this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>retweet</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:delete"></a>
-    <strong>tweet:delete&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Delete this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>delete_tweet</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:set_favorite"></a>
-    <strong>tweet:set_favorite&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Add this tweet to favorites.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>set_favorite</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:unset_favorite"></a>
-    <strong>tweet:unset_favorite&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Remove this tweet from favorites.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>unset_favorite</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:get_retweets"></a>
-    <strong>tweet:get_retweets&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Get a list of retweets of this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_retweets</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:get_retweeter_ids"></a>
-    <strong>tweet:get_retweeter_ids&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Get a list of user ids who retweeted this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_retweeter_ids</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:oembed"></a>
-    <strong>tweet:oembed&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Generates an OEmbed object for this tweet.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>oembed</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#oembed">oembed</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet:get_next_in_thread"></a>
-    <strong>tweet:get_next_in_thread&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Get the next tweet in a conversation thread.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_tweet</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object, or <tt>nil</tt> if this tweet is the first in the reply chain.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "dm:reply"></a>
-    <strong>dm:reply&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Sends a reply to this DM.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>send_dm</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "dm:delete"></a>
-    <strong>dm:delete&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Deletes this DM.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>delete_dm</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "oembed:__tostring"></a>
     <strong>oembed:__tostring&nbsp;()</strong>
     </dt>
@@ -1423,7 +678,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <tt>lookup_users</tt> API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#lookup_users">resources.lookup_users</a>  API method.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -1473,6 +728,75 @@
 
 </dd>
     <dt>
+    <a name = "friendship:get_user"></a>
+    <strong>friendship:get_user&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the user profile referenced by this object.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "relationship:get_source_user"></a>
+    <strong>relationship:get_source_user&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the user profile referenced by the source field.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "relationship:get_target_user"></a>
+    <strong>relationship:get_target_user&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the user profile referenced by the target field.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "suggestion_category:get_users"></a>
     <strong>suggestion_category:get_users&nbsp;()</strong>
     </dt>
@@ -1484,282 +808,6 @@
     <ol>
 
         An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:get_tweets"></a>
-    <strong>userlist:get_tweets&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the tweet timeline of this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_list_timeline</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:get_members"></a>
-    <strong>userlist:get_members&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the members of this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_list_members</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:add_member"></a>
-    <strong>userlist:add_member&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Adds a member to this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>add_list_member</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:remove_member"></a>
-    <strong>userlist:remove_member&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Removes a member from this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>remove_list_member</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:add_multiple_members"></a>
-    <strong>userlist:add_multiple_members&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Adds multiple members to this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>add_multiple_list_members</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:remove_multiple_members"></a>
-    <strong>userlist:remove_multiple_members&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Removes multiple members from this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>remove_multiple_list_members</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:has_member"></a>
-    <strong>userlist:has_member&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Check if the specified user is a member of this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>is_member_of_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:get_followers"></a>
-    <strong>userlist:get_followers&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Gets the followers of this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_list_followers</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:follow"></a>
-    <strong>userlist:follow&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Follows this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>follow_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:unfollow"></a>
-    <strong>userlist:unfollow&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Unfollows this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>unfollow_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:update"></a>
-    <strong>userlist:update&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Updates this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>update_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist:delete"></a>
-    <strong>userlist:delete&nbsp;(args)</strong>
-    </dt>
-    <dd>
-    Deletes this list.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">args</span>
-              Extra arguments for the <tt>delete_list</tt> API method.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
     </ol>
 
 
@@ -1812,13 +860,36 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <tt>search_tweets</tt> API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a>  API method.</li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
         A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "place_search:create_place"></a>
+    <strong>place_search:create_place&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a> .
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#create_place">resources.create_place</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#place">place</a>  object.
     </ol>
 
 
@@ -1853,7 +924,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <tt>search_tweets</tt> API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a>  API method.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -1876,7 +947,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <tt>get_trends</tt> API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_trends">resources.get_trends</a>  API method.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2010,24 +1081,11 @@
 
 </dd>
     <dt>
-    <a name = "user"></a>
-    <strong>user</strong>
-    </dt>
-    <dd>
-    User object.
-
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "user_list"></a>
     <strong>user_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#user">user</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#Class_user">user</a>  objects.
 
 
 
@@ -2040,20 +1098,7 @@
     <strong>user_cursor</strong>
     </dt>
     <dd>
-    Cursor of <a href="../modules/luatwit.objects.html#user">user</a>  objects.
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "tweet"></a>
-    <strong>tweet</strong>
-    </dt>
-    <dd>
-    Tweet object.
+    Cursor of <a href="../modules/luatwit.objects.html#Class_user">user</a>  objects.
 
 
 
@@ -2066,7 +1111,7 @@
     <strong>tweet_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#tweet">tweet</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  objects.
 
 
 
@@ -2079,20 +1124,7 @@
     <strong>tweet_search</strong>
     </dt>
     <dd>
-    Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a>  search.
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "dm"></a>
-    <strong>dm</strong>
-    </dt>
-    <dd>
-    Direct message object.
+    Results of a <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  search.
 
 
 
@@ -2105,7 +1137,7 @@
     <strong>dm_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#dm">dm</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#Class_dm">dm</a>  objects.
 
 
 
@@ -2270,24 +1302,11 @@
 
 </dd>
     <dt>
-    <a name = "userlist"></a>
-    <strong>userlist</strong>
-    </dt>
-    <dd>
-    User list.
-
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "userlist_list"></a>
     <strong>userlist_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  objects.
 
 
 
@@ -2300,7 +1319,7 @@
     <strong>userlist_cursor</strong>
     </dt>
     <dd>
-    Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.
+    Cursor of <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  objects.
 
 
 
@@ -2537,6 +1556,1059 @@
     Rate limit info.
 
 
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_user"></a>Class user </h2>
+        User object.
+    <dl class="function">
+    <dt>
+    <a name = "user:get_tweets"></a>
+    <strong>user:get_tweets&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets a list of tweets posted by this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user_timeline">resources.get_user_timeline</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:send_dm"></a>
+    <strong>user:send_dm&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sends a DM to this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_dm">dm</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_following"></a>
+    <strong>user:get_following&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the users this user follows.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following">resources.get_following</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_followers"></a>
+    <strong>user:get_followers&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the followers of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers">resources.get_followers</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_following_ids"></a>
+    <strong>user:get_following_ids&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the users this user follows as a list of ids.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following_ids">resources.get_following_ids</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_followers_ids"></a>
+    <strong>user:get_followers_ids&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the followers of this user as a list of ids.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers_ids">resources.get_followers_ids</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:follow"></a>
+    <strong>user:follow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Follows this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#follow">resources.follow</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:unfollow"></a>
+    <strong>user:unfollow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Unfollows this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow">resources.unfollow</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:set_follow_settings"></a>
+    <strong>user:set_follow_settings&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sets the follow settings of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#set_follow_settings">resources.set_follow_settings</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:block"></a>
+    <strong>user:block&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Blocks this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#block_user">resources.block_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:unblock"></a>
+    <strong>user:unblock&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Unblocks this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unblock_user">resources.unblock_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_profile_banner"></a>
+    <strong>user:get_profile_banner&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the profile banner of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_profile_banner">resources.get_profile_banner</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#profile_banner">profile_banner</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_favorites"></a>
+    <strong>user:get_favorites&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the favorites of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_favorites">resources.get_favorites</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_all_lists"></a>
+    <strong>user:get_all_lists&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets all suscribed and own lists of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_all_lists">resources.get_all_lists</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist_list">userlist_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_followed_lists"></a>
+    <strong>user:get_followed_lists&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets all suscribed lists of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followed_lists">resources.get_followed_lists</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_own_lists"></a>
+    <strong>user:get_own_lists&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets all own lists of this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_own_lists">resources.get_own_lists</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_lists_following_this"></a>
+    <strong>user:get_lists_following_this&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets all lists following this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_lists_following_user">resources.get_lists_following_user</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:is_following_list"></a>
+    <strong>user:is_following_list&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Checks if this user is following the specified list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_following_list">resources.is_following_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:is_member_of_list"></a>
+    <strong>user:is_member_of_list&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Checks if this user is member of the specified list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:add_to_list"></a>
+    <strong>user:add_to_list&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Adds this user to the specified list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:report_spam"></a>
+    <strong>user:report_spam&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Reports this user as a spam account.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#report_spam">resources.report_spam</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user:get_friendship"></a>
+    <strong>user:get_friendship&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the friendship status bewteen the authenticated user and this user.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_friendship">resources.get_friendship</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_tweet"></a>Class tweet </h2>
+        Tweet object.
+    <dl class="function">
+    <dt>
+    <a name = "tweet:reply"></a>
+    <strong>tweet:reply&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sends a tweet as a reply to this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#tweet">resources.tweet</a>  API method.
+                  The reply must text is passed in the <tt>status</tt> field.
+                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:retweet"></a>
+    <strong>tweet:retweet&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Retweets this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#retweet">resources.retweet</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:delete"></a>
+    <strong>tweet:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Delete this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_tweet">resources.delete_tweet</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:set_favorite"></a>
+    <strong>tweet:set_favorite&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Add this tweet to favorites.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#set_favorite">resources.set_favorite</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:unset_favorite"></a>
+    <strong>tweet:unset_favorite&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Remove this tweet from favorites.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unset_favorite">resources.unset_favorite</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_retweets"></a>
+    <strong>tweet:get_retweets&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get a list of retweets of this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweets">resources.get_retweets</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_retweeter_ids"></a>
+    <strong>tweet:get_retweeter_ids&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get a list of user ids who retweeted this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweeter_ids">resources.get_retweeter_ids</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:oembed"></a>
+    <strong>tweet:oembed&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Generates an OEmbed object for this tweet.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#oembed">resources.oembed</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#oembed">oembed</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet:get_next_in_thread"></a>
+    <strong>tweet:get_next_in_thread&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Get the next tweet in a conversation thread.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_tweet">resources.get_tweet</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_tweet">tweet</a>  object, or <tt>nil</tt> if this tweet is the first in the reply chain.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_dm"></a>Class dm </h2>
+        Direct message object.
+    <dl class="function">
+    <dt>
+    <a name = "dm:reply"></a>
+    <strong>dm:reply&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Sends a reply to this DM.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_dm">dm</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dm:delete"></a>
+    <strong>dm:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Deletes this DM.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_dm">resources.delete_dm</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#Class_dm">dm</a>  object.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_userlist"></a>Class userlist </h2>
+        User list.
+    <dl class="function">
+    <dt>
+    <a name = "userlist:get_tweets"></a>
+    <strong>userlist:get_tweets&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the tweet timeline of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_timeline">resources.get_list_timeline</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:get_members"></a>
+    <strong>userlist:get_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the members of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_members">resources.get_list_members</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:add_member"></a>
+    <strong>userlist:add_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Adds a member to this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:remove_member"></a>
+    <strong>userlist:remove_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Removes a member from this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_list_member">resources.remove_list_member</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:add_multiple_members"></a>
+    <strong>userlist:add_multiple_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Adds multiple members to this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_multiple_list_members">resources.add_multiple_list_members</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:remove_multiple_members"></a>
+    <strong>userlist:remove_multiple_members&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Removes multiple members from this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_multiple_list_members">resources.remove_multiple_list_members</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:has_member"></a>
+    <strong>userlist:has_member&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Check if the specified user is a member of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_user">user</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:get_followers"></a>
+    <strong>userlist:get_followers&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Gets the followers of this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_followers">resources.get_list_followers</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:follow"></a>
+    <strong>userlist:follow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Follows this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#follow_list">resources.follow_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:unfollow"></a>
+    <strong>userlist:unfollow&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Unfollows this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow_list">resources.unfollow_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:update"></a>
+    <strong>userlist:update&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Updates this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#update_list">resources.update_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist:delete"></a>
+    <strong>userlist:delete&nbsp;(args)</strong>
+    </dt>
+    <dd>
+    Deletes this list.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_list">resources.delete_list</a>  API method.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object.
+    </ol>
 
 
 
