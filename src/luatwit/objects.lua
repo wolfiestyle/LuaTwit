@@ -481,6 +481,26 @@ _M.friendship_list = new_type("friendship")
 --- Follow relation between two users.
 _M.relationship = new_type()
 
+--- Gets the user profile referenced by the source field.
+--
+-- @param args      Extra arguments for the `resources.get_user` API method.
+-- @return          An `user` object.
+function _M.relationship:get_source_user(args)
+    args = args or {}
+    args.user_id = self.source.id_str
+    return self._client:get_user(args)
+end
+
+--- Gets the user profile referenced by the target field.
+--
+-- @param args      Extra arguments for the `resources.get_user` API method.
+-- @return          An `user` object.
+function _M.relationship:get_target_user(args)
+    args = args or {}
+    args.user_id = self.target.id_str
+    return self._client:get_user(args)
+end
+
 --- Contains a single `relationship` object.
 _M.relationship_container = new_type{ relationship = "relationship" }
 
