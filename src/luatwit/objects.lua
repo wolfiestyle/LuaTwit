@@ -465,6 +465,16 @@ end
 --- Follow relation between the authenticated user and another one.
 _M.friendship = new_type()
 
+--- Gets the user profile referenced by this object.
+--
+-- @param args      Extra arguments for the `resources.get_user` API method.
+-- @return          An `user` object.
+function _M.friendship:get_user(args)
+    args = args or {}
+    args.user_id = self.id_str
+    return self._client:get_user(args)
+end
+
 --- List of `friendship` objects.
 _M.friendship_list = new_type("friendship")
 
