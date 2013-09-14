@@ -681,6 +681,16 @@ _M.place_list = new_type("place")
 --- Container of a `place` search with query info.
 _M.place_search = new_type{ result = "place_search_result" }
 
+--- Creates a new place using the token returned by `resources.get_similar_places`.
+--
+-- @param args      Extra arguments for the `resources.create_place` API method.
+-- @return          A `place` object.
+function _M.place_search:create_place(args)
+    args = args or {}
+    args.token = self.result.token
+    return self._client:create_place(args)
+end
+
 --- Results of a `place` search.
 _M.place_search_result = new_type{ places = "place_list" }
 

@@ -834,7 +834,8 @@ _M.create_place = api{ POST, "geo/place", {
         long = true,
         --attribute = false,    -- misc attribute:<key> values
         --callback = false,     -- generates JSONP, only for web apps
-    }
+    },
+    "place"
 }
 
 --( Trends )--
