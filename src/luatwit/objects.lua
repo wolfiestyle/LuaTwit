@@ -72,6 +72,7 @@ function _M.error:code()
 end
 
 --- User object.
+-- @type user
 _M.user = new_type{ status = "tweet", entities = "entities" }
 
 -- Calls an API method referencing this user.
@@ -84,7 +85,7 @@ end
 
 --- Gets a list of tweets posted by this user.
 --
--- @param args      Extra arguments for the <tt>get_user_timeline</tt> API method.
+-- @param args      Extra arguments for the `resources.get_user_timeline` API method.
 -- @return          A `tweet_list` object.
 function _M.user:get_tweets(args)
     return user_method(self, "get_user_timeline", args)
@@ -92,7 +93,7 @@ end
 
 --- Sends a DM to this user.
 --
--- @param args      Extra arguments for the <tt>send_dm</tt> API method.
+-- @param args      Extra arguments for the `resources.send_dm` API method.
 -- @return          A `dm` object.
 function _M.user:send_dm(args)
     return user_method(self, "send_dm", args)
@@ -100,7 +101,7 @@ end
 
 --- Gets the users this user follows.
 --
--- @param args      Extra arguments for the <tt>get_following</tt> API method.
+-- @param args      Extra arguments for the `resources.get_following` API method.
 -- @return          An `user_cursor` object.
 function _M.user:get_following(args)
     return user_method(self, "get_following", args)
@@ -108,7 +109,7 @@ end
 
 --- Gets the followers of this user.
 --
--- @param args      Extra arguments for the <tt>get_followers</tt> API method.
+-- @param args      Extra arguments for the `resources.get_followers` API method.
 -- @return          An `user_cursor` object.
 function _M.user:get_followers(args)
     return user_method(self, "get_followers", args)
@@ -116,7 +117,7 @@ end
 
 --- Gets the users this user follows as a list of ids.
 --
--- @param args      Extra arguments for the <tt>get_following_ids</tt> API method.
+-- @param args      Extra arguments for the `resources.get_following_ids` API method.
 -- @return          An `userid_cursor` object.
 function _M.user:get_following_ids(args)
     return user_method(self, "get_following_ids", args)
@@ -124,7 +125,7 @@ end
 
 --- Gets the followers of this user as a list of ids.
 --
--- @param args      Extra arguments for the <tt>get_followers_ids</tt> API method.
+-- @param args      Extra arguments for the `resources.get_followers_ids` API method.
 -- @return          An `userid_cursor` object.
 function _M.user:get_followers_ids(args)
     return user_method(self, "get_followers_ids", args)
@@ -132,7 +133,7 @@ end
 
 --- Follows this user.
 --
--- @param args      Extra arguments for the <tt>follow</tt> API method.
+-- @param args      Extra arguments for the `resources.follow` API method.
 -- @return          An `user` object.
 function _M.user:follow(args)
     return user_method(self, "follow", args)
@@ -140,7 +141,7 @@ end
 
 --- Unfollows this user.
 --
--- @param args      Extra arguments for the <tt>unfollow</tt> API method.
+-- @param args      Extra arguments for the `resources.unfollow` API method.
 -- @return          An `user` object.
 function _M.user:unfollow(args)
     return user_method(self, "unfollow", args)
@@ -148,7 +149,7 @@ end
 
 --- Sets the follow settings of this user.
 --
--- @param args      Extra arguments for the <tt>set_follow_settings</tt> API method.
+-- @param args      Extra arguments for the `resources.set_follow_settings` API method.
 -- @return          A `relationship_container` object.
 function _M.user:set_follow_settings(args)
     return user_method(self, "set_follow_settings", args)
@@ -156,7 +157,7 @@ end
 
 --- Blocks this user.
 --
--- @param args      Extra arguments for the <tt>block_user</tt> API method.
+-- @param args      Extra arguments for the `resources.block_user` API method.
 -- @return          An `user` object.
 function _M.user:block(args)
     return user_method(self, "block_user", args)
@@ -164,7 +165,7 @@ end
 
 --- Unblocks this user.
 --
--- @param args      Extra arguments for the <tt>unblock_user</tt> API method.
+-- @param args      Extra arguments for the `resources.unblock_user` API method.
 -- @return          An `user` object.
 function _M.user:unblock(args)
     return user_method(self, "unblock_user", args)
@@ -172,7 +173,7 @@ end
 
 --- Gets the profile banner of this user.
 --
--- @param args      Extra arguments for the <tt>get_profile_banner</tt> API method.
+-- @param args      Extra arguments for the `resources.get_profile_banner` API method.
 -- @return          A `profile_banner` object.
 function _M.user:get_profile_banner(args)
     return user_method(self, "get_profile_banner", args)
@@ -180,7 +181,7 @@ end
 
 --- Gets the favorites of this user.
 --
--- @param args      Extra arguments for the <tt>get_favorites</tt> API method.
+-- @param args      Extra arguments for the `resources.get_favorites` API method.
 -- @return          A `tweet_list` object.
 function _M.user:get_favorites(args)
     return user_method(self, "get_favorites", args)
@@ -188,7 +189,7 @@ end
 
 --- Gets all suscribed and own lists of this user.
 --
--- @param args      Extra arguments for the <tt>get_all_lists</tt> API method.
+-- @param args      Extra arguments for the `resources.get_all_lists` API method.
 -- @return          An `userlist_list` object.
 function _M.user:get_all_lists(args)
     return user_method(self, "get_all_lists", args)
@@ -196,7 +197,7 @@ end
 
 --- Gets all suscribed lists of this user.
 --
--- @param args      Extra arguments for the <tt>get_followed_lists</tt> API method.
+-- @param args      Extra arguments for the `resources.get_followed_lists` API method.
 -- @return          An `userlist_cursor` object.
 function _M.user:get_followed_lists(args)
     return user_method(self, "get_followed_lists", args)
@@ -204,7 +205,7 @@ end
 
 --- Gets all own lists of this user.
 --
--- @param args      Extra arguments for the <tt>get_own_lists</tt> API method.
+-- @param args      Extra arguments for the `resources.get_own_lists` API method.
 -- @return          An `userlist_cursor` object.
 function _M.user:get_own_lists(args)
     return user_method(self, "get_own_lists", args)
@@ -212,7 +213,7 @@ end
 
 --- Gets all lists following this user.
 --
--- @param args      Extra arguments for the <tt>get_lists_following_user</tt> API method.
+-- @param args      Extra arguments for the `resources.get_lists_following_user` API method.
 -- @return          An `userlist_cursor` object.
 function _M.user:get_lists_following_this(args)
     return user_method(self, "get_lists_following_user", args)
@@ -220,7 +221,7 @@ end
 
 --- Checks if this user is following the specified list.
 --
--- @param args      Extra arguments for the <tt>is_following_list</tt> API method.
+-- @param args      Extra arguments for the `resources.is_following_list` API method.
 -- @return          An `user` object.
 function _M.user:is_following_list(args)
     return user_method(self, "is_following_list", args)
@@ -228,7 +229,7 @@ end
 
 --- Checks if this user is member of the specified list.
 --
--- @param args      Extra arguments for the <tt>is_member_of_list</tt> API method.
+-- @param args      Extra arguments for the `resources.is_member_of_list` API method.
 -- @return          An `user` object.
 function _M.user:is_member_of_list(args)
     return user_method(self, "is_member_of_list", args)
@@ -236,7 +237,7 @@ end
 
 --- Adds this user to the specified list.
 --
--- @param args      Extra arguments for the <tt>add_list_member</tt> API method.
+-- @param args      Extra arguments for the `resources.add_list_member` API method.
 -- @return          An `userlist` object.
 function _M.user:add_to_list(args)
     return user_method(self, "add_list_member", args)
@@ -244,7 +245,7 @@ end
 
 --- Reports this user as a spam account.
 --
--- @param args      Extra arguments for the <tt>report_spam</tt> API method.
+-- @param args      Extra arguments for the `resources.report_spam` API method.
 -- @return          An `user` object.
 function _M.user:report_spam(args)
     return user_method(self, "report_spam", args)
@@ -252,13 +253,15 @@ end
 
 --- Gets the friendship status bewteen the authenticated user and this user.
 --
--- @param args      Extra arguments for the <tt>get_friendship</tt> API method.
+-- @param args      Extra arguments for the `resources.get_friendship` API method.
 -- @return          A `relationship_container` object.
 function _M.user:get_friendship(args)
     args = args or {}
     args.target_id = self.id_str
     return self._client:get_friendship(args)
 end
+
+--- @section end
 
 --- List of `user` objects.
 _M.user_list = new_type("user")
@@ -283,6 +286,7 @@ function _M.user_cursor:prev()
 end
 
 --- Tweet object.
+-- @type tweet
 _M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "tweet" }
 
 -- Calls an API method referencing this tweet.
@@ -295,7 +299,7 @@ end
 
 --- Sends a tweet as a reply to this tweet.
 --
--- @param args      Extra arguments for the <tt>tweet</tt> API method.
+-- @param args      Extra arguments for the `resources.tweet` API method.
 --                  The reply must text is passed in the <tt>status</tt> field.
 --                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.
 -- @return          A `tweet` object.
@@ -310,7 +314,7 @@ end
 
 --- Retweets this tweet.
 --
--- @param args      Extra arguments for the <tt>retweet</tt> API method.
+-- @param args      Extra arguments for the `resources.retweet` API method.
 -- @return          A `tweet` object.
 function _M.tweet:retweet(args)
     return tweet_method(self, "retweet", args)
@@ -318,7 +322,7 @@ end
 
 --- Delete this tweet.
 --
--- @param args      Extra arguments for the <tt>delete_tweet</tt> API method.
+-- @param args      Extra arguments for the `resources.delete_tweet` API method.
 -- @return          A `tweet` object.
 function _M.tweet:delete(args)
     return tweet_method(self, "delete_tweet", args)
@@ -326,7 +330,7 @@ end
 
 --- Add this tweet to favorites.
 --
--- @param args      Extra arguments for the <tt>set_favorite</tt> API method.
+-- @param args      Extra arguments for the `resources.set_favorite` API method.
 -- @return          A `tweet` object.
 function _M.tweet:set_favorite(args)
     return tweet_method(self, "set_favorite", args)
@@ -334,7 +338,7 @@ end
 
 --- Remove this tweet from favorites.
 --
--- @param args      Extra arguments for the <tt>unset_favorite</tt> API method.
+-- @param args      Extra arguments for the `resources.unset_favorite` API method.
 -- @return          A `tweet` object.
 function _M.tweet:unset_favorite(args)
     return tweet_method(self, "unset_favorite", args)
@@ -342,7 +346,7 @@ end
 
 --- Get a list of retweets of this tweet.
 --
--- @param args      Extra arguments for the <tt>get_retweets</tt> API method.
+-- @param args      Extra arguments for the `resources.get_retweets` API method.
 -- @return          A `tweet_list` object.
 function _M.tweet:get_retweets(args)
     return tweet_method(self, "get_retweets", args)
@@ -350,7 +354,7 @@ end
 
 --- Get a list of user ids who retweeted this tweet.
 --
--- @param args      Extra arguments for the <tt>get_retweeter_ids</tt> API method.
+-- @param args      Extra arguments for the `resources.get_retweeter_ids` API method.
 -- @return          An `userid_cursor` object.
 function _M.tweet:get_retweeter_ids(args)
     return tweet_method(self, "get_retweeter_ids", args)
@@ -358,7 +362,7 @@ end
 
 --- Generates an OEmbed object for this tweet.
 --
--- @param args      Extra arguments for the <tt>oembed</tt> API method.
+-- @param args      Extra arguments for the `resources.oembed` API method.
 -- @return          An `oembed` object.
 function _M.tweet:oembed(args)
     return tweet_method(self, "oembed", args)
@@ -366,7 +370,7 @@ end
 
 --- Get the next tweet in a conversation thread.
 --
--- @param args      Extra arguments for the <tt>get_tweet</tt> API method.
+-- @param args      Extra arguments for the `resources.get_tweet` API method.
 -- @return          A `tweet` object, or <tt>nil</tt> if this tweet is the first in the reply chain.
 function _M.tweet:get_next_in_thread(args)
     local reply_id = self.in_reply_to_status_id_str
@@ -376,6 +380,8 @@ function _M.tweet:get_next_in_thread(args)
     return self._client:get_tweet(args)
 end
 
+--- @section end
+
 --- List of `tweet` objects.
 _M.tweet_list = new_type("tweet")
 
@@ -383,11 +389,12 @@ _M.tweet_list = new_type("tweet")
 _M.tweet_search = new_type{ statuses = "tweet_list" }
 
 --- Direct message object.
+-- @type dm
 _M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }
 
 --- Sends a reply to this DM.
 --
--- @param args      Extra arguments for the <tt>send_dm</tt> API method.
+-- @param args      Extra arguments for the `resources.send_dm` API method.
 -- @return          A `dm` object.
 function _M.dm:reply(args)
     assert(type(args) == "table" and args.text, "must provide reply text in 'text' argument")
@@ -397,13 +404,15 @@ end
 
 --- Deletes this DM.
 --
--- @param args      Extra arguments for the <tt>delete_dm</tt> API method.
+-- @param args      Extra arguments for the `resources.delete_dm` API method.
 -- @return          A `dm` object.
 function _M.dm:delete(args)
     args = args or {}
     args.id = self.id_str
     return self._client:delete_dm(args)
 end
+
+--- @section end
 
 --- List of `dm` objects.
 _M.dm_list = new_type("dm")
@@ -426,7 +435,7 @@ _M.userid_array = new_type()
 
 --- Requests a list of users from the ids in this object.
 --
--- @param args      Extra arguments for the <tt>lookup_users</tt> API method.
+-- @param args      Extra arguments for the `resources.lookup_users` API method.
 -- @return          An `user_list` object.
 function _M.userid_array:get_users(args)
     args = args or {}
@@ -486,6 +495,7 @@ end
 _M.suggestion_category_list = new_type("suggestion_category")
 
 --- User list.
+-- @type userlist
 _M.userlist = new_type{ user = "user" }
 
 -- Calls an API method referencing this user list.
@@ -498,7 +508,7 @@ end
 
 --- Gets the tweet timeline of this list.
 --
--- @param args      Extra arguments for the <tt>get_list_timeline</tt> API method.
+-- @param args      Extra arguments for the `resources.get_list_timeline` API method.
 -- @return          A `tweet_list` object.
 function _M.userlist:get_tweets(args)
     return userlist_method(self, "get_list_timeline", args)
@@ -506,7 +516,7 @@ end
 
 --- Gets the members of this list.
 --
--- @param args      Extra arguments for the <tt>get_list_members</tt> API method.
+-- @param args      Extra arguments for the `resources.get_list_members` API method.
 -- @return          An `user_cursor` object.
 function _M.userlist:get_members(args)
     return userlist_method(self, "get_list_members", args)
@@ -514,7 +524,7 @@ end
 
 --- Adds a member to this list.
 --
--- @param args      Extra arguments for the <tt>add_list_member</tt> API method.
+-- @param args      Extra arguments for the `resources.add_list_member` API method.
 -- @return          An `userlist` object.
 function _M.userlist:add_member(args)
     return userlist_method(self, "add_list_member", args)
@@ -522,7 +532,7 @@ end
 
 --- Removes a member from this list.
 --
--- @param args      Extra arguments for the <tt>remove_list_member</tt> API method.
+-- @param args      Extra arguments for the `resources.remove_list_member` API method.
 -- @return          An `userlist` object.
 function _M.userlist:remove_member(args)
     return userlist_method(self, "remove_list_member", args)
@@ -530,7 +540,7 @@ end
 
 --- Adds multiple members to this list.
 --
--- @param args      Extra arguments for the <tt>add_multiple_list_members</tt> API method.
+-- @param args      Extra arguments for the `resources.add_multiple_list_members` API method.
 -- @return          An `userlist` object.
 function _M.userlist:add_multiple_members(args)
     return userlist_method(self, "add_multiple_list_members", args)
@@ -538,7 +548,7 @@ end
 
 --- Removes multiple members from this list.
 --
--- @param args      Extra arguments for the <tt>remove_multiple_list_members</tt> API method.
+-- @param args      Extra arguments for the `resources.remove_multiple_list_members` API method.
 -- @return          An `userlist` object.
 function _M.userlist:remove_multiple_members(args)
     return userlist_method(self, "remove_multiple_list_members", args)
@@ -546,7 +556,7 @@ end
 
 --- Check if the specified user is a member of this list.
 --
--- @param args      Extra arguments for the <tt>is_member_of_list</tt> API method.
+-- @param args      Extra arguments for the `resources.is_member_of_list` API method.
 -- @return          An `user` object.
 function _M.userlist:has_member(args)
     return userlist_method(self, "is_member_of_list", args)
@@ -554,7 +564,7 @@ end
 
 --- Gets the followers of this list.
 --
--- @param args      Extra arguments for the <tt>get_list_followers</tt> API method.
+-- @param args      Extra arguments for the `resources.get_list_followers` API method.
 -- @return          An `user_cursor` object.
 function _M.userlist:get_followers(args)
     return userlist_method(self, "get_list_followers", args)
@@ -562,7 +572,7 @@ end
 
 --- Follows this list.
 --
--- @param args      Extra arguments for the <tt>follow_list</tt> API method.
+-- @param args      Extra arguments for the `resources.follow_list` API method.
 -- @return          An `userlist` object.
 function _M.userlist:follow(args)
     return userlist_method(self, "follow_list", args)
@@ -570,7 +580,7 @@ end
 
 --- Unfollows this list.
 --
--- @param args      Extra arguments for the <tt>unfollow_list</tt> API method.
+-- @param args      Extra arguments for the `resources.unfollow_list` API method.
 -- @return          An `userlist` object.
 function _M.userlist:unfollow(args)
     return userlist_method(self, "unfollow_list", args)
@@ -578,7 +588,7 @@ end
 
 --- Updates this list.
 --
--- @param args      Extra arguments for the <tt>update_list</tt> API method.
+-- @param args      Extra arguments for the `resources.update_list` API method.
 -- @return          An `userlist` object.
 function _M.userlist:update(args)
     return userlist_method(self, "update_list", args)
@@ -586,11 +596,13 @@ end
 
 --- Deletes this list.
 --
--- @param args      Extra arguments for the <tt>delete_list</tt> API method.
+-- @param args      Extra arguments for the `resources.delete_list` API method.
 -- @return          An `userlist` object.
 function _M.userlist:delete(args)
     return userlist_method(self, "delete_list", args)
 end
+
+--- @section end
 
 --- List of `userlist` objects.
 _M.userlist_list = new_type("userlist")
@@ -619,7 +631,7 @@ _M.saved_search = new_type()
 
 --- Performs a tweet search using the query on this saved search.
 --
--- @param args      Extra arguments for the <tt>search_tweets</tt> API method.
+-- @param args      Extra arguments for the `resources.search_tweets` API method.
 -- @return          A `tweet_search` object.
 function _M.saved_search:do_search(args)
     args = args or {}
@@ -654,7 +666,7 @@ end
 
 --- Performs a tweet search using the query on this trending topic.
 --
--- @param args      Extra arguments for the <tt>search_tweets</tt> API method.
+-- @param args      Extra arguments for the `resources.search_tweets` API method.
 -- @return          A `tweet_search` object.
 function _M.trend:do_search(args)
     args = args or {}
@@ -676,7 +688,7 @@ _M.trend_location = new_type()
 
 --- Gets the trending topics for this location.
 --
--- @param args      Extra arguments for the <tt>get_trends</tt> API method.
+-- @param args      Extra arguments for the `resources.get_trends` API method.
 -- @return          A `trends_container_list` object.
 function _M.trend_location:get_trends(args)
     args = args or {}
