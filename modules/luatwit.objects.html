@@ -89,6 +89,10 @@
 	<td class="summary">Returns the numeric error code.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#user_list:get_ids">user_list:get_ids&nbsp;()</a></td>
+	<td class="summary">Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  from this object.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#user_cursor:next">user_cursor:next&nbsp;()</a></td>
 	<td class="summary">Loads the next page of an user cursored request.</td>
 	</tr>
@@ -103,6 +107,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#userid_array:get_users">userid_array:get_users&nbsp;(args)</a></td>
 	<td class="summary">Requests a list of users from the ids in this object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_array:__tostring">userid_array:__tostring&nbsp;()</a></td>
+	<td class="summary">Returns the ids in this object as a string.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#userid_cursor:next">userid_cursor:next&nbsp;()</a></td>
@@ -615,6 +623,24 @@
 
 </dd>
     <dt>
+    <a name = "user_list:get_ids"></a>
+    <strong>user_list:get_ids&nbsp;()</strong>
+    </dt>
+    <dd>
+    Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  from this object.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "user_cursor:next"></a>
     <strong>user_cursor:next&nbsp;()</strong>
     </dt>
@@ -685,6 +711,24 @@
     <ol>
 
         An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userid_array:__tostring"></a>
+    <strong>userid_array:__tostring&nbsp;()</strong>
+    </dt>
+    <dd>
+    Returns the ids in this object as a string.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A comma-separated list with the ids in this object.
     </ol>
 
 
@@ -1966,7 +2010,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_following_list">resources.is_following_list</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_following_list">resources.is_following_list</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -1989,7 +2034,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2012,7 +2058,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_userlist">userlist</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2394,7 +2441,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_user">user</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2417,7 +2465,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_list_member">resources.remove_list_member</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_list_member">resources.remove_list_member</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_user">user</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2440,7 +2489,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_multiple_list_members">resources.add_multiple_list_members</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_multiple_list_members">resources.add_multiple_list_members</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_user">user</a> , <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  or <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2463,7 +2513,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_multiple_list_members">resources.remove_multiple_list_members</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_multiple_list_members">resources.remove_multiple_list_members</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_user">user</a> , <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  or <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
@@ -2486,7 +2537,8 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.</li>
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#Class_user">user</a>  object as argument.</li>
     </ul>
 
     <h3>Returns:</h3>
