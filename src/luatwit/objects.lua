@@ -222,24 +222,36 @@ end
 --- Checks if this user is following the specified list.
 --
 -- @param args      Extra arguments for the `resources.is_following_list` API method.
+--                  It also accepts an `userlist` object as argument.
 -- @return          An `user` object.
 function _M.user:is_following_list(args)
+    if util.type(args) == "userlist" then
+        args = { list_id = args.id_str }
+    end
     return user_method(self, "is_following_list", args)
 end
 
 --- Checks if this user is member of the specified list.
 --
 -- @param args      Extra arguments for the `resources.is_member_of_list` API method.
+--                  It also accepts an `userlist` object as argument.
 -- @return          An `user` object.
 function _M.user:is_member_of_list(args)
+    if util.type(args) == "userlist" then
+        args = { list_id = args.id_str }
+    end
     return user_method(self, "is_member_of_list", args)
 end
 
 --- Adds this user to the specified list.
 --
 -- @param args      Extra arguments for the `resources.add_list_member` API method.
+--                  It also accepts an `userlist` object as argument.
 -- @return          An `userlist` object.
 function _M.user:add_to_list(args)
+    if util.type(args) == "userlist" then
+        args = { list_id = args.id_str }
+    end
     return user_method(self, "add_list_member", args)
 end
 
@@ -573,40 +585,70 @@ end
 --- Adds a member to this list.
 --
 -- @param args      Extra arguments for the `resources.add_list_member` API method.
+--                  It also accepts an `user` object as argument.
 -- @return          An `userlist` object.
 function _M.userlist:add_member(args)
+    if util.type(args) == "user" then
+        args = { user_id = args.id_str }
+    end
     return userlist_method(self, "add_list_member", args)
 end
 
 --- Removes a member from this list.
 --
 -- @param args      Extra arguments for the `resources.remove_list_member` API method.
+--                  It also accepts an `user` object as argument.
 -- @return          An `userlist` object.
 function _M.userlist:remove_member(args)
+    if util.type(args) == "user" then
+        args = { user_id = args.id_str }
+    end
     return userlist_method(self, "remove_list_member", args)
 end
 
 --- Adds multiple members to this list.
 --
 -- @param args      Extra arguments for the `resources.add_multiple_list_members` API method.
+--                  It also accepts an `user`, `userid_array` or `user_list` object as argument.
 -- @return          An `userlist` object.
 function _M.userlist:add_multiple_members(args)
+    local args_t = util.type(args)
+    if args_t == "user" then
+        args = { user_id = args.id_str }
+    elseif args_t == "userid_array" then
+        args = { user_id = tostring(args) }
+    elseif args_t == "user_list" then
+        args = { user_id = tostring(args:get_ids()) }
+    end
     return userlist_method(self, "add_multiple_list_members", args)
 end
 
 --- Removes multiple members from this list.
 --
 -- @param args      Extra arguments for the `resources.remove_multiple_list_members` API method.
+--                  It also accepts an `user`, `userid_array` or `user_list` object as argument.
 -- @return          An `userlist` object.
 function _M.userlist:remove_multiple_members(args)
+    local args_t = util.type(args)
+    if args_t == "user" then
+        args = { user_id = args.id_str }
+    elseif args_t == "userid_array" then
+        args = { user_id = tostring(args) }
+    elseif args_t == "user_list" then
+        args = { user_id = tostring(args:get_ids()) }
+    end
     return userlist_method(self, "remove_multiple_list_members", args)
 end
 
 --- Check if the specified user is a member of this list.
 --
 -- @param args      Extra arguments for the `resources.is_member_of_list` API method.
+--                  It also accepts an `user` object as argument.
 -- @return          An `user` object.
 function _M.userlist:has_member(args)
+    if util.type(args) == "user" then
+        args = { user_id = args.id_str }
+    end
     return userlist_method(self, "is_member_of_list", args)
 end
 
