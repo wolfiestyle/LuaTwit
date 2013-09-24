@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.objects
 -- @license MIT
-local assert, io_open, pairs, table_concat, type =
-      assert, io.open, pairs, table.concat, type
+local assert, io_open, ipairs, pairs, setmetatable, table_concat, type =
+      assert, io.open, ipairs, pairs, setmetatable, table.concat, type
 local util = require "luatwit.util"
 local json = require "cjson"
 
@@ -266,6 +266,17 @@ end
 --- List of `user` objects.
 _M.user_list = new_type("user")
 
+--- Constructs an `userid_array` from this object.
+--
+-- @return          An `userid_array` object.
+function _M.user_list:get_ids()
+    local ids = {}
+    for _, user in ipairs(self) do
+        ids[#ids + 1] = user.id_str
+    end
+    return setmetatable(ids, self._client.objects.userid_array)
+end
+
 --- Cursor of `user` objects.
 _M.user_cursor = new_type{ users = "user_list" }
 
@@ -441,6 +452,13 @@ function _M.userid_array:get_users(args)
     args = args or {}
     args.user_id = table_concat(self, ",")
     return self._client:lookup_users(args)
+end
+
+--- Returns the ids in this object as a string.
+--
+-- @return          A comma-separated list with the ids in this object.
+function _M.userid_array:__tostring()
+    return table_concat(self, ",")
 end
 
 --- Cursor of user ids.
