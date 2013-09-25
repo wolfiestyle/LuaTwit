@@ -141,7 +141,7 @@ function _M.api:raw_call(decl, args, name, defaults)
         return body, status_line, res_code, headers, tname
     end
     local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
-    if type(json_data) == "table" then
+    if method == "GET" and type(json_data) == "table" then
         json_data._source_method = function(_args)
             return self:raw_call(decl, _args, name, request)
         end
