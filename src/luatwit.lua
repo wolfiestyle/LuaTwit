@@ -71,7 +71,7 @@ end
 
 -- Builds the request url and arguments for the OAuth call.
 local function build_request(decl, args, name, defaults)
-    local method, url, rules, tname = unpack(decl)
+    local method, url, rules = unpack(decl)
     local err = check_args(args, rules, name)
     assert(not err, err)
     local args_str = {}
@@ -88,7 +88,7 @@ local function build_request(decl, args, name, defaults)
         return val
     end)
     url = _M.resources._base_url .. url .. ".json"
-    return method, url, args_str, tname
+    return method, url, args_str
 end
 
 -- Applies type metatables to the json data recursively.
@@ -132,9 +132,10 @@ function _M.api:raw_call(decl, args, name, defaults)
     assert(#decl >= 2, "invalid resource declaration")
     args = args or {}
     name = name or "raw_call"
-    local method, url, args_str, tname = build_request(decl, args, name, defaults)
-    local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, args_str)
+    local method, url, request = build_request(decl, args, name, defaults)
+    local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request)
     util.bless(headers, _M.objects.headers)
+    local tname = decl[4]
     if args._raw then
         if type(body) ~= "string" then body = nil end
         return body, status_line, res_code, headers, tname
@@ -142,7 +143,7 @@ function _M.api:raw_call(decl, args, name, defaults)
     local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
     if type(json_data) == "table" then
         json_data._source_method = function(_args)
-            return self:raw_call(decl, _args, name, args_str)
+            return self:raw_call(decl, _args, name, request)
         end
     end
     return json_data, status_line, res_code, headers
