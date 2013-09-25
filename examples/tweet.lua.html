@@ -59,19 +59,44 @@
 </span><span class="comment">-- Sends a tweet with the text in the command line arguments.
 </span><span class="comment">--
 </span><span class="global">pcall</span>(<span class="global">require</span>, <span class="string">"luarocks.loader"</span>)
+<span class="keyword">local</span> pl = <span class="global">require</span> <span class="string">"pl.import_into"</span> ()
 <span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 <span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
 
 <span class="comment">-- read tweet text from arguments
-</span><span class="keyword">local</span> msg = <span class="global">table</span>.concat({...}, <span class="string">" "</span>)
-<span class="global">assert</span>(msg:len() &gt; <span class="number">0</span>, <span class="string">"missing tweet text"</span>)
+</span><span class="keyword">local</span> args = pl.lapp <span class="string">[[
+Sends a tweet.
+    -m,--media (default "")     Image file to be included with the tweet
+    &lt;text...&gt;  (string)         Tweet text
+]]</span>
+<span class="keyword">local</span> msg = <span class="global">table</span>.concat(args.text, <span class="string">" "</span>)
+
+<span class="comment">-- read the image file
+</span><span class="keyword">local</span> img_data
+<span class="keyword">if</span> args.media:len() &gt; <span class="number">0</span> <span class="keyword">then</span>
+    <span class="keyword">local</span> file, err = <span class="global">io</span>.open(args.media)
+    <span class="global">assert</span>(file, err)
+    img_data = file:read(<span class="string">"*a"</span>)
+    file:close()
+<span class="keyword">end</span>
 
 <span class="comment">-- initialize the twitter client
 </span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 <span class="keyword">local</span> client = twitter.new(oauth_params)
 
 <span class="comment">-- send the tweet
-</span><span class="keyword">local</span> tw, status_line = client:tweet{ status = msg }
+</span><span class="keyword">local</span> tw, status_line
+<span class="keyword">if</span> img_data <span class="keyword">then</span>
+    tw, status_line = client:tweet_with_media{
+        status = msg,
+        [<span class="string">"media[]"</span>] = {
+            filename = args.media:match(<span class="string">"([^/]*)$"</span>),
+            data = img_data,
+        },
+    }
+<span class="keyword">else</span>
+    tw, status_line = client:tweet{ status = msg }
+<span class="keyword">end</span>
 <span class="global">assert</span>(tw, status_line)
 
 <span class="comment">-- the result is json data in a Lua table
