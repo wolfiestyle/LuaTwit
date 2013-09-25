@@ -7,6 +7,7 @@ local assert, error, next, pairs, select, setmetatable, table_concat, tostring, 
 local oauth = require "OAuth"
 local json = require "cjson"
 local util = require "luatwit.util"
+local multipart = require("OAuth.helpers").multipart
 
 local _M = {}
 
@@ -108,6 +109,10 @@ local function build_request(decl, args, name, defaults)
         return val
     end)
     url = _M.resources._base_url .. url .. ".json"
+    if decl._multipart then
+        local mp = multipart.Request(request)
+        return method, url, mp.body, mp.headers
+    end
     return method, url, request
 end
 
@@ -152,8 +157,8 @@ function _M.api:raw_call(decl, args, name, defaults)
     assert(#decl >= 2, "invalid resource declaration")
     args = args or {}
     name = name or "raw_call"
-    local method, url, request = build_request(decl, args, name, defaults)
-    local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request)
+    local method, url, request, req_headers = build_request(decl, args, name, defaults)
+    local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request, req_headers)
     util.bless(headers, _M.objects.headers)
     local tname = decl[4]
     if args._raw then
@@ -161,7 +166,7 @@ function _M.api:raw_call(decl, args, name, defaults)
         return body, status_line, res_code, headers, tname
     end
     local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
-    if method == "GET" and type(json_data) == "table" then
+    if method == "GET" and type(json_data) == "table" and type(request) == "table" then
         json_data._source_method = function(_args)
             return self:raw_call(decl, _args, name, request)
         end

@@ -155,7 +155,20 @@ _M.get_retweeter_ids = api{ GET, "statuses/retweeters/ids", {
     },
     "userid_cursor"
 }
--- POST statuses/update_with_media      --TODO: requires multipart/form-data request
+--- Updates the authenticating user's current status and attaches media for upload.
+_M.tweet_with_media = api{ POST, "statuses/update_with_media", {
+        status = true,
+        ["media[]"] = { true, "table" },
+        possibly_sensitive = false,
+        in_reply_to_status_id = false,
+        lat = false,
+        long = false,
+        place_id = false,
+        display_coordinates = false,
+    },
+    "tweet",
+    _multipart = true
+}
 
 --( Search )--
 
