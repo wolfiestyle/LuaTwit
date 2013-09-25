@@ -74,21 +74,22 @@ local function build_request(decl, args, name, defaults)
     local method, url, rules = unpack(decl)
     local err = check_args(args, rules, name)
     assert(not err, err)
-    local args_str = {}
+    local request = {}
     if defaults then
-        util.map_copy(args_str, defaults, tostring)
+        util.map_copy(request, defaults)
     end
-    util.map_copy(args_str, args, function(v, k)
-        return k:sub(1, 1) ~= "_" and tostring(v) or nil
+    util.map_copy(request, args, function(v, k)
+        if k:sub(1, 1) ~= "_" then return v end
+        return nil
     end)
     url = url:gsub(":([%w_]+)", function(key)
-        local val = args_str[key]
+        local val = request[key]
         assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
-        args_str[key] = nil
+        request[key] = nil
         return val
     end)
     url = _M.resources._base_url .. url .. ".json"
-    return method, url, args_str
+    return method, url, request
 end
 
 -- Applies type metatables to the json data recursively.

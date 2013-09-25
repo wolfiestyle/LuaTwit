@@ -17,7 +17,7 @@ description = {
 
 dependencies = {
     "lua >= 5.1",
-    "oauth >= 0.0.3",
+    "oauth >= 0.0.5",
     "lua-cjson >= 2.1.0",
 }
 

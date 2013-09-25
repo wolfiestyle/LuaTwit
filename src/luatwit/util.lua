@@ -95,6 +95,9 @@ end
 --                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.
 -- @return          The <tt>dest</tt> argument.
 function _M.map_copy(dest, src, fn)
+    if not fn then
+        fn = function(v) return v end
+    end
     for k, v in pairs(src) do
         local res = fn(v, k)
         if res ~= nil then
