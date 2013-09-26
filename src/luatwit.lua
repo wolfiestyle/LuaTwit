@@ -58,22 +58,24 @@ local function check_args(args, rules, res_name)
         if type(name) ~= "string" then
             return res_name .. ": keys must be strings"
         end
-        local rule = rules[name]
-        if rule == nil and name:sub(1, 1) ~= "_" then
-            return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
-        end
-        local rule_type = type(rule)
-        local allowed_type
-        if rule_type == "boolean" then
-            allowed_type = scalar_types
-        elseif rule_type == "table" and #rule == 2 then
-            allowed_type = {}
-            allowed_type[rule[2]] = true
-        else
-            return res_name .. ": invalid rule for field '" .. name .. "'"
-        end
-        if not allowed_type[type(val)] then
-            return res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_type) .. ")"
+        if name:sub(1, 1) ~= "_" then
+            local rule = rules[name]
+            if rule == nil then
+                return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
+            end
+            local rule_type = type(rule)
+            local allowed_types
+            if rule_type == "boolean" then
+                allowed_types = scalar_types
+            elseif rule_type == "table" and #rule == 2 then
+                allowed_types = {}
+                allowed_types[rule[2]] = true
+            else
+                return res_name .. ": invalid rule for field '" .. name .. "'"
+            end
+            if not allowed_types[type(val)] then
+                return res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
+            end
         end
     end
     -- check if required args are present
