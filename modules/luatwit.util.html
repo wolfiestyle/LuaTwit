@@ -72,10 +72,6 @@
 	<td class="summary">Create a new class prototype or instance.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#bless">bless&nbsp;(tbl, mt)</a></td>
-	<td class="summary">Converts a table into a class instance of the supplied type.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#load_file">load_file&nbsp;(filename, env)</a></td>
 	<td class="summary">Loads a Lua chunk from a file and executes it on it's own environment.</td>
 	</tr>
@@ -127,31 +123,6 @@
     <ol>
 
         New class table.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "bless"></a>
-    <strong>bless&nbsp;(tbl, mt)</strong>
-    </dt>
-    <dd>
-    Converts a table into a class instance of the supplied type.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">tbl</span>
-               Table to be converted. If it's not a table it will be returned unmodified.</li>
-        <li><span class="parameter">mt</span>
-                Metatable that defines the type of the object.</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The <tt>table</tt> argument with <tt>type</tt> as it's metatable.
     </ol>
 
 

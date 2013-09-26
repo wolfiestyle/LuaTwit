@@ -96,6 +96,10 @@
 <h2><a href="#Class_api">Class api </a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#api:apply_types">api:apply_types&nbsp;(node, tname)</a></td>
+	<td class="summary">Applies type metatables to the supplied JSON data recursively.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#api:raw_call">api:raw_call&nbsp;(decl, args, name, defaults)</a></td>
 	<td class="summary">Generic call to the Twitter API.</td>
 	</tr>
@@ -234,6 +238,31 @@
         Class prototype that implements the API calls.
  Methods are created on demand from the definitions in the <a href="../modules/luatwit.html#resources">resources</a>  table.
     <dl class="function">
+    <dt>
+    <a name = "api:apply_types"></a>
+    <strong>api:apply_types&nbsp;(node, tname)</strong>
+    </dt>
+    <dd>
+    Applies type metatables to the supplied JSON data recursively.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">node</span>
+          Table with JSON data.</li>
+        <li><span class="parameter">tname</span>
+         String with the name of an object defined in <a href="../modules/luatwit.html#objects">objects</a> .</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The <tt>node</tt> argument after the processing is done.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "api:raw_call"></a>
     <strong>api:raw_call&nbsp;(decl, args, name, defaults)</strong>
