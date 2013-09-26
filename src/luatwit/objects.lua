@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.objects
 -- @license MIT
-local assert, io_open, ipairs, pairs, setmetatable, table_concat, type =
-      assert, io.open, ipairs, pairs, setmetatable, table.concat, type
+local assert, io_open, ipairs, pairs, table_concat, type =
+      assert, io.open, ipairs, pairs, table.concat, type
 local util = require "luatwit.util"
 local json = require "cjson"
 
@@ -286,7 +286,7 @@ function _M.user_list:get_ids()
     for _, user in ipairs(self) do
         ids[#ids + 1] = user.id_str
     end
-    return setmetatable(ids, self._client.objects.userid_array)
+    return self._client:apply_types(ids, "userid_array")
 end
 
 --- Cursor of `user` objects.

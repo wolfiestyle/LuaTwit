@@ -116,27 +116,35 @@ local function build_request(decl, args, name, defaults)
     return method, url, request
 end
 
--- Applies type metatables to the json data recursively.
-local function apply_types(node, tname, objects)
-    local type_decl = objects[tname]
-    util.bless(node, type_decl)
+-- Applies type metatables to the supplied JSON data recursively.
+--
+-- @param node  Table with JSON data.
+-- @param tname String with the name of an object defined in `objects`.
+-- @return      The <tt>node</tt> argument after the processing is done.
+function _M.api:apply_types(node, tname)
+    local type_decl = self.objects[tname]
+    assert(type(type_decl) == "table", "invalid object type")
+    if type(node) == "table" then
+        setmetatable(node, type_decl)
+    end
     local st = type_decl._subtypes
-    if st == nil then return end
+    if st == nil then return node end
     local type_st = type(st)
     if type_st == "string" then
         for _, item in pairs(node) do
-            apply_types(item, st, objects)
+            self:apply_types(item, st)
         end
     elseif type_st == "table" then
         for k, tn in pairs(st) do
             local item = node[k]
             if item ~= nil and item ~= json.null then
-                apply_types(item, tn, objects)
+                self:apply_types(item, tn)
             end
         end
     else
         error("subtype declaration must be string or table")
     end
+    return node
 end
 
 --- Generic call to the Twitter API.
@@ -159,7 +167,7 @@ function _M.api:raw_call(decl, args, name, defaults)
     name = name or "raw_call"
     local method, url, request, req_headers = build_request(decl, args, name, defaults)
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request, req_headers)
-    util.bless(headers, _M.objects.headers)
+    self:apply_types(headers, "headers")
     local tname = decl[4]
     if args._raw then
         if type(body) ~= "string" then body = nil end
@@ -187,7 +195,7 @@ function _M.api:parse_json(str, tname)
             tname = "error"
         end
         if json_data then
-            apply_types(json_data, tname, self.objects)
+            self:apply_types(json_data, tname)
         end
     end
     return json_data
@@ -213,7 +221,7 @@ end
 -- @return      HTTP headers.
 function _M.api:confirm_login(pin)
     local token, res_code, headers, status_line = self.oauth_client:GetAccessToken{ oauth_verifier = tostring(pin) }
-    return util.bless(token, _M.objects.access_token), status_line, res_code, headers
+    return self:apply_types(token, "access_token"), status_line, res_code, headers
 end
 
 --- Constructs an `api` method from the declarations in `resources`.

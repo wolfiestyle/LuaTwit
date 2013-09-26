@@ -20,17 +20,6 @@ function _M.new(base, mt)
     return setmetatable(self, mt)
 end
 
---- Converts a table into a class instance of the supplied type.
---
--- @param tbl       Table to be converted. If it's not a table it will be returned unmodified.
--- @param mt        Metatable that defines the type of the object.
--- @return          The <tt>table</tt> argument with <tt>type</tt> as it's metatable.
-function _M.bless(tbl, mt)
-    if type(tbl) ~= "table" then return tbl end
-    assert(type(mt) == "table", "argument #2 must be a table")
-    return setmetatable(tbl, mt)
-end
-
 --- Loads a Lua chunk from a file and executes it on it's own environment.
 --
 -- @param filename  Lua source file.
