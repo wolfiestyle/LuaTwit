@@ -116,7 +116,7 @@ local function build_request(decl, args, name, defaults)
     return method, url, request
 end
 
--- Applies type metatables to the supplied JSON data recursively.
+--- Applies type metatables to the supplied JSON data recursively.
 --
 -- @param node  Table with JSON data.
 -- @param tname String with the name of an object defined in `objects`.
