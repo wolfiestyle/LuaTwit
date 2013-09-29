@@ -95,6 +95,10 @@
 	<td class="name" nowrap><a href="#lazy_loader">lazy_loader&nbsp;(fn)</a></td>
 	<td class="summary">Creates a lazy table that loads its contents on field access.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set">set&nbsp;(...)</a></td>
+	<td class="summary">Creates a set table from the keys in the arguments.</td>
+	</tr>
 </table>
 
 <br/>
@@ -272,6 +276,29 @@
     <ol>
 
         New lazy table.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set"></a>
+    <strong>set&nbsp;(...)</strong>
+    </dt>
+    <dd>
+    Creates a set table from the keys in the arguments.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+               Keys of the table. The values will be set to <tt>true</tt>.</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New set table.
     </ol>
 
 
