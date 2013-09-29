@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT
-local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, setfenv, setmetatable, type =
-      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, setfenv, setmetatable, type
+local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type =
+      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type
 
 local _M = {}
 
@@ -115,6 +115,19 @@ function _M.lazy_loader(fn)
             return self[key]
         end
     })
+end
+
+--- Creates a set table from the keys in the arguments.
+--
+-- @param ...       Keys of the table. The values will be set to <tt>true</tt>.
+-- @return          New set table.
+function _M.set(...)
+    local tbl = {}
+    for i = 1, select("#", ...) do
+        local key = select(i, ...)
+        tbl[key] = true
+    end
+    return tbl
 end
 
 return _M

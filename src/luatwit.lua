@@ -45,7 +45,7 @@ local function build_required_str(rules)
     return table_concat(res, ", ")
 end
 
-local scalar_types = { string = true, number = true, boolean = true }
+local scalar_types = util.set("string", "number", "boolean")
 
 -- Checks if the arguments in a table match the rules.
 local function check_args(args, rules, res_name)
@@ -67,9 +67,8 @@ local function check_args(args, rules, res_name)
             local allowed_types
             if rule_type == "boolean" then
                 allowed_types = scalar_types
-            elseif rule_type == "table" and #rule == 2 then
-                allowed_types = {}
-                allowed_types[rule[2]] = true
+            elseif rule_type == "table" then
+                allowed_types = rule.types
             else
                 return res_name .. ": invalid rule for field '" .. name .. "'"
             end
@@ -82,7 +81,7 @@ local function check_args(args, rules, res_name)
     for name, rule in pairs(rules) do
         local required = rule
         if type(rule) == "table" then
-            required = rule[1]
+            required = rule.required
         end
         if required and args[name] == nil then
             return res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
