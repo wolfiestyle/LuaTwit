@@ -290,14 +290,11 @@
         A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
               If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.</li>
         <li>
-        HTTP status line.</li>
+        HTTP headers. On error, instead it will be an string or <a href="../modules/luatwit.objects.html#error">luatwit.objects.error</a>  describing the error.</li>
         <li>
-        HTTP result code.</li>
-        <li>
-        HTTP headers.</li>
-        <li>
-        If the option <tt>_raw</tt> is set, the type name from <a href="../modules/luatwit.html#resources">resources</a> .
-              This value is needed to use the <a href="../modules/luatwit.html#api:parse_json">api:parse_json</a>  with the returned string.</li>
+              If the option <tt>_raw</tt> is set, the type name from <a href="../modules/luatwit.html#resources">resources</a> .
+              This value is needed to use the <a href="../modules/luatwit.html#api:parse_json">api:parse_json</a>  with the returned string.
+              If an API error ocurred, instead it will be the HTTP headers of the request.</li>
     </ol>
 
 

@@ -78,7 +78,11 @@
 file:close()
 
 <span class="comment">-- avatar must be sent as base64 encoded data
-</span><span class="keyword">local</span> user = client:set_profile_image{ image = base64.encode(img_data) }
+</span><span class="keyword">local</span> user, headers = client:set_profile_image{ image = base64.encode(img_data) }
+
+<span class="comment">-- the second return value contains the error if something went wrong
+</span><span class="global">assert</span>(user, <span class="global">tostring</span>(headers))
+
 <span class="global">print</span>(<span class="string">"user: @"</span> .. user.screen_name .. <span class="string">" ("</span> .. user.name .. <span class="string">")"</span>)
 <span class="global">print</span>(<span class="string">"avatar image: "</span> .. user.profile_image_url)</pre>
 

@@ -85,9 +85,9 @@ Sends a tweet.
 <span class="keyword">local</span> client = twitter.new(oauth_params)
 
 <span class="comment">-- send the tweet
-</span><span class="keyword">local</span> tw, status_line
+</span><span class="keyword">local</span> tw, headers
 <span class="keyword">if</span> img_data <span class="keyword">then</span>
-    tw, status_line = client:tweet_with_media{
+    tw, headers = client:tweet_with_media{
         status = msg,
         [<span class="string">"media[]"</span>] = {
             filename = args.media:match(<span class="string">"([^/]*)$"</span>),
@@ -95,9 +95,11 @@ Sends a tweet.
         },
     }
 <span class="keyword">else</span>
-    tw, status_line = client:tweet{ status = msg }
+    tw, headers = client:tweet{ status = msg }
 <span class="keyword">end</span>
-<span class="global">assert</span>(tw, status_line)
+
+<span class="comment">-- the second return value contains the error if something went wrong
+</span><span class="global">assert</span>(tw, <span class="global">tostring</span>(headers))
 
 <span class="comment">-- the result is json data in a Lua table
 </span><span class="global">print</span>(<span class="string">"user: @"</span> .. tw.user.screen_name .. <span class="string">" ("</span> .. tw.user.name .. <span class="string">")"</span>)
