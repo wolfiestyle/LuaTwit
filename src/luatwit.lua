@@ -157,30 +157,34 @@ end
 -- @param defaults  Default method arguments.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
 --              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
--- @return      HTTP status line.
--- @return      HTTP result code.
--- @return      HTTP headers.
+-- @return      HTTP headers. On error, instead it will be an string or `luatwit.objects.error` describing the error.
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
+--              If an API error ocurred, instead it will be the HTTP headers of the request.
 function _M.api:raw_call(decl, args, name, defaults)
     assert(#decl >= 2, "invalid resource declaration")
     args = args or {}
     name = name or "raw_call"
     local method, url, request, req_headers = build_request(decl, args, name, defaults)
     local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request, req_headers)
+    if type(body) ~= "string" then  -- returns an empty table on error and the error string in 'res_code'
+        return nil, res_code
+    end
     self:apply_types(headers, "headers")
     local tname = decl[4]
     if args._raw then
-        if type(body) ~= "string" then body = nil end
-        return body, status_line, res_code, headers, tname
+        return body, headers, tname
     end
-    local json_data = type(body) == "string" and self:parse_json(body, tname) or nil
+    local json_data = self:parse_json(body, tname)
+    if json_data._type == "error" then
+        return nil, json_data, headers
+    end
     if method == "GET" and type(json_data) == "table" and type(request) == "table" then
         json_data._source_method = function(_args)
             return self:raw_call(decl, _args, name, request)
         end
     end
-    return json_data, status_line, res_code, headers
+    return json_data, headers
 end
 
 --- Parses a JSON string and applies type metatables.
@@ -288,8 +292,8 @@ function _M.new(args)
     })
     -- get info about the authenticated user
     self.me = util.lazy_loader(function()
-        local res = self:verify_credentials()
-        assert(not res.errors, tostring(res))
+        local res, err = self:verify_credentials()
+        assert(res, tostring(err))
         return res
     end)
     return self

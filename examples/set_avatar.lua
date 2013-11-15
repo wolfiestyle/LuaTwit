@@ -22,7 +22,11 @@ local img_data = file:read("*a")
 file:close()
 
 -- avatar must be sent as base64 encoded data
-local user = client:set_profile_image{ image = base64.encode(img_data) }
+local user, headers = client:set_profile_image{ image = base64.encode(img_data) }
+
+-- the second return value contains the error if something went wrong
+assert(user, tostring(headers))
+
 print("user: @" .. user.screen_name .. " (" .. user.name .. ")")
 print("avatar image: " .. user.profile_image_url)
 

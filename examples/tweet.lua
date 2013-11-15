@@ -29,9 +29,9 @@ local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
 local client = twitter.new(oauth_params)
 
 -- send the tweet
-local tw, status_line
+local tw, headers
 if img_data then
-    tw, status_line = client:tweet_with_media{
+    tw, headers = client:tweet_with_media{
         status = msg,
         ["media[]"] = {
             filename = args.media:match("([^/]*)$"),
@@ -39,9 +39,11 @@ if img_data then
         },
     }
 else
-    tw, status_line = client:tweet{ status = msg }
+    tw, headers = client:tweet{ status = msg }
 end
-assert(tw, status_line)
+
+-- the second return value contains the error if something went wrong
+assert(tw, tostring(headers))
 
 -- the result is json data in a Lua table
 print("user: @" .. tw.user.screen_name .. " (" .. tw.user.name .. ")")
