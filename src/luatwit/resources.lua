@@ -170,6 +170,15 @@ _M.tweet_with_media = api{ POST, "statuses/update_with_media", {
     "tweet",
     _multipart = true
 }
+--- Returns fully-hydrated  tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.
+_M.lookup_tweets = api{ GET, "statuses/lookup", {
+        id = true,
+        include_entities = false,
+        trim_user = false,
+        map = false,
+    },
+    "tweet_list"
+}
 
 --( Search )--
 
@@ -514,6 +523,34 @@ _M.get_profile_banner = api{ GET, "users/profile_banner", {
     },
     "profile_banner"
 }
+--- Mutes the user specified in the ID parameter for the authenticating user.
+_M.mute_user = api{ POST, "mutes/users/create", {
+        screen_name = false,
+        user_id = false,
+    },
+    "user"
+}
+--- Un-mutes the user specified in the ID parameter for the authenticating user.
+_M.unmute_user = api{ POST, "mutes/users/destroy", {
+        screen_name = false,
+        user_id = false,
+    },
+    "user"
+}
+--- Returns an array of numeric user ids the authenticating user has muted.
+_M.get_muted_ids = api{ GET, "mutes/users/ids", {
+        cursor = false,
+    },
+    "userid_cursor"
+}
+--- Returns an array of user objects the authenticating user has muted.
+_M.get_muted_users = api{ GET, "mutes/users/list", {
+        cursor = false,
+        include_entities = false,
+        skip_status = false,
+    },
+    "user_cursor"
+}
 
 --( Suggested Users )--
 
@@ -839,7 +876,7 @@ _M.get_similar_places = api{ GET, "geo/similar_places", {
     },
     "place_search"
 }
---- Creates a new place object at the given latitude and longitude.
+--- As of December 2nd, 2013, this endpoint is deprecated and retired and no longer functions.
 _M.create_place = api{ POST, "geo/place", {
         name = true,
         contained_within = true,
@@ -893,7 +930,7 @@ _M.get_service_config = api{ GET, "help/configuration", {
     },
     "service_config"
 }
---- Returns the list of languages supported by Twitter along with their ISO 639-1 code.
+--- Returns the list of languages supported by Twitter along with the language code supported by Twitter.
 _M.get_languages = api{ GET, "help/languages", {
         -- empty
     },
@@ -905,7 +942,7 @@ _M.get_privacy_policy = api{ GET, "help/privacy", {
     },
     "privacy"
 }
---- Returns the Twitter Terms of Service in the requested format.
+--- Returns the Twitter Terms of Service.
 _M.get_tos = api{ GET, "help/tos", {
         -- empty
     },
