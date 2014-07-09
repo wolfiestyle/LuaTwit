@@ -37,14 +37,18 @@
 
 
 <h2>Modules</h2>
-<ul>
-  <li><a href="../modules/luatwit.html">luatwit</a></li>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
   <li><strong>luatwit.resources</strong></li>
   <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
 </ul>
 <h2>Examples</h2>
-<ul>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
@@ -56,10 +60,9 @@
 <div id="content">
 
 <h1>Module <code>luatwit.resources</code></h1>
-
 <p>Table with the Twitter API resources.</p>
 <p>
- This is the data used to construct the <a href="../modules/luatwit.html#Class_api">luatwit.api</a>  function calls.
+ This is the data used to construct the <a href="../modules/luatwit.html#api">luatwit.api</a>  function calls.
 </p>
     <h3>Info:</h3>
     <ul>
@@ -116,6 +119,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#tweet_with_media">tweet_with_media</a></td>
 	<td class="summary">Updates the authenticating user's current status and attaches media for upload.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lookup_tweets">lookup_tweets</a></td>
+	<td class="summary">Returns fully-hydrated  tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_tweets">search_tweets</a></td>
@@ -270,6 +277,22 @@
 	<td class="summary">Returns a map of the available size variations of the specified user's profile banner.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#mute_user">mute_user</a></td>
+	<td class="summary">Mutes the user specified in the ID parameter for the authenticating user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unmute_user">unmute_user</a></td>
+	<td class="summary">Un-mutes the user specified in the ID parameter for the authenticating user.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_muted_ids">get_muted_ids</a></td>
+	<td class="summary">Returns an array of numeric user ids the authenticating user has muted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#get_muted_users">get_muted_users</a></td>
+	<td class="summary">Returns an array of user objects the authenticating user has muted.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#get_suggestion_category">get_suggestion_category</a></td>
 	<td class="summary">Access the users in a given category of the Twitter suggested user list.</td>
 	</tr>
@@ -403,7 +426,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#create_place">create_place</a></td>
-	<td class="summary">Creates a new place object at the given latitude and longitude.</td>
+	<td class="summary">As of December 2nd, 2013, this endpoint is deprecated and retired and no longer functions.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_trends">get_trends</a></td>
@@ -427,7 +450,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_languages">get_languages</a></td>
-	<td class="summary">Returns the list of languages supported by Twitter along with their ISO 639-1 code.</td>
+	<td class="summary">Returns the list of languages supported by Twitter along with the language code supported by Twitter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_privacy_policy">get_privacy_policy</a></td>
@@ -435,7 +458,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_tos">get_tos</a></td>
-	<td class="summary">Returns the Twitter Terms of Service in the requested format.</td>
+	<td class="summary">Returns the Twitter Terms of Service.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_rate_limit">get_rate_limit</a></td>
@@ -461,6 +484,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_user_timeline"></a>
@@ -468,6 +492,7 @@
     </dt>
     <dd>
     Returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters.
+
 
 
 
@@ -487,6 +512,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_retweets_of_me"></a>
@@ -494,6 +520,7 @@
     </dt>
     <dd>
     Returns the most recent tweets authored by the authenticating user that have been retweeted by others.
+
 
 
 
@@ -513,6 +540,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_tweet"></a>
@@ -520,6 +548,7 @@
     </dt>
     <dd>
     Returns a single Tweet, specified by the id parameter.
+
 
 
 
@@ -539,6 +568,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "tweet"></a>
@@ -546,6 +576,7 @@
     </dt>
     <dd>
     Updates the authenticating user's current status, also known as tweeting.
+
 
 
 
@@ -565,6 +596,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "oembed"></a>
@@ -572,6 +604,7 @@
     </dt>
     <dd>
     Returns information allowing the creation of an embedded representation of a Tweet on third party sites.
+
 
 
 
@@ -591,6 +624,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "tweet_with_media"></a>
@@ -598,6 +632,21 @@
     </dt>
     <dd>
     Updates the authenticating user's current status and attaches media for upload.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lookup_tweets"></a>
+    <strong>lookup_tweets</strong>
+    </dt>
+    <dd>
+    Returns fully-hydrated  tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.
+
 
 
 
@@ -617,6 +666,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_received_dms"></a>
@@ -624,6 +674,7 @@
     </dt>
     <dd>
     Returns the 20 most recent direct messages sent to the authenticating user.
+
 
 
 
@@ -643,6 +694,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_dm"></a>
@@ -650,6 +702,7 @@
     </dt>
     <dd>
     Returns a single direct message, specified by an id parameter.
+
 
 
 
@@ -669,6 +722,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "send_dm"></a>
@@ -676,6 +730,7 @@
     </dt>
     <dd>
     Sends a new direct message to the specified user from the authenticating user.
+
 
 
 
@@ -695,6 +750,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_following_ids"></a>
@@ -702,6 +758,7 @@
     </dt>
     <dd>
     Returns a cursored collection of user IDs for every user the specified user is following (otherwise known as their "friends").
+
 
 
 
@@ -721,6 +778,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "lookup_friendships"></a>
@@ -728,6 +786,7 @@
     </dt>
     <dd>
     Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided.
+
 
 
 
@@ -747,6 +806,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_outgoing_follow_requests"></a>
@@ -754,6 +814,7 @@
     </dt>
     <dd>
     Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
+
 
 
 
@@ -773,6 +834,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "unfollow"></a>
@@ -780,6 +842,7 @@
     </dt>
     <dd>
     Allows the authenticating user to unfollow the user specified in the ID parameter.
+
 
 
 
@@ -799,6 +862,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_friendship"></a>
@@ -806,6 +870,7 @@
     </dt>
     <dd>
     Returns detailed information about the relationship between two arbitrary users.
+
 
 
 
@@ -825,6 +890,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_followers"></a>
@@ -832,6 +898,7 @@
     </dt>
     <dd>
     Returns a cursored collection of user objects for users following the specified user.
+
 
 
 
@@ -851,6 +918,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "verify_credentials"></a>
@@ -858,6 +926,7 @@
     </dt>
     <dd>
     Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not.
+
 
 
 
@@ -877,6 +946,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "update_delivery_device"></a>
@@ -884,6 +954,7 @@
     </dt>
     <dd>
     Sets which device Twitter delivers updates to for the authenticating user.
+
 
 
 
@@ -903,6 +974,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "set_profile_background_image"></a>
@@ -910,6 +982,7 @@
     </dt>
     <dd>
     Updates the authenticating user's profile background image.
+
 
 
 
@@ -929,6 +1002,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "set_profile_image"></a>
@@ -936,6 +1010,7 @@
     </dt>
     <dd>
     Updates the authenticating user's profile image.
+
 
 
 
@@ -955,6 +1030,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_blocked_ids"></a>
@@ -962,6 +1038,7 @@
     </dt>
     <dd>
     Returns an array of numeric user ids the authenticating user is blocking.
+
 
 
 
@@ -981,6 +1058,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "unblock_user"></a>
@@ -988,6 +1066,7 @@
     </dt>
     <dd>
     Un-blocks the user specified in the ID parameter for the authenticating user.
+
 
 
 
@@ -1007,6 +1086,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_user"></a>
@@ -1014,6 +1094,7 @@
     </dt>
     <dd>
     Returns a variety of information about the user specified by the required user_id or screen_name parameter.
+
 
 
 
@@ -1033,6 +1114,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_contributees"></a>
@@ -1040,6 +1122,7 @@
     </dt>
     <dd>
     Returns a collection of users that the specified user can "contribute" to.
+
 
 
 
@@ -1059,6 +1142,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "remove_profile_banner"></a>
@@ -1066,6 +1150,7 @@
     </dt>
     <dd>
     Removes the uploaded profile banner for the authenticating user.
+
 
 
 
@@ -1085,6 +1170,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_profile_banner"></a>
@@ -1092,6 +1178,63 @@
     </dt>
     <dd>
     Returns a map of the available size variations of the specified user's profile banner.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mute_user"></a>
+    <strong>mute_user</strong>
+    </dt>
+    <dd>
+    Mutes the user specified in the ID parameter for the authenticating user.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "unmute_user"></a>
+    <strong>unmute_user</strong>
+    </dt>
+    <dd>
+    Un-mutes the user specified in the ID parameter for the authenticating user.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_muted_ids"></a>
+    <strong>get_muted_ids</strong>
+    </dt>
+    <dd>
+    Returns an array of numeric user ids the authenticating user has muted.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "get_muted_users"></a>
+    <strong>get_muted_users</strong>
+    </dt>
+    <dd>
+    Returns an array of user objects the authenticating user has muted.
+
 
 
 
@@ -1111,6 +1254,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_suggestion_categories"></a>
@@ -1118,6 +1262,7 @@
     </dt>
     <dd>
     Access to Twitter's suggested user list.
+
 
 
 
@@ -1137,6 +1282,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_favorites"></a>
@@ -1144,6 +1290,7 @@
     </dt>
     <dd>
     Returns the 20 most recent Tweets favorited by the authenticating or specified user.
+
 
 
 
@@ -1163,6 +1310,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "set_favorite"></a>
@@ -1170,6 +1318,7 @@
     </dt>
     <dd>
     Favorites the status specified in the ID parameter as the authenticating user.
+
 
 
 
@@ -1189,6 +1338,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_list_timeline"></a>
@@ -1196,6 +1346,7 @@
     </dt>
     <dd>
     Returns a timeline of tweets authored by members of the specified list.
+
 
 
 
@@ -1215,6 +1366,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_lists_following_user"></a>
@@ -1222,6 +1374,7 @@
     </dt>
     <dd>
     Returns the lists the specified user has been added to.
+
 
 
 
@@ -1241,6 +1394,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "follow_list"></a>
@@ -1248,6 +1402,7 @@
     </dt>
     <dd>
     Subscribes the authenticated user to the specified list.
+
 
 
 
@@ -1267,6 +1422,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "unfollow_list"></a>
@@ -1274,6 +1430,7 @@
     </dt>
     <dd>
     Unsubscribes the authenticated user from the specified list.
+
 
 
 
@@ -1293,6 +1450,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "is_member_of_list"></a>
@@ -1300,6 +1458,7 @@
     </dt>
     <dd>
     Check if the specified user is a member of the specified list.
+
 
 
 
@@ -1319,6 +1478,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "add_list_member"></a>
@@ -1326,6 +1486,7 @@
     </dt>
     <dd>
     Add a member to a list.
+
 
 
 
@@ -1345,6 +1506,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "update_list"></a>
@@ -1352,6 +1514,7 @@
     </dt>
     <dd>
     Updates the specified list.
+
 
 
 
@@ -1371,6 +1534,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_list"></a>
@@ -1378,6 +1542,7 @@
     </dt>
     <dd>
     Returns the specified list.
+
 
 
 
@@ -1397,6 +1562,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "remove_multiple_list_members"></a>
@@ -1404,6 +1570,7 @@
     </dt>
     <dd>
     Removes multiple members from a list, by specifying a comma-separated list of member ids or screen names.
+
 
 
 
@@ -1423,6 +1590,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_saved_searches"></a>
@@ -1430,6 +1598,7 @@
     </dt>
     <dd>
     Returns the authenticated user's saved search queries.
+
 
 
 
@@ -1449,6 +1618,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "create_saved_search"></a>
@@ -1456,6 +1626,7 @@
     </dt>
     <dd>
     Create a new saved search for the authenticated user.
+
 
 
 
@@ -1475,6 +1646,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_place"></a>
@@ -1482,6 +1654,7 @@
     </dt>
     <dd>
     Returns all the information about a known place.
+
 
 
 
@@ -1501,6 +1674,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "search_places"></a>
@@ -1508,6 +1682,7 @@
     </dt>
     <dd>
     Search for places that can be attached to a statuses/update.
+
 
 
 
@@ -1527,13 +1702,15 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "create_place"></a>
     <strong>create_place</strong>
     </dt>
     <dd>
-    Creates a new place object at the given latitude and longitude.
+    As of December 2nd, 2013, this endpoint is deprecated and retired and no longer functions.
+
 
 
 
@@ -1553,6 +1730,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_all_trends_locations"></a>
@@ -1560,6 +1738,7 @@
     </dt>
     <dd>
     Returns the locations that Twitter has trending topic information for.
+
 
 
 
@@ -1579,6 +1758,7 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "report_spam"></a>
@@ -1586,6 +1766,7 @@
     </dt>
     <dd>
     Report the specified user as a spam account to Twitter.
+
 
 
 
@@ -1605,13 +1786,15 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_languages"></a>
     <strong>get_languages</strong>
     </dt>
     <dd>
-    Returns the list of languages supported by Twitter along with their ISO 639-1 code.
+    Returns the list of languages supported by Twitter along with the language code supported by Twitter.
+
 
 
 
@@ -1631,13 +1814,15 @@
 
 
 
+
 </dd>
     <dt>
     <a name = "get_tos"></a>
     <strong>get_tos</strong>
     </dt>
     <dd>
-    Returns the Twitter Terms of Service in the requested format.
+    Returns the Twitter Terms of Service.
+
 
 
 
@@ -1657,6 +1842,7 @@
 
 
 
+
 </dd>
 </dl>
 
@@ -1664,7 +1850,7 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3.12</a></i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

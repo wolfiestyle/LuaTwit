@@ -37,14 +37,18 @@
 
 
 <h2>Modules</h2>
-<ul>
-  <li><a href="../modules/luatwit.html">luatwit</a></li>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
   <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
   <li><strong>luatwit.util</strong></li>
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
 </ul>
 <h2>Examples</h2>
-<ul>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
@@ -56,7 +60,6 @@
 <div id="content">
 
 <h1>Module <code>luatwit.util</code></h1>
-
 <p>Misc utility functions used by the <a href="../modules/luatwit.html#">luatwit</a>  library.</p>
 <p></p>
     <h3>Info:</h3>
@@ -68,35 +71,35 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#new">new&nbsp;(base, mt)</a></td>
+	<td class="name" nowrap><a href="#new">new (base, mt)</a></td>
 	<td class="summary">Create a new class prototype or instance.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#load_file">load_file&nbsp;(filename, env)</a></td>
+	<td class="name" nowrap><a href="#load_file">load_file (filename, env)</a></td>
 	<td class="summary">Loads a Lua chunk from a file and executes it on it's own environment.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#make_functor">make_functor&nbsp;(fn)</a></td>
+	<td class="name" nowrap><a href="#make_functor">make_functor (fn)</a></td>
 	<td class="summary">Creates a function object.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#type">type&nbsp;(obj)</a></td>
+	<td class="name" nowrap><a href="#type">type (obj)</a></td>
 	<td class="summary">Gets the type of the supplied object or the _type value if present.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#inherit_mt">inherit_mt&nbsp;(dest, src)</a></td>
+	<td class="name" nowrap><a href="#inherit_mt">inherit_mt (dest, src)</a></td>
 	<td class="summary">Inherits methamethods from one table to another by copying them.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#map_copy">map_copy&nbsp;(dest, src, fn)</a></td>
+	<td class="name" nowrap><a href="#map_copy">map_copy (dest, src, fn)</a></td>
 	<td class="summary">Copies key-value pairs from one table to another and applies a function to the values.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#lazy_loader">lazy_loader&nbsp;(fn)</a></td>
+	<td class="name" nowrap><a href="#lazy_loader">lazy_loader (fn)</a></td>
 	<td class="summary">Creates a lazy table that loads its contents on field access.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#set">set&nbsp;(...)</a></td>
+	<td class="name" nowrap><a href="#set">set (...)</a></td>
 	<td class="summary">Creates a set table from the keys in the arguments.</td>
 	</tr>
 </table>
@@ -109,18 +112,21 @@
     <dl class="function">
     <dt>
     <a name = "new"></a>
-    <strong>new&nbsp;(base, mt)</strong>
+    <strong>new (base, mt)</strong>
     </dt>
     <dd>
     Create a new class prototype or instance.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">base</span>
-              Table used as a base class. Creates a new empty table if omitted.</li>
+              Table used as a base class. Creates a new empty table if omitted.
+        </li>
         <li><span class="parameter">mt</span>
                 Metatable for the new class. Sets <tt>base</tt> as metatable if omitted.
-                  The <tt>__index</tt> metamethod of this table will be set to the <tt>base</tt> argument.</li>
+                  The <tt>__index</tt> metamethod of this table will be set to the <tt>base</tt> argument.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -135,17 +141,20 @@
 </dd>
     <dt>
     <a name = "load_file"></a>
-    <strong>load_file&nbsp;(filename, env)</strong>
+    <strong>load_file (filename, env)</strong>
     </dt>
     <dd>
     Loads a Lua chunk from a file and executes it on it's own environment.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">filename</span>
-          Lua source file.</li>
+          Lua source file.
+        </li>
         <li><span class="parameter">env</span>
-               Environment used to run the code. Creates a new empty table if omitted.</li>
+               Environment used to run the code. Creates a new empty table if omitted.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -164,15 +173,17 @@
 </dd>
     <dt>
     <a name = "make_functor"></a>
-    <strong>make_functor&nbsp;(fn)</strong>
+    <strong>make_functor (fn)</strong>
     </dt>
     <dd>
     Creates a function object.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">fn</span>
-                Function.</li>
+                Function.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -187,15 +198,17 @@
 </dd>
     <dt>
     <a name = "type"></a>
-    <strong>type&nbsp;(obj)</strong>
+    <strong>type (obj)</strong>
     </dt>
     <dd>
     Gets the type of the supplied object or the _type value if present.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">obj</span>
-               Any value.</li>
+               Any value.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -210,17 +223,20 @@
 </dd>
     <dt>
     <a name = "inherit_mt"></a>
-    <strong>inherit_mt&nbsp;(dest, src)</strong>
+    <strong>inherit_mt (dest, src)</strong>
     </dt>
     <dd>
     Inherits methamethods from one table to another by copying them.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">dest</span>
-              Destination table.</li>
+              Destination table.
+        </li>
         <li><span class="parameter">src</span>
-               Source table.</li>
+               Source table.
+        </li>
     </ul>
 
 
@@ -230,21 +246,25 @@
 </dd>
     <dt>
     <a name = "map_copy"></a>
-    <strong>map_copy&nbsp;(dest, src, fn)</strong>
+    <strong>map_copy (dest, src, fn)</strong>
     </dt>
     <dd>
     Copies key-value pairs from one table to another and applies a function to the values.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">dest</span>
-              Destination table.</li>
+              Destination table.
+        </li>
         <li><span class="parameter">src</span>
-               Source table.</li>
+               Source table.
+        </li>
         <li><span class="parameter">fn</span>
                 Function applied to values before assigning them.
                   It's called as <tt>fn(value, key)</tt> for each key in <tt>src</tt>,
-                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.</li>
+                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -259,17 +279,19 @@
 </dd>
     <dt>
     <a name = "lazy_loader"></a>
-    <strong>lazy_loader&nbsp;(fn)</strong>
+    <strong>lazy_loader (fn)</strong>
     </dt>
     <dd>
     Creates a lazy table that loads its contents on field access.
+
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">fn</span>
                 Function that returns the table content.
                   This function will be called on the first field read attempt.
-                  The returned table fields will be copied to this table.</li>
+                  The returned table fields will be copied to this table.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -284,15 +306,17 @@
 </dd>
     <dt>
     <a name = "set"></a>
-    <strong>set&nbsp;(...)</strong>
+    <strong>set (...)</strong>
     </dt>
     <dd>
     Creates a set table from the keys in the arguments.
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">...</span>
-               Keys of the table. The values will be set to <tt>true</tt>.</li>
+               Keys of the table. The values will be set to <tt>true</tt>.
+        </li>
     </ul>
 
     <h3>Returns:</h3>
@@ -311,7 +335,7 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3.12</a></i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
