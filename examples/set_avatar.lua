@@ -2,7 +2,6 @@
 --
 -- Changes the user's avatar with the file passed as argument.
 --
-pcall(require, "luarocks.loader")
 package.path = "../src/?.lua;" .. package.path
 local twitter = require "luatwit"
 local base64 = require "base64"

@@ -2,7 +2,6 @@
 --
 -- Performs the Twitter app authorization procedure.
 --
-pcall(require, "luarocks.loader")
 package.path = "../src/?.lua;" .. package.path
 local twitter = require "luatwit"
 

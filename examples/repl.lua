@@ -3,9 +3,8 @@
 -- Interactive Lua session with a Twitter client logged in.
 -- It uses pl.pretty to display the returned data.
 --
-pcall(require, "luarocks.loader")
-pl = require "pl.import_into" ()
 package.path = "../src/?.lua;" .. package.path
+pl = require "pl.import_into" ()
 twitter = require "luatwit"
 util = require "luatwit.util"
 --debug.traceback = require("StackTracePlus").stacktrace

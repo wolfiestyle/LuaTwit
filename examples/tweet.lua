@@ -2,13 +2,12 @@
 --
 -- Sends a tweet with the text in the command line arguments.
 --
-pcall(require, "luarocks.loader")
-local pl = require "pl.import_into" ()
 package.path = "../src/?.lua;" .. package.path
+local lapp = require "pl.lapp"
 local twitter = require "luatwit"
 
 -- read tweet text from arguments
-local args = pl.lapp [[
+local args = lapp [[
 Sends a tweet.
     -m,--media (default "")     Image file to be included with the tweet
     <text...>  (string)         Tweet text
