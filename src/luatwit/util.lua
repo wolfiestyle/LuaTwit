@@ -39,11 +39,11 @@ function _M.load_file(filename, env)
     return env, pcall(code)
 end
 
---- Creates a function object.
+--- Creates a callable table.
 --
 -- @param fn        Function.
 -- @return          Table with the <tt>__call</tt> metamethod set to the provided function.
-function _M.make_functor(fn)
+function _M.make_callable(fn)
     local self = {}
     self.__call = fn
     return setmetatable(self, self)
@@ -62,7 +62,7 @@ function _M.type(obj)
     end
 end
 
-local metamethods = {"__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__eq", "__lt", "__le", "__index", "__newindex", "__call", "__tostring"}
+local metamethods = { "__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__len", "__eq", "__lt", "__le", "__index", "__newindex", "__call", "__tostring", "__pairs", "__ipairs" }
 
 --- Inherits methamethods from one table to another by copying them.
 --

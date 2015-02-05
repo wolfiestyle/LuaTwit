@@ -237,7 +237,7 @@ function _M.api:__index(key)
     if key:sub(1, 1) == "_" then return nil end
     local decl = _M.resources[key]
     if not decl then return nil end
-    local impl = util.make_functor(function(_self, parent, args)
+    local impl = util.make_callable(function(_self, parent, args)
         return parent:raw_call(decl, args, key, _self.defaults)
     end)
     impl._type = "api"
