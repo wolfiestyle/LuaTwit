@@ -12,7 +12,7 @@ description = {
         It implements simple parameter checking and returns metatable-typed JSON data.
     ]],
     homepage = "https://github.com/darkstalker/LuaTwit",
-    license = "MIT",
+    license = "MIT/X11",
 }
 
 dependencies = {

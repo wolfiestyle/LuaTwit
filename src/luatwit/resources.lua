@@ -2,7 +2,7 @@
 -- This is the data used to construct the `luatwit.api` function calls.
 --
 -- @module  luatwit.resources
--- @license MIT
+-- @license MIT/X11
 local setmetatable =
       setmetatable
 local util = require "luatwit.util"

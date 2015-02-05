@@ -1,7 +1,7 @@
 --- Metatables used to create objects from the data returned by the Twitter API.
 --
 -- @module  luatwit.objects
--- @license MIT
+-- @license MIT/X11
 local assert, io_open, ipairs, pairs, table_concat, type =
       assert, io.open, ipairs, pairs, table.concat, type
 local util = require "luatwit.util"

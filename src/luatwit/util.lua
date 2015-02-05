@@ -1,7 +1,7 @@
 --- Misc utility functions used by the `luatwit` library.
 --
 -- @module  luatwit.util
--- @license MIT
+-- @license MIT/X11
 local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type =
       assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type
 

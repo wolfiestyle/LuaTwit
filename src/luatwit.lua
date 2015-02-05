@@ -1,7 +1,7 @@
 --- Lua library for accessing the Twitter REST API v1.1
 --
 -- @module  luatwit
--- @license MIT
+-- @license MIT/X11
 local assert, error, next, pairs, select, setmetatable, table_concat, tostring, type, unpack =
       assert, error, next, pairs, select, setmetatable, table.concat, tostring, type, unpack
 local oauth = require "OAuth"
