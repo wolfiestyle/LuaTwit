@@ -5,7 +5,7 @@
 local assert, error, next, pairs, select, setmetatable, table_concat, tostring, type, unpack =
       assert, error, next, pairs, select, setmetatable, table.concat, tostring, type, unpack
 local oauth = require "OAuth"
-local json = require "cjson"
+local json = require "dkjson"
 local util = require "luatwit.util"
 local multipart = require("OAuth.helpers").multipart
 
@@ -18,9 +18,6 @@ _M.resources = require "luatwit.resources"
 --- API object definitions.
 -- @see luatwit.objects
 _M.objects = require "luatwit.objects"
-
---- JSON null value.
-_M.null = json.null
 
 --- Class prototype that implements the API calls.
 -- Methods are created on demand from the definitions in the `resources` table.
@@ -138,7 +135,7 @@ function _M.api:apply_types(node, tname)
     elseif type_st == "table" then
         for k, tn in pairs(st) do
             local item = node[k]
-            if item ~= nil and item ~= json.null then
+            if item ~= nil then
                 self:apply_types(item, tn)
             end
         end
@@ -157,7 +154,7 @@ end
 -- @param defaults  Default method arguments.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
 --              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
--- @return      HTTP headers. On error, instead it will be an string or `luatwit.objects.error` describing the error.
+-- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
@@ -175,7 +172,10 @@ function _M.api:raw_call(decl, args, name, defaults)
     if args._raw then
         return body, headers, tname
     end
-    local json_data = self:parse_json(body, tname)
+    local json_data, err = self:parse_json(body, tname)
+    if json_data == nil then
+        return nil, err, headers
+    end
     if json_data._type == "error" then
         return nil, json_data, headers
     end
@@ -192,9 +192,12 @@ end
 -- @param str   JSON string.
 -- @param tname Type name as defined in `resources`.
 --              If set, the function will set type metatables.
--- @return      A table with the decoded JSON data.
+-- @return      A table with the decoded JSON data, or <tt>nil</tt> on error.
 function _M.api:parse_json(str, tname)
-    local json_data = json.decode(str)
+    local json_data, _, err = json.decode(str, nil, nil, nil)
+    if json_data == nil then
+        return nil, err
+    end
     if tname then
         if type(json_data) == "table" and json_data.errors then
             tname = "error"

@@ -6,7 +6,7 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 ## Dependencies
 
 - oauth
-- lua-cjson
+- dkjson
 
 Also you'll need `penlight` to run some of the examples and `ldoc` if you want to generate the docs.
 

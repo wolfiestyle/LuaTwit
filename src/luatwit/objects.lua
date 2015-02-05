@@ -5,7 +5,6 @@
 local assert, io_open, ipairs, pairs, table_concat, type =
       assert, io.open, ipairs, pairs, table.concat, type
 local util = require "luatwit.util"
-local json = require "cjson"
 
 local _M = {}
 
@@ -397,7 +396,7 @@ end
 -- @return          A `tweet` object, or <tt>nil</tt> if this tweet is the first in the reply chain.
 function _M.tweet:get_next_in_thread(args)
     local reply_id = self.in_reply_to_status_id_str
-    if reply_id == nil or reply_id == json.null then return nil end
+    if reply_id == nil then return nil end
     args = args or {}
     args.id = reply_id
     return self._client:get_tweet(args)
