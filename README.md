@@ -7,8 +7,9 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 
 - oauth
 - dkjson
+- lanes
 
-Also you'll need `penlight` to run some of the examples and `ldoc` if you want to generate the docs.
+Also you'll need `penlight` to run the examples and `ldoc` if you want to generate the docs.
 
 ## Documentation
 
@@ -50,3 +51,9 @@ The type metatables also provide convenience methods:
 
     result[1]:set_favorite():retweet()
     result[1]:reply{ status = "answer!", _mention = true }
+
+The methods can be called in async mode, and they'll return a future object that can be read with `peek()` and `wait()`:
+
+    local res_f = client:get_user{ user_id = 174958347, _async = true }
+    print(res_f._type)          -- "future"
+    print(res_f:wait().screen_name)

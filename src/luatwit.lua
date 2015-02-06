@@ -5,6 +5,7 @@
 local assert, error, next, pairs, select, setmetatable, table_concat, tostring, type, unpack =
       assert, error, next, pairs, select, setmetatable, table.concat, tostring, type, unpack
 local oauth = require "OAuth"
+local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
 local util = require "luatwit.util"
 local multipart = require("OAuth.helpers").multipart
@@ -154,6 +155,7 @@ end
 -- @param defaults  Default method arguments.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
 --              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
+--              If the option <tt>_async</tt> is set, instead it returns a `luatwit.oauth_async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
@@ -163,28 +165,37 @@ function _M.api:raw_call(decl, args, name, defaults)
     args = args or {}
     name = name or "raw_call"
     local method, url, request, req_headers = build_request(decl, args, name, defaults)
-    local res_code, headers, status_line, body = self.oauth_client:PerformRequest(method, url, request, req_headers)
-    if type(body) ~= "string" then  -- returns an empty table on error and the error string in 'res_code'
-        return nil, res_code
-    end
-    self:apply_types(headers, "headers")
-    local tname = decl[4]
-    if args._raw then
-        return body, headers, tname
-    end
-    local json_data, err = self:parse_json(body, tname)
-    if json_data == nil then
-        return nil, err, headers
-    end
-    if json_data._type == "error" then
-        return nil, json_data, headers
-    end
-    if method == "GET" and type(json_data) == "table" and type(request) == "table" then
-        json_data._source_method = function(_args)
-            return self:raw_call(decl, _args, name, request)
+
+    local function response_callback(res_code, headers, body)
+        if type(body) ~= "string" then  -- returns an empty table on error and the error string in 'res_code'
+            return nil, res_code
         end
+        self:apply_types(headers, "headers")
+        local tname = decl[4]
+        if args._raw then
+            return body, headers, tname
+        end
+        local json_data, err = self:parse_json(body, tname)
+        if json_data == nil then
+            return nil, err, headers
+        end
+        if json_data._type == "error" then
+            return nil, json_data, headers
+        end
+        if method == "GET" and type(json_data) == "table" and type(request) == "table" then
+            json_data._source_method = function(_args)
+                return self:raw_call(decl, _args, name, request)
+            end
+        end
+        return json_data, headers
     end
-    return json_data, headers
+
+    if args._async then
+        return self.oauth_async:PerformRequest(method, url, request, req_headers, response_callback)
+    else
+        local res_code, headers, _, body = self.oauth_sync:PerformRequest(method, url, request, req_headers)
+        return response_callback(res_code, headers, body)
+    end
 end
 
 --- Parses a JSON string and applies type metatables.
@@ -215,8 +226,8 @@ end
 -- @return      Authorization URL.
 -- @return      HTTP Authorization header.
 function _M.api:start_login()
-    self.oauth_client:RequestToken{ oauth_callback = "oob" }
-    return self.oauth_client:BuildAuthorizationUrl()
+    self.oauth_sync:RequestToken{ oauth_callback = "oob" }
+    return self.oauth_sync:BuildAuthorizationUrl()
 end
 
 --- Finishes the OAuth authorization.
@@ -228,7 +239,7 @@ end
 -- @return      HTTP result code.
 -- @return      HTTP headers.
 function _M.api:confirm_login(pin)
-    local token, res_code, headers, status_line = self.oauth_client:GetAccessToken{ oauth_verifier = tostring(pin) }
+    local token, res_code, headers, status_line = self.oauth_sync:GetAccessToken{ oauth_verifier = tostring(pin) }
     return self:apply_types(token, "access_token"), status_line, res_code, headers
 end
 
@@ -278,7 +289,8 @@ function _M.new(args)
     local err = check_args(args, oauth_key_args, "new")
     assert(not err, err)
     local self = util.new(_M.api)
-    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    self.oauth_async = oauth_as.worker.new(args, _M.resources._endpoints)
     -- create per-client copies of _M.objects items with an extra _client field
     self.objects = setmetatable({}, {
         __index = function(_self, key)

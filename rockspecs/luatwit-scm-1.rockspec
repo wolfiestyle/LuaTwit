@@ -19,6 +19,7 @@ dependencies = {
     "lua >= 5.1",
     "oauth >= 0.0.5",
     "dkjson >= 2.5",
+    "lanes >= 3.9.4",
 }
 
 build = {
