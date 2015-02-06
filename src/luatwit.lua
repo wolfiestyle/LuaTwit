@@ -8,7 +8,7 @@ local oauth = require "OAuth"
 local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
 local util = require "luatwit.util"
-local multipart = require("OAuth.helpers").multipart
+local helpers = require "OAuth.helpers"
 
 local _M = {}
 
@@ -26,30 +26,26 @@ _M.objects = require "luatwit.objects"
 _M.api = util.make_class()
 
 -- Builds the request url and arguments for the OAuth call.
-local function build_request(decl, args, name, defaults)
-    local method, url, rules = unpack(decl)
-    local err = util.check_args(args, rules, name)
-    assert(not err, err)
+local function build_request(path, args, defaults, multipart)
     local request = {}
     if defaults then
         util.map_copy(request, defaults)
     end
     util.map_copy(request, args, function(v, k)
         if k:sub(1, 1) ~= "_" then return v end
-        return nil
     end)
-    url = url:gsub(":([%w_]+)", function(key)
+    path = path:gsub(":([%w_]+)", function(key)
         local val = request[key]
         assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")
         request[key] = nil
         return val
     end)
-    url = _M.resources._base_url .. url .. ".json"
-    if decl._multipart then
-        local mp = multipart.Request(request)
-        return method, url, mp.body, mp.headers
+    local url = _M.resources._base_url .. path .. ".json"
+    if multipart then
+        local mp = helpers.multipart.Request(request)
+        return url, mp.body, mp.headers
     end
-    return method, url, request
+    return url, request
 end
 
 --- Applies type metatables to the supplied JSON data recursively.
@@ -86,10 +82,14 @@ end
 --- Generic call to the Twitter API.
 -- This is the backend method that performs all the API calls.
 --
--- @param decl  API method declaration. This is taken from the `resources` table.
+-- @param method    HTTP method.
+-- @param path  API method path.
 -- @param args  Table with the method arguments.
--- @param name  Method name. Used internally for building error messages.
+-- @param tname Type name as defined in `resources`.
+-- @param mp    `true` if the request should be done as multipart.
+-- @param rules Rules for checking args (with `luatwit.util.check_args`).
 -- @param defaults  Default method arguments.
+-- @param name  API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
 --              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
 --              If the option <tt>_async</tt> is set, instead it returns a `luatwit.oauth_async.future` object.
@@ -97,18 +97,19 @@ end
 -- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
-function _M.api:raw_call(decl, args, name, defaults)
-    assert(#decl >= 2, "invalid resource declaration")
+function _M.api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     args = args or {}
     name = name or "raw_call"
-    local method, url, request, req_headers = build_request(decl, args, name, defaults)
+    local err = util.check_args(args, rules, name)
+    assert(not err, err)
+
+    local url, request, req_headers = build_request(path, args, defaults, mp)
 
     local function parse_response(res_code, headers, body)
         if type(body) ~= "string" then  -- OAuth.PerformRequest returns {} on error and the error string in 'res_code'
             return nil, res_code
         end
         self:apply_types(headers, "headers")
-        local tname = decl[4]
         if args._raw then
             return body, headers, tname
         end
@@ -185,18 +186,19 @@ end
 -- @param key   Function name as defined in `luatwit.resources`.
 -- @return      Function implementation.
 function _M.api:__index(key)
-    if key:sub(1, 1) == "_" then return nil end
+    if type(key) ~= "string" or key:sub(1, 1) == "_" then return nil end
     local decl = _M.resources[key]
     if not decl then return nil end
+    assert(type(decl) == "table" and #decl >= 2, "invalid resource declaration for: " .. key)
+    local mp, method, path, rules, tname = decl._multipart, unpack(decl)
     local impl = util.make_callable(function(_self, parent, args)
-        return parent:raw_call(decl, args, key, _self.defaults)
+        return parent:raw_call(method, path, args, tname, mp, rules, _self.defaults, key)
     end)
     impl._type = "api"
-    impl.url = decl[2]
+    impl.url = path
     if decl.default_args then
         local def = util.map_copy({}, decl.default_args, function(v, k)
-            if decl[3][k] ~= nil then return v end
-            return nil
+            if rules[k] ~= nil then return v end
         end)
         if next(def) ~= nil then
             impl.defaults = def
