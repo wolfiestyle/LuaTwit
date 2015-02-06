@@ -40,10 +40,11 @@
 
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>luatwit</strong></li>
+  <li><a href="../modules/luatwit.oauth_async.html">luatwit.oauth_async</a></li>
   <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
   <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
   <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
-  <li><strong>luatwit</strong></li>
 </ul>
 <h2>Topics</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
@@ -51,6 +52,7 @@
 </ul>
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
@@ -66,7 +68,7 @@
 <p></p>
     <h3>Info:</h3>
     <ul>
-        <li><strong>License</strong>: MIT</li>
+        <li><strong>License</strong>: MIT/X11</li>
     </ul>
 
 
@@ -74,7 +76,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#new">new (args)</a></td>
-	<td class="summary">Creates a new <a href="../modules/luatwit.html#api">api</a>  object with the supplied keys.</td>
+	<td class="summary">Creates a new <a href="../modules/luatwit.html#api">api</a> object with the supplied keys.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#load_keys">load_keys (...)</a></td>
@@ -90,10 +92,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#objects">objects</a></td>
 	<td class="summary">API object definitions.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#null">null</a></td>
-	<td class="summary">JSON null value.</td>
 	</tr>
 </table>
 <h2><a href="#Class_api">Class api </a></h2>
@@ -120,7 +118,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.api:__index">_M.api:__index (key)</a></td>
-	<td class="summary">Constructs an <a href="../modules/luatwit.html#api">api</a>  method from the declarations in <a href="../modules/luatwit.html#resources">resources</a> .</td>
+	<td class="summary">Constructs an <a href="../modules/luatwit.html#api">api</a> method from the declarations in <a href="../modules/luatwit.html#resources">resources</a>.</td>
 	</tr>
 </table>
 
@@ -129,13 +127,14 @@
 
 
     <h2><a name="Functions"></a>Functions</h2>
+
     <dl class="function">
     <dt>
     <a name = "new"></a>
     <strong>new (args)</strong>
     </dt>
     <dd>
-    Creates a new <a href="../modules/luatwit.html#api">api</a>  object with the supplied keys.
+    Creates a new <a href="../modules/luatwit.html#api">api</a> object with the supplied keys.
  An object created with only the consumer keys must call <code>api:start_login</code> and <code>api:confirm_login</code> to get the access token,
  otherwise it won't be able to make API calls.
 
@@ -151,7 +150,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        New instance of the <a href="../modules/luatwit.html#api">api</a>  class.
+        New instance of the <a href="../modules/luatwit.html#api">api</a> class.
     </ol>
 
 
@@ -192,6 +191,7 @@
 </dd>
 </dl>
     <h2><a name="Fields"></a>Fields</h2>
+
     <dl class="function">
     <dt>
     <a name = "resources"></a>
@@ -229,24 +229,11 @@
 
 
 </dd>
-    <dt>
-    <a name = "null"></a>
-    <strong>null</strong>
-    </dt>
-    <dd>
-    JSON null value.
-
-
-
-
-
-
-
-</dd>
 </dl>
     <h2><a name="Class_api"></a>Class api </h2>
 
- Methods are created on demand from the definitions in the <a href="../modules/luatwit.html#resources">resources</a>  table.
+        Class prototype that implements the API calls.
+ Methods are created on demand from the definitions in the <a href="../modules/luatwit.html#resources">resources</a> table.
     <dl class="function">
     <dt>
     <a name = "_M.api:apply_types"></a>
@@ -262,7 +249,7 @@
           Table with JSON data.
         </li>
         <li><span class="parameter">tname</span>
-         String with the name of an object defined in <a href="../modules/luatwit.html#objects">objects</a> .
+         String with the name of an object defined in <a href="../modules/luatwit.html#objects">objects</a>.
         </li>
     </ul>
 
@@ -289,7 +276,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">decl</span>
-          API method declaration. This is taken from the <a href="../modules/luatwit.html#resources">resources</a>  table.
+          API method declaration. This is taken from the <a href="../modules/luatwit.html#resources">resources</a> table.
         </li>
         <li><span class="parameter">args</span>
           Table with the method arguments.
@@ -305,12 +292,13 @@
     <h3>Returns:</h3>
     <ol>
         <li>
-        A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
-              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.</li>
+              A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
+              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
+              If the option <tt>_async</tt> is set, instead it returns a <a href="../modules/luatwit.oauth_async.html#future">luatwit.oauth_async.future</a> object.</li>
         <li>
-        HTTP headers. On error, instead it will be an string or <a href="../modules/luatwit.objects.html#error">luatwit.objects.error</a>  describing the error.</li>
+        HTTP headers. On error, instead it will be a string or a <a href="../modules/luatwit.objects.html#error">luatwit.objects.error</a> describing the error.</li>
         <li>
-              If the option <tt>_raw</tt> is set, the type name from <a href="../modules/luatwit.html#resources">resources</a> .
+              If the option <tt>_raw</tt> is set, the type name from <a href="../modules/luatwit.html#resources">resources</a>.
               This value is needed to use the <code>api:parse_json</code> with the returned string.
               If an API error ocurred, instead it will be the HTTP headers of the request.</li>
     </ol>
@@ -333,7 +321,7 @@
            JSON string.
         </li>
         <li><span class="parameter">tname</span>
-         Type name as defined in <a href="../modules/luatwit.html#resources">resources</a> .
+         Type name as defined in <a href="../modules/luatwit.html#resources">resources</a>.
               If set, the function will set type metatables.
         </li>
     </ul>
@@ -341,7 +329,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        A table with the decoded JSON data.
+        A table with the decoded JSON data, or <tt>nil</tt> on error.
     </ol>
 
 
@@ -409,13 +397,13 @@
     <strong>_M.api:__index (key)</strong>
     </dt>
     <dd>
-    Constructs an <a href="../modules/luatwit.html#api">api</a>  method from the declarations in <a href="../modules/luatwit.html#resources">resources</a> .
+    Constructs an <a href="../modules/luatwit.html#api">api</a> method from the declarations in <a href="../modules/luatwit.html#resources">resources</a>.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">key</span>
-           Function name as defined in <a href="../modules/luatwit.resources.html#">luatwit.resources</a> .
+           Function name as defined in <a href="../modules/luatwit.resources.html#">luatwit.resources</a>.
         </li>
     </ul>
 
@@ -435,7 +423,8 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-02-06 03:34:56 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

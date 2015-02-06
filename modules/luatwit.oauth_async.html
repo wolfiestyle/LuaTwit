@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Class_future">Class future </a></li>
+<li><a href="#Class_worker">Class worker </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><strong>luatwit.oauth_async</strong></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>luatwit.oauth_async</code></h1>
+<p>Implements a service for performing asyncronous OAuth requests.</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>License</strong>: MIT/X11</li>
+    </ul>
+
+
+<h2><a href="#Class_future">Class future </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#future:peek">future:peek ()</a></td>
+	<td class="summary">Checks (non-blocking) and returns the value of the future if it's ready.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#future:wait">future:wait ()</a></td>
+	<td class="summary">Waits (blocks) until the value of the future is ready.</td>
+	</tr>
+</table>
+<h2><a href="#Class_worker">Class worker </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#worker.new">worker.new (keys, endp)</a></td>
+	<td class="summary">Creates a new async OAuth client.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#worker:start">worker:start ()</a></td>
+	<td class="summary">Starts the service thread.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#worker:stop">worker:stop ()</a></td>
+	<td class="summary">Stops the service thread.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#worker:data_available">worker:data_available ()</a></td>
+	<td class="summary">Checks if there is data pending to be received.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#worker:PerformRequest">worker:PerformRequest (method, url, request, headers, callback)</a></td>
+	<td class="summary">Performs an asynchronous OAuth request.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Class_future"></a>Class future </h2>
+
+        Future object.
+ It contains the result of an asynchronous API call.
+    <dl class="function">
+    <dt>
+    <a name = "future:peek"></a>
+    <strong>future:peek ()</strong>
+    </dt>
+    <dd>
+    Checks (non-blocking) and returns the value of the future if it's ready.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The API call result, or <tt>nil</tt> if it's not ready yet.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "future:wait"></a>
+    <strong>future:wait ()</strong>
+    </dt>
+    <dd>
+    Waits (blocks) until the value of the future is ready.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The API call result.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_worker"></a>Class worker </h2>
+
+        Worker object.
+ Executes OAuth requests on a background thread.
+    <dl class="function">
+    <dt>
+    <a name = "worker.new"></a>
+    <strong>worker.new (keys, endp)</strong>
+    </dt>
+    <dd>
+    Creates a new async OAuth client.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keys</span>
+          Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
+        </li>
+        <li><span class="parameter">endp</span>
+          Table with OAuth endpoints.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New instance of the oauth async client.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "worker:start"></a>
+    <strong>worker:start ()</strong>
+    </dt>
+    <dd>
+    Starts the service thread.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "worker:stop"></a>
+    <strong>worker:stop ()</strong>
+    </dt>
+    <dd>
+    Stops the service thread.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "worker:data_available"></a>
+    <strong>worker:data_available ()</strong>
+    </dt>
+    <dd>
+    Checks if there is data pending to be received.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <tt>true</tt> if there is data pending on the message queue, otherwise <tt>false</tt>.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "worker:PerformRequest"></a>
+    <strong>worker:PerformRequest (method, url, request, headers, callback)</strong>
+    </dt>
+    <dd>
+    Performs an asynchronous OAuth request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">url</span>
+               Request URL.
+        </li>
+        <li><span class="parameter">request</span>
+           Table with request pairs.
+        </li>
+        <li><span class="parameter">headers</span>
+           Custom HTTP headers.
+        </li>
+        <li><span class="parameter">callback</span>
+          Function that processes the response output.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-02-06 03:34:56 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

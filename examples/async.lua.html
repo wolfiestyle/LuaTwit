@@ -34,8 +34,8 @@
 
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
-  <li><a href="../examples/async.lua.html">async.lua</a></li>
-  <li><strong>authorize.lua</strong></li>
+  <li><strong>async.lua</strong></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
   <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
@@ -57,33 +57,41 @@
 
 <div id="content">
 
-    <h2>authorize.lua</h2>
+    <h2>async.lua</h2>
 <pre>
 #!/usr/bin/lua
 <span class="comment">--
-</span><span class="comment">-- Performs the Twitter app authorization procedure.
+</span><span class="comment">-- Performs an asyncronous API call.
 </span><span class="comment">--
 </span><span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 <span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
+<span class="keyword">local</span> pretty = <span class="global">require</span> <span class="string">"pl.pretty"</span>
+<span class="keyword">local</span> socket = <span class="global">require</span> <span class="string">"socket"</span>
 
-<span class="comment">-- load the app consumer keys from "oauth_app_keys"
-</span><span class="comment">-- you need to fill in valid app keys before using this script
-</span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>)
+<span class="comment">-- initialize the twitter client
+</span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 <span class="keyword">local</span> client = twitter.new(oauth_params)
 
-<span class="comment">-- First auth step: generate auth URL and obtain PIN
-</span><span class="keyword">local</span> auth_url = client:start_login()
-<span class="global">print</span>(<span class="string">"-- auth url: "</span> .. auth_url)
+<span class="comment">-- When the option _async is set, the methods exit immeditately and
+</span><span class="comment">-- return a future value. The request is done in a background thread.
+</span><span class="comment">-- The main thread can get the result calling :peek() or :wait()
+</span><span class="comment">-- on the future object.
+</span><span class="keyword">local</span> f = client:verify_credentials{ skip_status = <span class="keyword">true</span>, _async = <span class="keyword">true</span> }
+<span class="global">print</span> <span class="string">"request sent..."</span>
 
-<span class="comment">-- Second auth step: read the PIN and obtain access token
-</span><span class="global">io</span>.write(<span class="string">"-- enter pin: "</span>)
-<span class="keyword">local</span> pin = <span class="global">assert</span>(<span class="global">io</span>.read():match(<span class="string">"%d+"</span>), <span class="string">"invalid number"</span>)
-<span class="keyword">local</span> token, err = client:confirm_login(pin)
-<span class="global">assert</span>(token, err)
+<span class="comment">-- do something else until it's ready
+</span><span class="keyword">local</span> res, h
+<span class="keyword">repeat</span>
+    <span class="global">print</span> <span class="string">"waiting for response..."</span>
+    socket.sleep(<span class="number">0.25</span>)
+    <span class="comment">-- uses the same return format of normal api calls
+</span>    res, h = f:peek()
+<span class="keyword">until</span> res
 
-<span class="comment">-- save the access token
-</span><span class="global">print</span>(<span class="string">"-- logged in as "</span> .. token.screen_name)
-token:save(<span class="string">"local_auth"</span>)</pre>
+<span class="comment">-- the second return value contains the error if something went wrong
+</span><span class="global">assert</span>(res, <span class="global">tostring</span>(h))
+
+pretty.dump(res)</pre>
 
 
 </div> <!-- id="content" -->

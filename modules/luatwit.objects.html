@@ -43,10 +43,11 @@
 
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.oauth_async.html">luatwit.oauth_async</a></li>
   <li><strong>luatwit.objects</strong></li>
   <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
   <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
-  <li><a href="../modules/luatwit.html">luatwit</a></li>
 </ul>
 <h2>Topics</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
@@ -54,6 +55,7 @@
 </ul>
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
@@ -69,7 +71,7 @@
 <p></p>
     <h3>Info:</h3>
     <ul>
-        <li><strong>License</strong>: MIT</li>
+        <li><strong>License</strong>: MIT/X11</li>
     </ul>
 
 
@@ -77,7 +79,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#_M.access_token:save">_M.access_token:save (filename)</a></td>
-	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a>  object into a file.</td>
+	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a> object into a file.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.headers:get_rate_limit">_M.headers:get_rate_limit ()</a></td>
@@ -93,7 +95,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.user_list:get_ids">_M.user_list:get_ids ()</a></td>
-	<td class="summary">Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  from this object.</td>
+	<td class="summary">Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> from this object.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.user_cursor:next">_M.user_cursor:next ()</a></td>
@@ -153,7 +155,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.place_search:create_place">_M.place_search:create_place (args)</a></td>
-	<td class="summary">Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a> .</td>
+	<td class="summary">Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a>.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#_M.trend:__tostring">_M.trend:__tostring ()</a></td>
@@ -200,23 +202,23 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#user_list">user_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#user">user</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#user">user</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#user_cursor">user_cursor</a></td>
-	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#user">user</a>  objects.</td>
+	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#user">user</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tweet_list">tweet_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#tweet">tweet</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#tweet">tweet</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#tweet_search">tweet_search</a></td>
-	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a>  search.</td>
+	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a> search.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#dm_list">dm_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#dm">dm</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#dm">dm</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#entities">entities</a></td>
@@ -240,7 +242,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#friendship_list">friendship_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#friendship">friendship</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#friendship">friendship</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#relationship">relationship</a></td>
@@ -248,7 +250,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#relationship_container">relationship_container</a></td>
-	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a>  object.</td>
+	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a> object.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#account_settings">account_settings</a></td>
@@ -264,15 +266,15 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#suggestion_category_list">suggestion_category_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#userlist_list">userlist_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#userlist_cursor">userlist_cursor</a></td>
-	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.</td>
+	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#saved_search">saved_search</a></td>
@@ -280,7 +282,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#saved_search_list">saved_search_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#place">place</a></td>
@@ -288,15 +290,15 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#place_list">place_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#place">place</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#place">place</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#place_search">place_search</a></td>
-	<td class="summary">Container of a <a href="../modules/luatwit.objects.html#place">place</a>  search with query info.</td>
+	<td class="summary">Container of a <a href="../modules/luatwit.objects.html#place">place</a> search with query info.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#place_search_result">place_search_result</a></td>
-	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#place">place</a>  search.</td>
+	<td class="summary">Results of a <a href="../modules/luatwit.objects.html#place">place</a> search.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend">trend</a></td>
@@ -304,7 +306,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend_list">trend_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend">trend</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trends_container">trends_container</a></td>
@@ -312,7 +314,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trends_container_list">trends_container_list</a></td>
-	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.</td>
+	<td class="summary">Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a> object.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend_location">trend_location</a></td>
@@ -320,7 +322,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#trend_location_list">trend_location_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#service_config">service_config</a></td>
@@ -332,7 +334,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#language_list">language_list</a></td>
-	<td class="summary">List of <a href="../modules/luatwit.objects.html#language">language</a>  objects.</td>
+	<td class="summary">List of <a href="../modules/luatwit.objects.html#language">language</a> objects.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#privacy">privacy</a></td>
@@ -545,14 +547,15 @@
 
 
     <h2><a name="Functions"></a>Functions</h2>
+
     <dl class="function">
     <dt>
     <a name = "_M.access_token:save"></a>
     <strong>_M.access_token:save (filename)</strong>
     </dt>
     <dd>
-    Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a>  object into a file.
- The output file can be loaded with <a href="../modules/luatwit.html#load_keys">luatwit.load_keys</a> .
+    Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a> object into a file.
+ The output file can be loaded with <a href="../modules/luatwit.html#load_keys">luatwit.load_keys</a>.
 
 
 
@@ -566,7 +569,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        The <a href="../modules/luatwit.objects.html#access_token">access_token</a>  itself.
+        The <a href="../modules/luatwit.objects.html#access_token">access_token</a> itself.
     </ol>
 
 
@@ -635,14 +638,14 @@
     <strong>_M.user_list:get_ids ()</strong>
     </dt>
     <dd>
-    Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  from this object.
+    Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> from this object.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  object.
+        An <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> object.
     </ol>
 
 
@@ -661,7 +664,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Next <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+        Next <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> page, or <tt>nil</tt> if the current page is the last.
     </ol>
 
 
@@ -680,7 +683,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Previous <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+        Previous <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> page, or <tt>nil</tt> if the current page is the first.
     </ol>
 
 
@@ -717,14 +720,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#lookup_users">resources.lookup_users</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#lookup_users">resources.lookup_users</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_list">user_list</a> object.
     </ol>
 
 
@@ -762,7 +765,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Next <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+        Next <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> page, or <tt>nil</tt> if the current page is the last.
     </ol>
 
 
@@ -781,7 +784,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Previous <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+        Previous <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> page, or <tt>nil</tt> if the current page is the first.
     </ol>
 
 
@@ -799,14 +802,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -824,14 +827,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -849,14 +852,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user">resources.get_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -875,7 +878,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_list">user_list</a> object.
     </ol>
 
 
@@ -894,7 +897,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Next <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  page, or <tt>nil</tt> if the current page is the last.
+        Next <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> page, or <tt>nil</tt> if the current page is the last.
     </ol>
 
 
@@ -913,7 +916,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        Previous <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  page, or <tt>nil</tt> if the current page is the first.
+        Previous <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> page, or <tt>nil</tt> if the current page is the first.
     </ol>
 
 
@@ -931,14 +934,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a> object.
     </ol>
 
 
@@ -950,20 +953,20 @@
     <strong>_M.place_search:create_place (args)</strong>
     </dt>
     <dd>
-    Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a> .
+    Creates a new place using the token returned by <a href="../modules/luatwit.resources.html#get_similar_places">resources.get_similar_places</a>.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#create_place">resources.create_place</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#create_place">resources.create_place</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#place">place</a>  object.
+        A <a href="../modules/luatwit.objects.html#place">place</a> object.
     </ol>
 
 
@@ -1000,14 +1003,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#search_tweets">resources.search_tweets</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_search">tweet_search</a> object.
     </ol>
 
 
@@ -1025,14 +1028,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_trends">resources.get_trends</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_trends">resources.get_trends</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#trends_container_list">trends_container_list</a>  object.
+        A <a href="../modules/luatwit.objects.html#trends_container_list">trends_container_list</a> object.
     </ol>
 
 
@@ -1107,7 +1110,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">obj</span>
-               Endpoint URL, Resource declaration (<a href="../modules/luatwit.resources.html#">luatwit.resources</a>  field) or API method (<a href="../modules/luatwit.html#api">luatwit.api</a>  field).
+               Endpoint URL, Resource declaration (<a href="../modules/luatwit.resources.html#">luatwit.resources</a> field) or API method (<a href="../modules/luatwit.html#api">luatwit.api</a> field).
         </li>
     </ul>
 
@@ -1123,6 +1126,7 @@
 </dd>
 </dl>
     <h2><a name="Fields"></a>Fields</h2>
+
     <dl class="function">
     <dt>
     <a name = "access_token"></a>
@@ -1172,7 +1176,7 @@
     <strong>user_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#user">user</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#user">user</a> objects.
 
 
 
@@ -1186,7 +1190,7 @@
     <strong>user_cursor</strong>
     </dt>
     <dd>
-    Cursor of <a href="../modules/luatwit.objects.html#user">user</a>  objects.
+    Cursor of <a href="../modules/luatwit.objects.html#user">user</a> objects.
 
 
 
@@ -1200,7 +1204,7 @@
     <strong>tweet_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#tweet">tweet</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#tweet">tweet</a> objects.
 
 
 
@@ -1214,7 +1218,7 @@
     <strong>tweet_search</strong>
     </dt>
     <dd>
-    Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a>  search.
+    Results of a <a href="../modules/luatwit.objects.html#tweet">tweet</a> search.
 
 
 
@@ -1228,7 +1232,7 @@
     <strong>dm_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#dm">dm</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#dm">dm</a> objects.
 
 
 
@@ -1312,7 +1316,7 @@
     <strong>friendship_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#friendship">friendship</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#friendship">friendship</a> objects.
 
 
 
@@ -1340,7 +1344,7 @@
     <strong>relationship_container</strong>
     </dt>
     <dd>
-    Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a>  object.
+    Contains a single <a href="../modules/luatwit.objects.html#relationship">relationship</a> object.
 
 
 
@@ -1396,7 +1400,7 @@
     <strong>suggestion_category_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#suggestion_category">suggestion_category</a> objects.
 
 
 
@@ -1410,7 +1414,7 @@
     <strong>userlist_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.
 
 
 
@@ -1424,7 +1428,7 @@
     <strong>userlist_cursor</strong>
     </dt>
     <dd>
-    Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a>  objects.
+    Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.
 
 
 
@@ -1452,7 +1456,7 @@
     <strong>saved_search_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#saved_search">saved_search</a> objects.
 
 
 
@@ -1480,7 +1484,7 @@
     <strong>place_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#place">place</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#place">place</a> objects.
 
 
 
@@ -1494,7 +1498,7 @@
     <strong>place_search</strong>
     </dt>
     <dd>
-    Container of a <a href="../modules/luatwit.objects.html#place">place</a>  search with query info.
+    Container of a <a href="../modules/luatwit.objects.html#place">place</a> search with query info.
 
 
 
@@ -1508,7 +1512,7 @@
     <strong>place_search_result</strong>
     </dt>
     <dd>
-    Results of a <a href="../modules/luatwit.objects.html#place">place</a>  search.
+    Results of a <a href="../modules/luatwit.objects.html#place">place</a> search.
 
 
 
@@ -1536,7 +1540,7 @@
     <strong>trend_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#trend">trend</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#trend">trend</a> objects.
 
 
 
@@ -1564,7 +1568,7 @@
     <strong>trends_container_list</strong>
     </dt>
     <dd>
-    Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a>  object.
+    Contains a single <a href="../modules/luatwit.objects.html#trends_container">trends_container</a> object.
 
 
 
@@ -1592,7 +1596,7 @@
     <strong>trend_location_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#trend_location">trend_location</a> objects.
 
 
 
@@ -1634,7 +1638,7 @@
     <strong>language_list</strong>
     </dt>
     <dd>
-    List of <a href="../modules/luatwit.objects.html#language">language</a>  objects.
+    List of <a href="../modules/luatwit.objects.html#language">language</a> objects.
 
 
 
@@ -1688,6 +1692,7 @@
 </dl>
     <h2><a name="Class_user"></a>Class user </h2>
 
+        User object.
     <dl class="function">
     <dt>
     <a name = "_M.user:get_tweets"></a>
@@ -1700,14 +1705,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user_timeline">resources.get_user_timeline</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_user_timeline">resources.get_user_timeline</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a> object.
     </ol>
 
 
@@ -1725,14 +1730,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
+        A <a href="../modules/luatwit.objects.html#dm">dm</a> object.
     </ol>
 
 
@@ -1750,14 +1755,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following">resources.get_following</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following">resources.get_following</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> object.
     </ol>
 
 
@@ -1775,14 +1780,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers">resources.get_followers</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers">resources.get_followers</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> object.
     </ol>
 
 
@@ -1800,14 +1805,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following_ids">resources.get_following_ids</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_following_ids">resources.get_following_ids</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> object.
     </ol>
 
 
@@ -1825,14 +1830,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers_ids">resources.get_followers_ids</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followers_ids">resources.get_followers_ids</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> object.
     </ol>
 
 
@@ -1850,14 +1855,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#follow">resources.follow</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#follow">resources.follow</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -1875,14 +1880,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow">resources.unfollow</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow">resources.unfollow</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -1900,14 +1905,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#set_follow_settings">resources.set_follow_settings</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#set_follow_settings">resources.set_follow_settings</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
+        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a> object.
     </ol>
 
 
@@ -1925,14 +1930,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#block_user">resources.block_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#block_user">resources.block_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -1950,14 +1955,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#unblock_user">resources.unblock_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unblock_user">resources.unblock_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -1975,14 +1980,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_profile_banner">resources.get_profile_banner</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_profile_banner">resources.get_profile_banner</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#profile_banner">profile_banner</a>  object.
+        A <a href="../modules/luatwit.objects.html#profile_banner">profile_banner</a> object.
     </ol>
 
 
@@ -2000,14 +2005,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_favorites">resources.get_favorites</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_favorites">resources.get_favorites</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a> object.
     </ol>
 
 
@@ -2025,14 +2030,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_all_lists">resources.get_all_lists</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_all_lists">resources.get_all_lists</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist_list">userlist_list</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist_list">userlist_list</a> object.
     </ol>
 
 
@@ -2050,14 +2055,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followed_lists">resources.get_followed_lists</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_followed_lists">resources.get_followed_lists</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> object.
     </ol>
 
 
@@ -2075,14 +2080,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_own_lists">resources.get_own_lists</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_own_lists">resources.get_own_lists</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> object.
     </ol>
 
 
@@ -2100,14 +2105,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_lists_following_user">resources.get_lists_following_user</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_lists_following_user">resources.get_lists_following_user</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> object.
     </ol>
 
 
@@ -2125,15 +2130,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_following_list">resources.is_following_list</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_following_list">resources.is_following_list</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -2151,15 +2156,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -2177,15 +2182,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#userlist">userlist</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2203,14 +2208,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#report_spam">resources.report_spam</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#report_spam">resources.report_spam</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -2228,14 +2233,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_friendship">resources.get_friendship</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_friendship">resources.get_friendship</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a>  object.
+        A <a href="../modules/luatwit.objects.html#relationship_container">relationship_container</a> object.
     </ol>
 
 
@@ -2245,6 +2250,7 @@
 </dl>
     <h2><a name="Class_tweet"></a>Class tweet </h2>
 
+        Tweet object.
     <dl class="function">
     <dt>
     <a name = "_M.tweet:reply"></a>
@@ -2257,7 +2263,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#tweet">resources.tweet</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#tweet">resources.tweet</a> API method.
                   The reply must text is passed in the <tt>status</tt> field.
                   If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.
         </li>
@@ -2266,7 +2272,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object.
     </ol>
 
 
@@ -2284,14 +2290,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#retweet">resources.retweet</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#retweet">resources.retweet</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object.
     </ol>
 
 
@@ -2309,14 +2315,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_tweet">resources.delete_tweet</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_tweet">resources.delete_tweet</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object.
     </ol>
 
 
@@ -2334,14 +2340,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#set_favorite">resources.set_favorite</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#set_favorite">resources.set_favorite</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object.
     </ol>
 
 
@@ -2359,14 +2365,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#unset_favorite">resources.unset_favorite</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unset_favorite">resources.unset_favorite</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object.
     </ol>
 
 
@@ -2384,14 +2390,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweets">resources.get_retweets</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweets">resources.get_retweets</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a> object.
     </ol>
 
 
@@ -2409,14 +2415,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweeter_ids">resources.get_retweeter_ids</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_retweeter_ids">resources.get_retweeter_ids</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> object.
     </ol>
 
 
@@ -2434,14 +2440,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#oembed">resources.oembed</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#oembed">resources.oembed</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#oembed">oembed</a>  object.
+        An <a href="../modules/luatwit.objects.html#oembed">oembed</a> object.
     </ol>
 
 
@@ -2459,14 +2465,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_tweet">resources.get_tweet</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_tweet">resources.get_tweet</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet">tweet</a>  object, or <tt>nil</tt> if this tweet is the first in the reply chain.
+        A <a href="../modules/luatwit.objects.html#tweet">tweet</a> object, or <tt>nil</tt> if this tweet is the first in the reply chain.
     </ol>
 
 
@@ -2476,6 +2482,7 @@
 </dl>
     <h2><a name="Class_dm"></a>Class dm </h2>
 
+        Direct message object.
     <dl class="function">
     <dt>
     <a name = "_M.dm:reply"></a>
@@ -2488,14 +2495,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#send_dm">resources.send_dm</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
+        A <a href="../modules/luatwit.objects.html#dm">dm</a> object.
     </ol>
 
 
@@ -2513,14 +2520,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_dm">resources.delete_dm</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_dm">resources.delete_dm</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#dm">dm</a>  object.
+        A <a href="../modules/luatwit.objects.html#dm">dm</a> object.
     </ol>
 
 
@@ -2530,6 +2537,7 @@
 </dl>
     <h2><a name="Class_userlist"></a>Class userlist </h2>
 
+        User list.
     <dl class="function">
     <dt>
     <a name = "_M.userlist:get_tweets"></a>
@@ -2542,14 +2550,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_timeline">resources.get_list_timeline</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_timeline">resources.get_list_timeline</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a>  object.
+        A <a href="../modules/luatwit.objects.html#tweet_list">tweet_list</a> object.
     </ol>
 
 
@@ -2567,14 +2575,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_members">resources.get_list_members</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_members">resources.get_list_members</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> object.
     </ol>
 
 
@@ -2592,15 +2600,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_list_member">resources.add_list_member</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2618,15 +2626,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_list_member">resources.remove_list_member</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_list_member">resources.remove_list_member</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2644,15 +2652,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#add_multiple_list_members">resources.add_multiple_list_members</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a> , <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  or <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#add_multiple_list_members">resources.add_multiple_list_members</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a>, <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> or <a href="../modules/luatwit.objects.html#user_list">user_list</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2670,15 +2678,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_multiple_list_members">resources.remove_multiple_list_members</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a> , <a href="../modules/luatwit.objects.html#userid_array">userid_array</a>  or <a href="../modules/luatwit.objects.html#user_list">user_list</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#remove_multiple_list_members">resources.remove_multiple_list_members</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a>, <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> or <a href="../modules/luatwit.objects.html#user_list">user_list</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2696,15 +2704,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a>  API method.
-                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a>  object as argument.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#is_member_of_list">resources.is_member_of_list</a> API method.
+                  It also accepts an <a href="../modules/luatwit.objects.html#user">user</a> object as argument.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user">user</a>  object.
+        An <a href="../modules/luatwit.objects.html#user">user</a> object.
     </ol>
 
 
@@ -2722,14 +2730,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_followers">resources.get_list_followers</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#get_list_followers">resources.get_list_followers</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a>  object.
+        An <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> object.
     </ol>
 
 
@@ -2747,14 +2755,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#follow_list">resources.follow_list</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#follow_list">resources.follow_list</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2772,14 +2780,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow_list">resources.unfollow_list</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#unfollow_list">resources.unfollow_list</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2797,14 +2805,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#update_list">resources.update_list</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#update_list">resources.update_list</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2822,14 +2830,14 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">args</span>
-              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_list">resources.delete_list</a>  API method.
+              Extra arguments for the <a href="../modules/luatwit.resources.html#delete_list">resources.delete_list</a> API method.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        An <a href="../modules/luatwit.objects.html#userlist">userlist</a>  object.
+        An <a href="../modules/luatwit.objects.html#userlist">userlist</a> object.
     </ol>
 
 
@@ -2842,7 +2850,8 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.2</a></i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-02-06 03:34:56 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
