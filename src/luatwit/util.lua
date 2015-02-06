@@ -148,7 +148,7 @@ local function build_required_str(rules)
     return table_concat(res, ", ")
 end
 
-local scalar_types = _M.make_set("string", "number", "boolean")
+local scalar_types = { string = true, number = true, boolean = true }
 
 --- Checks if the arguments in the specified table match the rules.
 --
