@@ -155,22 +155,23 @@ local scalar_types = { string = true, number = true, boolean = true }
 -- @param args      Table with arguments to be checked.
 -- @param rules     Rules to check against.
 -- @param res_name  Name of the resource that is being checked (for error messages)
--- @return          Error string if the check failed, otherwise <tt>nil</tt>.
+-- @return          `true` if `args` is valid, otherwise `false`.
+-- @return          The error string if `args` is invalid.
 function _M.check_args(args, rules, res_name)
     res_name = res_name or "error"
     if type(args) ~= "table" then
-        return res_name .. ": arguments must be passed in a table"
+        return false, res_name .. ": arguments must be passed in a table"
     end
-    if not rules then return nil end
+    if not rules then return true end
     -- check for valid args (names starting with _ are ignored)
     for name, val in pairs(args) do
         if type(name) ~= "string" then
-            return res_name .. ": keys must be strings"
+            return false, res_name .. ": keys must be strings"
         end
         if name:sub(1, 1) ~= "_" then
             local rule = rules[name]
             if rule == nil then
-                return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
+                return false, res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
             end
             local rule_type = type(rule)
             local allowed_types
@@ -179,10 +180,10 @@ function _M.check_args(args, rules, res_name)
             elseif rule_type == "table" then
                 allowed_types = rule.types
             else
-                return res_name .. ": invalid rule for field '" .. name .. "'"
+                return false, res_name .. ": invalid rule for field '" .. name .. "'"
             end
             if not allowed_types[type(val)] then
-                return res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
+                return false, res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
             end
         end
     end
@@ -193,9 +194,10 @@ function _M.check_args(args, rules, res_name)
             required = rule.required
         end
         if required and args[name] == nil then
-            return res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
+            return false, res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
         end
     end
+    return true
 end
 
 return _M

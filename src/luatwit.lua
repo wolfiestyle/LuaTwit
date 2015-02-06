@@ -100,8 +100,7 @@ end
 function _M.api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     args = args or {}
     name = name or "raw_call"
-    local err = util.check_args(args, rules, name)
-    assert(not err, err)
+    assert(util.check_args(args, rules, name))
 
     local url, request, req_headers = build_request(path, args, defaults, mp)
 
@@ -225,8 +224,7 @@ local oauth_key_args = {
 -- @return      New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function _M.new(args)
-    local err = util.check_args(args, oauth_key_args, "new")
-    assert(not err, err)
+    assert(util.check_args(args, oauth_key_args, "api.new"))
     local self = util.make_class(_M.api)
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
     self.oauth_async = oauth_as.worker.new(args, _M.resources._endpoints)
