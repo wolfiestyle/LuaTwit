@@ -23,7 +23,7 @@ _M.objects = require "luatwit.objects"
 --- Class prototype that implements the API calls.
 -- Methods are created on demand from the definitions in the `resources` table.
 -- @type api
-_M.api = util.new()
+_M.api = util.make_class()
 
 -- Builds the request url and arguments for the OAuth call.
 local function build_request(decl, args, name, defaults)
@@ -103,8 +103,8 @@ function _M.api:raw_call(decl, args, name, defaults)
     name = name or "raw_call"
     local method, url, request, req_headers = build_request(decl, args, name, defaults)
 
-    local function response_callback(res_code, headers, body)
-        if type(body) ~= "string" then  -- returns an empty table on error and the error string in 'res_code'
+    local function parse_response(res_code, headers, body)
+        if type(body) ~= "string" then  -- OAuth.PerformRequest returns {} on error and the error string in 'res_code'
             return nil, res_code
         end
         self:apply_types(headers, "headers")
@@ -128,10 +128,10 @@ function _M.api:raw_call(decl, args, name, defaults)
     end
 
     if args._async then
-        return self.oauth_async:PerformRequest(method, url, request, req_headers, response_callback)
+        return self.oauth_async:PerformRequest(method, url, request, req_headers, parse_response)
     else
         local res_code, headers, _, body = self.oauth_sync:PerformRequest(method, url, request, req_headers)
-        return response_callback(res_code, headers, body)
+        return parse_response(res_code, headers, body)
     end
 end
 
@@ -225,7 +225,7 @@ local oauth_key_args = {
 function _M.new(args)
     local err = util.check_args(args, oauth_key_args, "new")
     assert(not err, err)
-    local self = util.new(_M.api)
+    local self = util.make_class(_M.api)
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
     self.oauth_async = oauth_as.worker.new(args, _M.resources._endpoints)
     -- create per-client copies of _M.objects items with an extra _client field

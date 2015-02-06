@@ -13,7 +13,7 @@ local _M = {}
 -- @param mt        Metatable for the new class. Sets <tt>base</tt> as metatable if omitted.
 --                  The <tt>__index</tt> metamethod of this table will be set to the <tt>base</tt> argument.
 -- @return          New class table.
-function _M.new(base, mt)
+function _M.make_class(base, mt)
     local self = {}
     local mt = mt or self
     mt.__index = base
@@ -121,7 +121,7 @@ end
 --
 -- @param ...       Keys of the table. The values will be set to <tt>true</tt>.
 -- @return          New set table.
-function _M.set(...)
+function _M.make_set(...)
     local tbl = {}
     for i = 1, select("#", ...) do
         local key = select(i, ...)
@@ -148,7 +148,7 @@ local function build_required_str(rules)
     return table_concat(res, ", ")
 end
 
-local scalar_types = _M.set("string", "number", "boolean")
+local scalar_types = _M.make_set("string", "number", "boolean")
 
 --- Checks if the arguments in the specified table match the rules.
 --
