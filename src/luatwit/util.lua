@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT/X11
-local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type =
-      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, type
+local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, table_concat, type =
+      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, table.concat, type
 
 local _M = {}
 
@@ -128,6 +128,74 @@ function _M.set(...)
         tbl[key] = true
     end
     return tbl
+end
+
+local function build_args_str(rules)
+    local res = {}
+    for name, _ in pairs(rules) do
+        res[#res + 1] = name
+    end
+    return table_concat(res, ", ")
+end
+
+local function build_required_str(rules)
+    local res = {}
+    for name, req in pairs(rules) do
+        if req then
+            res[#res + 1] = name
+        end
+    end
+    return table_concat(res, ", ")
+end
+
+local scalar_types = _M.set("string", "number", "boolean")
+
+--- Checks if the arguments in the specified table match the rules.
+--
+-- @param args      Table with arguments to be checked.
+-- @param rules     Rules to check against.
+-- @param res_name  Name of the resource that is being checked (for error messages)
+-- @return          Error string if the check failed, otherwise <tt>nil</tt>.
+function _M.check_args(args, rules, res_name)
+    res_name = res_name or "error"
+    if type(args) ~= "table" then
+        return res_name .. ": arguments must be passed in a table"
+    end
+    if not rules then return nil end
+    -- check for valid args (names starting with _ are ignored)
+    for name, val in pairs(args) do
+        if type(name) ~= "string" then
+            return res_name .. ": keys must be strings"
+        end
+        if name:sub(1, 1) ~= "_" then
+            local rule = rules[name]
+            if rule == nil then
+                return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
+            end
+            local rule_type = type(rule)
+            local allowed_types
+            if rule_type == "boolean" then
+                allowed_types = scalar_types
+            elseif rule_type == "table" then
+                allowed_types = rule.types
+            else
+                return res_name .. ": invalid rule for field '" .. name .. "'"
+            end
+            if not allowed_types[type(val)] then
+                return res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
+            end
+        end
+    end
+    -- check if required args are present
+    for name, rule in pairs(rules) do
+        local required = rule
+        if type(rule) == "table" then
+            required = rule.required
+        end
+        if required and args[name] == nil then
+            return res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
+        end
+    end
 end
 
 return _M

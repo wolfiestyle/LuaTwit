@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT/X11
-local assert, error, next, pairs, select, setmetatable, table_concat, tostring, type, unpack =
-      assert, error, next, pairs, select, setmetatable, table.concat, tostring, type, unpack
+local assert, error, next, pairs, select, setmetatable, tostring, type, unpack =
+      assert, error, next, pairs, select, setmetatable, tostring, type, unpack
 local oauth = require "OAuth"
 local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
@@ -25,73 +25,10 @@ _M.objects = require "luatwit.objects"
 -- @type api
 _M.api = util.new()
 
-local function build_args_str(rules)
-    local res = {}
-    for name, _ in pairs(rules) do
-        res[#res + 1] = name
-    end
-    return table_concat(res, ", ")
-end
-
-local function build_required_str(rules)
-    local res = {}
-    for name, req in pairs(rules) do
-        if req then
-            res[#res + 1] = name
-        end
-    end
-    return table_concat(res, ", ")
-end
-
-local scalar_types = util.set("string", "number", "boolean")
-
--- Checks if the arguments in a table match the rules.
-local function check_args(args, rules, res_name)
-    if type(args) ~= "table" then
-        return res_name .. ": arguments must be passed in a table"
-    end
-    if not rules then return nil end
-    -- check for valid args (names starting with _ are ignored)
-    for name, val in pairs(args) do
-        if type(name) ~= "string" then
-            return res_name .. ": keys must be strings"
-        end
-        if name:sub(1, 1) ~= "_" then
-            local rule = rules[name]
-            if rule == nil then
-                return res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
-            end
-            local rule_type = type(rule)
-            local allowed_types
-            if rule_type == "boolean" then
-                allowed_types = scalar_types
-            elseif rule_type == "table" then
-                allowed_types = rule.types
-            else
-                return res_name .. ": invalid rule for field '" .. name .. "'"
-            end
-            if not allowed_types[type(val)] then
-                return res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
-            end
-        end
-    end
-    -- check if required args are present
-    for name, rule in pairs(rules) do
-        local required = rule
-        if type(rule) == "table" then
-            required = rule.required
-        end
-        if required and args[name] == nil then
-            return res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
-        end
-    end
-    return nil
-end
-
 -- Builds the request url and arguments for the OAuth call.
 local function build_request(decl, args, name, defaults)
     local method, url, rules = unpack(decl)
-    local err = check_args(args, rules, name)
+    local err = util.check_args(args, rules, name)
     assert(not err, err)
     local request = {}
     if defaults then
@@ -286,7 +223,7 @@ local oauth_key_args = {
 -- @return      New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function _M.new(args)
-    local err = check_args(args, oauth_key_args, "new")
+    local err = util.check_args(args, oauth_key_args, "new")
     assert(not err, err)
     local self = util.new(_M.api)
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, _M.resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
