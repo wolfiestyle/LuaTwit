@@ -10,8 +10,8 @@ local _M = {}
 --- Create a new class prototype or instance.
 --
 -- @param base      Table used as a base class. Creates a new empty table if omitted.
--- @param mt        Metatable for the new class. Sets <tt>base</tt> as metatable if omitted.
---                  The <tt>__index</tt> metamethod of this table will be set to the <tt>base</tt> argument.
+-- @param mt        Metatable for the new class. Sets `base` as metatable if omitted.
+--                  The `__index` metamethod of this table will be set to the `base` argument.
 -- @return          New class table.
 function _M.make_class(base, mt)
     local self = {}
@@ -25,7 +25,7 @@ end
 -- @param filename  Lua source file.
 -- @param env       Environment used to run the code. Creates a new empty table if omitted.
 -- @return          The environment where the code was executed.
--- @return          <tt>true</tt> if no errors found when executing the code.
+-- @return          `true` if no errors found when executing the code.
 -- @return          Value(s) returned by the Lua chunk, or the error message.
 function _M.load_file(filename, env)
     env = env or {}
@@ -42,7 +42,7 @@ end
 --- Creates a callable table.
 --
 -- @param fn        Function.
--- @return          Table with the <tt>__call</tt> metamethod set to the provided function.
+-- @return          Table with the `__call` metamethod set to the provided function.
 function _M.make_callable(fn)
     local self = {}
     self.__call = fn
@@ -80,9 +80,9 @@ end
 -- @param dest      Destination table.
 -- @param src       Source table.
 -- @param fn        Function applied to values before assigning them.
---                  It's called as <tt>fn(value, key)</tt> for each key in <tt>src</tt>,
---                  then the result is assigned to <tt>dest[key]</tt>, unless it's <tt>nil</tt>.
--- @return          The <tt>dest</tt> argument.
+--                  It's called as `fn(value, key)` for each key in `src`,
+--                  then the result is assigned to `dest[key]`, unless it's `nil`.
+-- @return          The `dest` argument.
 function _M.map_copy(dest, src, fn)
     if not fn then
         fn = function(v) return v end
@@ -119,7 +119,7 @@ end
 
 --- Creates a set table from the keys in the arguments.
 --
--- @param ...       Keys of the table. The values will be set to <tt>true</tt>.
+-- @param ...       Keys of the table. The values will be set to `true`.
 -- @return          New set table.
 function _M.make_set(...)
     local tbl = {}

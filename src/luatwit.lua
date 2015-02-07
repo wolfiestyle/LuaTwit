@@ -45,7 +45,7 @@ end
 --
 -- @param node  Table with JSON data.
 -- @param tname String with the name of an object defined in `objects`.
--- @return      The <tt>node</tt> argument after the processing is done.
+-- @return      The `node` argument after the processing is done.
 function api:apply_types(node, tname)
     local type_decl = self.objects[tname]
     assert(type(type_decl) == "table", "invalid object type")
@@ -83,11 +83,11 @@ end
 -- @param rules Rules for checking args (with `luatwit.util.check_args`).
 -- @param defaults  Default method arguments.
 -- @param name  API method name. Used internally for building error messages.
--- @return      A table with the decoded JSON data from the response, or <tt>nil</tt> on error.
---              If the option <tt>_raw</tt> is set, instead returns an unprocessed JSON string.
---              If the option <tt>_async</tt> is set, instead it returns a `luatwit.oauth_async.future` object.
+-- @return      A table with the decoded JSON data from the response, or `nil` on error.
+--              If the option `_raw` is set, instead returns an unprocessed JSON string.
+--              If the option `_async` is set, instead it returns a `luatwit.oauth_async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
--- @return      If the option <tt>_raw</tt> is set, the type name from `resources`.
+-- @return      If the option `_raw` is set, the type name from `resources`.
 --              This value is needed to use the `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
 function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
@@ -133,7 +133,7 @@ end
 -- @param str   JSON string.
 -- @param tname Type name as defined in `resources`.
 --              If set, the function will set type metatables.
--- @return      A table with the decoded JSON data, or <tt>nil</tt> on error.
+-- @return      A table with the decoded JSON data, or `nil` on error.
 function api:parse_json(str, tname)
     local json_data, _, err = json.decode(str, nil, nil, nil)
     if json_data == nil then
@@ -260,7 +260,7 @@ end
 
 --- Helper to load OAuth keys from text files.
 -- Key files are loaded as Lua files in an empty environment and the values are extracted from their global namespace.
--- It also accepts tables as arguments (useful when using <tt>require</tt>).
+-- It also accepts tables as arguments (useful when using `require`).
 --
 -- @param ...   Filenames (Lua code) or tables with the keys to load.
 -- @return      Table with the keys found.

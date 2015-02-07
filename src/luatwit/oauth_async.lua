@@ -36,7 +36,7 @@ end
 
 --- Checks (non-blocking) and returns the value of the future if it's ready.
 --
--- @return      The API call result, or <tt>nil</tt> if it's not ready yet.
+-- @return      The API call result, or `nil` if it's not ready yet.
 function future:peek()
     return future_get(self, "_poll_data_for")
 end
@@ -105,7 +105,7 @@ function worker:stop()
 end
 
 --- Checks if there is data pending to be received.
--- @return      <tt>true</tt> if there is data pending on the message queue, otherwise <tt>false</tt>.
+-- @return      `true` if there is data pending on the message queue, otherwise `false`.
 function worker:data_available()
     local count = self.message:count("response")
     return count ~= nil and count > 0

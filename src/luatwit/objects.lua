@@ -293,7 +293,7 @@ _M.user_cursor = new_type{ users = "user_list" }
 
 --- Loads the next page of an user cursored request.
 --
--- @return          Next `user_cursor` page, or <tt>nil</tt> if the current page is the last.
+-- @return          Next `user_cursor` page, or `nil` if the current page is the last.
 function _M.user_cursor:next()
     if self.next_cursor == 0 then return nil end
     return self._source_method{ cursor = self.next_cursor_str }
@@ -301,7 +301,7 @@ end
 
 --- Loads the previous page of an user cursored request.
 --
--- @return          Previous `user_cursor` page, or <tt>nil</tt> if the current page is the first.
+-- @return          Previous `user_cursor` page, or `nil` if the current page is the first.
 function _M.user_cursor:prev()
     if self.previous_cursor == 0 then return nil end
     return self._source_method{ cursor = self.previous_cursor_str }
@@ -322,8 +322,8 @@ end
 --- Sends a tweet as a reply to this tweet.
 --
 -- @param args      Extra arguments for the `resources.tweet` API method.
---                  The reply must text is passed in the <tt>status</tt> field.
---                  If the <tt>_mention</tt> option is set, it will prepend the @screen_name to the reply text.
+--                  The reply must text is passed in the `status` field.
+--                  If the `_mention` option is set, it will prepend the @screen_name to the reply text.
 -- @return          A `tweet` object.
 function _M.tweet:reply(args)
     assert(type(args) == "table" and args.status, "must provide reply text in 'status' argument")
@@ -393,7 +393,7 @@ end
 --- Get the next tweet in a conversation thread.
 --
 -- @param args      Extra arguments for the `resources.get_tweet` API method.
--- @return          A `tweet` object, or <tt>nil</tt> if this tweet is the first in the reply chain.
+-- @return          A `tweet` object, or `nil` if this tweet is the first in the reply chain.
 function _M.tweet:get_next_in_thread(args)
     local reply_id = self.in_reply_to_status_id_str
     if reply_id == nil then return nil end
@@ -477,7 +477,7 @@ _M.userid_cursor = new_type{ ids = "userid_array" }
 
 --- Loads the next page of an user id cursored request.
 --
--- @return          Next `userid_cursor` page, or <tt>nil</tt> if the current page is the last.
+-- @return          Next `userid_cursor` page, or `nil` if the current page is the last.
 function _M.userid_cursor:next()
     if self.next_cursor == 0 then return nil end
     return self._source_method{ cursor = self.next_cursor_str }
@@ -485,7 +485,7 @@ end
 
 --- Loads the previous page of an user id cursored request.
 --
--- @return          Previous `userid_cursor` page, or <tt>nil</tt> if the current page is the first.
+-- @return          Previous `userid_cursor` page, or `nil` if the current page is the first.
 function _M.userid_cursor:prev()
     if self.previous_cursor == 0 then return nil end
     return self._source_method{ cursor = self.previous_cursor_str }
@@ -701,7 +701,7 @@ _M.userlist_cursor = new_type{ lists = "userlist_list" }
 
 --- Loads the next page of an user list cursored request.
 --
--- @return          Next `userlist_cursor` page, or <tt>nil</tt> if the current page is the last.
+-- @return          Next `userlist_cursor` page, or `nil` if the current page is the last.
 function _M.userlist_cursor:next()
     if self.next_cursor == 0 then return nil end
     return self._source_method{ cursor = self.next_cursor_str }
@@ -709,7 +709,7 @@ end
 
 --- Loads the previous page of an user list cursored request.
 --
--- @return          Previous `userlist_cursor` page, or <tt>nil</tt> if the current page is the first.
+-- @return          Previous `userlist_cursor` page, or `nil` if the current page is the first.
 function _M.userlist_cursor:prev()
     if self.previous_cursor == 0 then return nil end
     return self._source_method{ cursor = self.previous_cursor_str }
