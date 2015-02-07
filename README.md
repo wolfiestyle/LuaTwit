@@ -29,9 +29,9 @@ First, you need a set of app keys. You can get them from [here](https://dev.twit
         oauth_token_secret= "<token_secret>",
     }
 
-The twitter client is created by the method `luatwit.new`:
+The twitter client is created by the method `luatwit.api.new`:
 
-    local client = luatwit.new(keys)
+    local client = luatwit.api.new(keys)
 
 Use this object to do API calls. The argument names are checked against the definitions in `luatwit.resources`:
 

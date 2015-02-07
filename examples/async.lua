@@ -9,7 +9,7 @@ local socket = require "socket"
 
 -- initialize the twitter client
 local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
-local client = twitter.new(oauth_params)
+local client = twitter.api.new(oauth_params)
 
 -- When the option _async is set, the methods exit immeditately and
 -- return a future value. The request is done in a background thread.

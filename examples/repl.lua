@@ -7,14 +7,14 @@ package.path = "../src/?.lua;" .. package.path
 pl = require "pl.import_into" ()
 twitter = require "luatwit"
 util = require "luatwit.util"
---debug.traceback = require("StackTracePlus").stacktrace
+objects = require "luatwit.objects"
 
 -- used to display raw json data
 local table_inspect_mt = {}
 table_inspect_mt.__index = table_inspect_mt
 
 function table_inspect_mt:__tostring()
-    return pl.stringx.replace(pl.pretty.write(self), '"userdata: (nil)"', "json.null")
+    return pl.pretty.write(self)
 end
 
 function table_inspect_mt:save(filename)
@@ -33,13 +33,17 @@ function get_resource_by_url(url)
     return nil
 end
 
+-- initialize the twitter client
+oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+client = twitter.api.new(oauth_params)
+
 -- used to display tweets
-function twitter.objects.tweet:__tostring()
+function client.objects.tweet:__tostring()
     return "<" .. self.user.screen_name .. "> " .. self.text
 end
 
 -- used to display DMs
-function twitter.objects.dm:__tostring()
+function client.objects.dm:__tostring()
     return "<" .. self.sender.screen_name .. "> (to: " .. self.recipient.screen_name .. ") " .. self.text
 end
 
@@ -50,9 +54,10 @@ Bio: $description
 Location: $location
 Followers: $followers_count, Following: $friends_count, Listed: $listed_count
 Tweets: $statuses_count
+---
 ]])
 
-function twitter.objects.user:__tostring()
+function client.objects.user:__tostring()
     return user_tmpl:safe_substitute(self)
 end
 
@@ -62,7 +67,8 @@ local function list_tostring(self)
 end
 
 -- add default __tostring methods to all objects
-for name, obj in pairs(twitter.objects) do
+for name, _ in pairs(objects) do
+    local obj = client.objects[name]
     if not obj.__tostring then
         obj.__tostring = name:match("_list$") and list_tostring or table_inspect_mt.__tostring
     end
@@ -70,7 +76,6 @@ for name, obj in pairs(twitter.objects) do
 end
 
 -- avoid headers spam
-twitter.objects.headers.__tostring = nil
+client.objects.headers.__tostring = nil
 
-oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
-client = twitter.new(oauth_params)
+

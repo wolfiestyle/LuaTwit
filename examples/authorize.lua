@@ -8,7 +8,7 @@ local twitter = require "luatwit"
 -- load the app consumer keys from "oauth_app_keys"
 -- you need to fill in valid app keys before using this script
 local oauth_params = twitter.load_keys("oauth_app_keys")
-local client = twitter.new(oauth_params)
+local client = twitter.api.new(oauth_params)
 
 -- First auth step: generate auth URL and obtain PIN
 local auth_url = client:start_login()

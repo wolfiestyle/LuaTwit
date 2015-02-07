@@ -25,7 +25,7 @@ end
 
 -- initialize the twitter client
 local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
-local client = twitter.new(oauth_params)
+local client = twitter.api.new(oauth_params)
 
 -- send the tweet
 local tw, headers
