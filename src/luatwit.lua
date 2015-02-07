@@ -187,7 +187,7 @@ function api:build_method(name)
         return parent:raw_call(method, path, args, tname, mp, rules, _self.defaults, name)
     end)
     impl._type = "api"
-    impl.url = path
+    impl.path = path
     if decl.default_args then
         local def = util.map_copy({}, decl.default_args, function(v, k)
             if rules[k] ~= nil then return v end

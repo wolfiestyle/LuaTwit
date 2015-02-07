@@ -866,23 +866,23 @@ local rate_limit = _
 
 --- Get the rate limit info of the specified object.
 --
--- @param obj       Endpoint URL, Resource declaration (`luatwit.resources` field) or API method (`luatwit.api` field).
+-- @param obj       Endpoint path, Resource declaration (`luatwit.resources` field) or API method (`luatwit.api` field).
 -- @return          Table with rate limit info.
 function rate_limit:get_for(obj)
-    local url
+    local path
     local t_obj = util.type(obj)
     if t_obj == "string" then
-        url = obj
+        path = obj
     elseif t_obj == "api" then
-        url = obj.url
+        path = obj.path
     elseif t_obj == "resource" then
-        url = obj[2]
+        path = obj[2]
     end
-    assert(url, "invalid argument")
+    assert(path, "invalid argument")
     for _, category in pairs(self.resources) do
         for name, item in pairs(category) do
             name = name:gsub("^/", "")
-            if name == url then
+            if name == path then
                 return item
             end
         end
