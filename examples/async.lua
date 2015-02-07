@@ -19,13 +19,13 @@ local f = client:verify_credentials{ skip_status = true, _async = true }
 print "request sent..."
 
 -- do something else until it's ready
-local res, h
+local ready, res, h
 repeat
     print "waiting for response..."
     socket.sleep(0.25)
     -- uses the same return format of normal api calls
-    res, h = f:peek()
-until res
+    ready, res, h = f:peek()
+until ready
 
 -- the second return value contains the error if something went wrong
 assert(res, tostring(h))

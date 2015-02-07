@@ -36,23 +36,26 @@ local function future_get(self, method)
             self.value = value
         end
     end
-    if value then
-        return unpackn(value)
-    end
+    return value
 end
 
 --- Checks (non-blocking) and returns the value of the future if it's ready.
 --
--- @return      The API call result, or `nil` if it's not ready yet.
+-- @return      `true` if the value is ready, otherwise `false`.
+-- @return      List of return values from the API call.
 function future:peek()
-    return future_get(self, "_poll_data_for")
+    local value = future_get(self, "_poll_data_for")
+    if value then
+        return true, unpackn(value)
+    end
+    return false
 end
 
 --- Waits (blocks) until the value of the future is ready.
 --
--- @return      The API call result.
+-- @return      List of return values from the API call.
 function future:wait()
-    return future_get(self, "_wait_data_for")
+    return unpackn(future_get(self, "_wait_data_for"))
 end
 
 --- @section end
