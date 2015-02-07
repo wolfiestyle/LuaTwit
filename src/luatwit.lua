@@ -219,19 +219,20 @@ local oauth_key_args = {
 -- An object created with only the consumer keys must call `api:start_login` and `api:confirm_login` to get the access token,
 -- otherwise it won't be able to make API calls.
 --
--- @param args  Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
+-- @param args      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
+-- @param threads   Number of threads for the async requests (default 1).
 -- @param resources Table with the API interface definition (default `luatwit.resources`).
 -- @param objects   Table with the API objects definition (default `luatwit.objects`).
--- @return      New instance of the `api` class.
+-- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
-function api.new(args, resources, objects)
+function api.new(args, threads, resources, objects)
     assert(util.check_args(args, oauth_key_args, "api.new"))
     resources = resources or require("luatwit.resources")
     objects = objects or require("luatwit.objects")
     local self = util.make_class(api_index)
     self.resources = resources
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
-    self.oauth_async = oauth_as.service.new(args, resources._endpoints)
+    self.oauth_async = oauth_as.service.new(args, resources._endpoints, threads)
     -- create per-client copies of `objects` items with an extra _client field
     self.objects = setmetatable({}, {
         __index = function(_self, key)

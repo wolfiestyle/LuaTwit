@@ -58,7 +58,7 @@ end
 --- @section end
 
 --- OAuth service object.
--- Executes OAuth requests on a background thread.
+-- Executes OAuth requests on background threads.
 -- @type service
 local service = {}
 service.__index = service
@@ -83,30 +83,41 @@ end)
 --
 -- @param keys  Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
 -- @param endp  Table with OAuth endpoints.
+-- @param threads Number of threads to create (default 1).
 -- @return      New instance of the oauth async client.
-function service.new(keys, endp)
+function service.new(keys, endp, threads)
     local self = {
         cur_id = 1,
         store = {},
         args = { keys.consumer_key, keys.consumer_secret, endp, { OAuthToken = keys.oauth_token, OAuthTokenSecret = keys.oauth_token_secret } },
+        num_th = threads or 1,
     }
     self.message = lanes.linda()
     return setmetatable(self, service)
 end
 
---- Starts the worker thread.
+--- Starts the worker threads.
 function service:start()
-    if not self.thread then
-        self.thread = start_worker_thread(self.args, self.message)
+    if not self.threads then
+        self.threads = {}
+        for i = 1, self.num_th do
+            self.threads[i] = start_worker_thread(self.args, self.message)
+        end
     end
 end
 
---- Stops the worker thread.
+--- Stops the worker threads.
 function service:stop()
-    if self.thread then
-        self.message:send("quit", true)
-        self.thread:join()
-        self.thread = nil
+    if self.threads then
+        local n = #self.threads
+        for i = 1, n do
+            self.message:send("quit", true)
+        end
+        -- join threads by reading their result
+        for i = 1, n do
+            local _ = self.threads[i][1]
+        end
+        self.threads = nil
     end
 end
 
