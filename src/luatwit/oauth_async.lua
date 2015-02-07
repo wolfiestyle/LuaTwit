@@ -2,11 +2,12 @@
 --
 -- @module  luatwit.oauth_async
 -- @license MIT/X11
-local setmetatable, unpack =
-      setmetatable, unpack
+local select, setmetatable, unpack =
+      select, setmetatable, unpack
 local lanes = require "lanes".configure()
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
+local unpackn = function(t) return unpack(t, 1, t.n) end
 
 local _M = {}
 
@@ -22,15 +23,21 @@ function future.new(id, svc, callback)
 end
 
 local function future_get(self, method)
-    if not self.value then
+    local value = self.value
+    if not value then
         local svc = self.svc
         local data = svc[method](svc, self.id)
         if data ~= nil then
-            self.value = table_pack(self.callback(data.res_code, data.headers, data.body))
+            if self.callback then
+                value = table_pack(self.callback(unpackn(data)))
+            else
+                value = data
+            end
+            self.value = value
         end
     end
-    if self.value then
-        return unpack(self.value, 1, self.value.n)
+    if value then
+        return unpackn(value)
     end
 end
 
@@ -62,11 +69,11 @@ local start_worker_thread = lanes.gen("*", function(args, message)
     local oauth_client = require("OAuth").new(unpack(args))
 
     while true do
-        local k, v = message:receive(nil, "request", "quit")
-        if k == "request" then
-            local res_code, headers, _, body = oauth_client:PerformRequest(v.method, v.url, v.request, v.headers)
-            message:send("response", { id = v.id, data = { res_code = res_code, headers = headers, body = body } })
-        elseif k == "quit" then
+        local msg, req = message:receive(nil, "request", "quit")
+        if msg == "request" then
+            local result = table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
+            message:send("response", { id = req.id, data = result })
+        elseif msg == "quit" then
             break
         end
     end
@@ -84,7 +91,6 @@ function service.new(keys, endp)
         args = { keys.consumer_key, keys.consumer_secret, endp, { OAuthToken = keys.oauth_token, OAuthTokenSecret = keys.oauth_token_secret } },
     }
     self.message = lanes.linda()
-
     return setmetatable(self, service)
 end
 
@@ -146,20 +152,36 @@ function service:_wait_data_for(id)
     return data
 end
 
+-- Generates a request id
+function service:_gen_id()
+    local id = self.cur_id
+    self.cur_id = id + 1
+    return id
+end
+
 --- Performs an asynchronous OAuth request.
+--
+-- @param name      Method name.
+-- @param callback  Function that processes the response output (called when reading the `future`).
+-- @param ...       Method arguments.
+-- @return          `future` object with the result.
+function service:call_method(name, callback, ...)
+    local args = { id = self:_gen_id(), method = name, args = table_pack(...) }
+    self:start()
+    self.message:send("request", args)
+    return future.new(args.id, self, callback)
+end
+
+--- Async wrapper for `OAuth.PerformRequest`.
 --
 -- @param method    HTTP method.
 -- @param url       Request URL.
 -- @param request   Table with request pairs.
 -- @param headers   Custom HTTP headers.
 -- @param callback  Function that processes the response output.
+-- @return          `future` object with the result.
 function service:PerformRequest(method, url, request, headers, callback)
-    local args = { method = method, url = url, request = request, headers = headers }
-    args.id = self.cur_id
-    self.cur_id = self.cur_id + 1
-    self:start()
-    self.message:send("request", args)
-    return future.new(args.id, self, callback)
+    return self:call_method("PerformRequest", callback, method, url, request, headers)
 end
 
 return _M

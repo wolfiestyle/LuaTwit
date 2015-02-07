@@ -97,7 +97,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
 
     local url, request, req_headers = build_request(self.resources._base_url, path, args, defaults, mp)
 
-    local function parse_response(res_code, headers, body)
+    local function parse_response(res_code, headers, _, body)
         if type(body) ~= "string" then  -- OAuth.PerformRequest returns {} on error and the error string in 'res_code'
             return nil, res_code
         end
@@ -123,8 +123,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     if args._async then
         return self.oauth_async:PerformRequest(method, url, request, req_headers, parse_response)
     else
-        local res_code, headers, _, body = self.oauth_sync:PerformRequest(method, url, request, req_headers)
-        return parse_response(res_code, headers, body)
+        return parse_response(self.oauth_sync:PerformRequest(method, url, request, req_headers))
     end
 end
 
