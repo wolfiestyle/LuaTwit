@@ -50,15 +50,15 @@ end
 
 --- @section end
 
---- Worker object.
+--- OAuth service object.
 -- Executes OAuth requests on a background thread.
--- @type worker
-local worker = {}
-worker.__index = worker
-_M.worker = worker
+-- @type service
+local service = {}
+service.__index = service
+_M.service = service
 
--- worker thread
-local start_service_thread = lanes.gen("*", function(args, message)
+-- worker thread generator
+local start_worker_thread = lanes.gen("*", function(args, message)
     local oauth_client = require("OAuth").new(unpack(args))
 
     while true do
@@ -77,26 +77,26 @@ end)
 -- @param keys  Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
 -- @param endp  Table with OAuth endpoints.
 -- @return      New instance of the oauth async client.
-function worker.new(keys, endp)
+function service.new(keys, endp)
     local self = {
         cur_id = 1,
-        data = {},
+        store = {},
         args = { keys.consumer_key, keys.consumer_secret, endp, { OAuthToken = keys.oauth_token, OAuthTokenSecret = keys.oauth_token_secret } },
     }
     self.message = lanes.linda()
 
-    return setmetatable(self, worker)
+    return setmetatable(self, service)
 end
 
---- Starts the service thread.
-function worker:start()
+--- Starts the worker thread.
+function service:start()
     if not self.thread then
-        self.thread = start_service_thread(self.args, self.message)
+        self.thread = start_worker_thread(self.args, self.message)
     end
 end
 
---- Stops the service thread.
-function worker:stop()
+--- Stops the worker thread.
+function service:stop()
     if self.thread then
         self.message:send("quit", true)
         self.thread:join()
@@ -106,42 +106,42 @@ end
 
 --- Checks if there is data pending to be received.
 -- @return      `true` if there is data pending on the message queue, otherwise `false`.
-function worker:data_available()
+function service:data_available()
     local count = self.message:count("response")
     return count ~= nil and count > 0
 end
 
 -- Non-blocking consumer
-function worker:_poll_data_for(id)
-    local data = self.data[id]
+function service:_poll_data_for(id)
+    local data = self.store[id]
     if data == nil and self:data_available() then
         while true do
             local k, v = self.message:receive(0, "response")
             if k == nil then break end
-            self.data[v.id] = v.data
+            self.store[v.id] = v.data
         end
-        data = self.data[id]
+        data = self.store[id]
     end
     if data ~= nil then
-        self.data[id] = nil
+        self.store[id] = nil
     end
     return data
 end
 
 -- Blocking consumer
-function worker:_wait_data_for(id)
-    local data = self.data[id]
+function service:_wait_data_for(id)
+    local data = self.store[id]
     if data == nil then
         repeat
             local k, v = self.message:receive(nil, "response")
             if k ~= nil then
-                self.data[v.id] = v.data
+                self.store[v.id] = v.data
             end
-            data = self.data[id]
+            data = self.store[id]
         until data ~= nil
     end
     if data ~= nil then
-        self.data[id] = nil
+        self.store[id] = nil
     end
     return data
 end
@@ -153,7 +153,7 @@ end
 -- @param request   Table with request pairs.
 -- @param headers   Custom HTTP headers.
 -- @param callback  Function that processes the response output.
-function worker:PerformRequest(method, url, request, headers, callback)
+function service:PerformRequest(method, url, request, headers, callback)
     local args = { method = method, url = url, request = request, headers = headers }
     args.id = self.cur_id
     self.cur_id = self.cur_id + 1

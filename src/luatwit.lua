@@ -232,7 +232,7 @@ function api.new(args, resources, objects)
     local self = util.make_class(api_index)
     self.resources = resources
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
-    self.oauth_async = oauth_as.worker.new(args, resources._endpoints)
+    self.oauth_async = oauth_as.service.new(args, resources._endpoints)
     -- create per-client copies of `objects` items with an extra _client field
     self.objects = setmetatable({}, {
         __index = function(_self, key)
