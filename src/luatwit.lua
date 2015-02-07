@@ -114,7 +114,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         end
         if method == "GET" and type(json_data) == "table" and type(request) == "table" then
             json_data._source_method = function(_args)
-                return self:raw_call(decl, _args, name, request)
+                return self:raw_call(method, path, _args, tname, mp, rules, request, name)
             end
         end
         return json_data, headers
