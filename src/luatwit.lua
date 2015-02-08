@@ -98,7 +98,12 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     local url, request, req_headers = build_request(self.resources._base_url, path, args, defaults, mp)
 
     local function parse_response(res_code, headers, _, body)
-        if type(body) ~= "string" then  -- OAuth.PerformRequest returns {} on error and the error string in 'res_code'
+        -- The method crashed, error is on second arg
+        if res_code == nil then
+            return nil, headers
+        end
+        -- OAuth.PerformRequest returns body = {} on error and the error string in 'res_code'
+        if type(body) ~= "string" then
             return nil, res_code
         end
         self:apply_types(headers, "headers")

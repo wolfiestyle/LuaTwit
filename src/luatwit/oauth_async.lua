@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.oauth_async
 -- @license MIT/X11
-local select, setmetatable, unpack =
-      select, setmetatable, unpack
+local pcall, select, setmetatable, unpack =
+      pcall, select, setmetatable, unpack
 local lanes = require "lanes".configure()
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -74,7 +74,12 @@ local start_worker_thread = lanes.gen("*", function(args, message)
     while true do
         local msg, req = message:receive(nil, "request", "quit")
         if msg == "request" then
-            local result = table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
+            local ok, result = pcall(function()
+                return table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
+            end)
+            if not ok then
+                result = { nil, result, n = 2 }
+            end
             message:send("response", { id = req.id, data = result })
         elseif msg == "quit" then
             break
