@@ -88,7 +88,7 @@ end
 --              If the option `_async` is set, instead it returns a `luatwit.oauth_async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If the option `_raw` is set, the type name from `resources`.
---              This value is needed to use the `api:parse_json` with the returned string.
+--              This value is needed to use `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
 function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     args = args or {}
@@ -106,10 +106,10 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         if type(body) ~= "string" then
             return nil, res_code
         end
-        self:apply_types(headers, "headers")
         if args._raw then
             return body, headers, tname
         end
+        self:apply_types(headers, "headers")
         local json_data, err = self:parse_json(body, tname)
         if json_data == nil then
             return nil, err, headers
