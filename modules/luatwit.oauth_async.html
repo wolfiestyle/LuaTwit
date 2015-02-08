@@ -33,7 +33,7 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Class_future">Class future </a></li>
-<li><a href="#Class_worker">Class worker </a></li>
+<li><a href="#Class_service">Class service </a></li>
 </ul>
 
 
@@ -82,27 +82,31 @@
 	<td class="summary">Waits (blocks) until the value of the future is ready.</td>
 	</tr>
 </table>
-<h2><a href="#Class_worker">Class worker </a></h2>
+<h2><a href="#Class_service">Class service </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#worker.new">worker.new (keys, endp)</a></td>
+	<td class="name" nowrap><a href="#service.new">service.new (keys, endp, threads)</a></td>
 	<td class="summary">Creates a new async OAuth client.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#worker:start">worker:start ()</a></td>
-	<td class="summary">Starts the service thread.</td>
+	<td class="name" nowrap><a href="#service:start">service:start ()</a></td>
+	<td class="summary">Starts the worker threads.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#worker:stop">worker:stop ()</a></td>
-	<td class="summary">Stops the service thread.</td>
+	<td class="name" nowrap><a href="#service:stop">service:stop ()</a></td>
+	<td class="summary">Stops the worker threads.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#worker:data_available">worker:data_available ()</a></td>
+	<td class="name" nowrap><a href="#service:data_available">service:data_available ()</a></td>
 	<td class="summary">Checks if there is data pending to be received.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#worker:PerformRequest">worker:PerformRequest (method, url, request, headers, callback)</a></td>
+	<td class="name" nowrap><a href="#service:call_method">service:call_method (name, callback, ...)</a></td>
 	<td class="summary">Performs an asynchronous OAuth request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:PerformRequest">service:PerformRequest (method, url, request, headers, callback)</a></td>
+	<td class="summary">Async wrapper for <code>OAuth.PerformRequest</code>.</td>
 	</tr>
 </table>
 
@@ -126,8 +130,10 @@
 
     <h3>Returns:</h3>
     <ol>
-
-        The API call result, or <code>nil</code> if it's not ready yet.
+        <li>
+        <code>true</code> if the value is ready, otherwise <code>false</code>.</li>
+        <li>
+        List of return values from the API call.</li>
     </ol>
 
 
@@ -146,7 +152,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        The API call result.
+        List of return values from the API call.
     </ol>
 
 
@@ -154,14 +160,14 @@
 
 </dd>
 </dl>
-    <h2><a name="Class_worker"></a>Class worker </h2>
+    <h2><a name="Class_service"></a>Class service </h2>
 
-        Worker object.
- Executes OAuth requests on a background thread.
+        OAuth service object.
+ Executes OAuth requests on background threads.
     <dl class="function">
     <dt>
-    <a name = "worker.new"></a>
-    <strong>worker.new (keys, endp)</strong>
+    <a name = "service.new"></a>
+    <strong>service.new (keys, endp, threads)</strong>
     </dt>
     <dd>
     Creates a new async OAuth client.
@@ -174,6 +180,9 @@
         </li>
         <li><span class="parameter">endp</span>
           Table with OAuth endpoints.
+        </li>
+        <li><span class="parameter">threads</span>
+         Number of threads to create (default 1).
         </li>
     </ul>
 
@@ -188,11 +197,11 @@
 
 </dd>
     <dt>
-    <a name = "worker:start"></a>
-    <strong>worker:start ()</strong>
+    <a name = "service:start"></a>
+    <strong>service:start ()</strong>
     </dt>
     <dd>
-    Starts the service thread.
+    Starts the worker threads.
 
 
 
@@ -202,11 +211,11 @@
 
 </dd>
     <dt>
-    <a name = "worker:stop"></a>
-    <strong>worker:stop ()</strong>
+    <a name = "service:stop"></a>
+    <strong>service:stop ()</strong>
     </dt>
     <dd>
-    Stops the service thread.
+    Stops the worker threads.
 
 
 
@@ -216,8 +225,8 @@
 
 </dd>
     <dt>
-    <a name = "worker:data_available"></a>
-    <strong>worker:data_available ()</strong>
+    <a name = "service:data_available"></a>
+    <strong>service:data_available ()</strong>
     </dt>
     <dd>
     Checks if there is data pending to be received.
@@ -235,11 +244,42 @@
 
 </dd>
     <dt>
-    <a name = "worker:PerformRequest"></a>
-    <strong>worker:PerformRequest (method, url, request, headers, callback)</strong>
+    <a name = "service:call_method"></a>
+    <strong>service:call_method (name, callback, ...)</strong>
     </dt>
     <dd>
     Performs an asynchronous OAuth request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+              Method name.
+        </li>
+        <li><span class="parameter">callback</span>
+          Function that processes the response output (called when reading the <a href="../modules/luatwit.oauth_async.html#future">future</a>).
+        </li>
+        <li><span class="parameter">...</span>
+               Method arguments.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <a href="../modules/luatwit.oauth_async.html#future">future</a> object with the result.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:PerformRequest"></a>
+    <strong>service:PerformRequest (method, url, request, headers, callback)</strong>
+    </dt>
+    <dd>
+    Async wrapper for <code>OAuth.PerformRequest</code>.
 
 
     <h3>Parameters:</h3>
@@ -261,6 +301,11 @@
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        <a href="../modules/luatwit.oauth_async.html#future">future</a> object with the result.
+    </ol>
 
 
 
@@ -273,7 +318,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-02-07 00:17:38 </i>
+<i style="float:right;">Last updated 2015-02-07 21:22:11 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
