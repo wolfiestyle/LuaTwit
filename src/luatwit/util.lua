@@ -200,4 +200,17 @@ function _M.check_args(args, rules, res_name)
     return true
 end
 
+--- Removes the first value from a `pcall` result and returns errors in Lua style.
+--
+-- @param ok        Success status from `pcall`.
+-- @param ...       List of returned values.
+-- @return          On success, the function return values. On failure `nil`.
+-- @return          The error string.
+function _M.shift_pcall_error(ok, ...)
+    if not ok then
+        return nil, ...
+    end
+    return ...
+end
+
 return _M

@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT/X11
-local assert, error, next, pairs, require, select, setmetatable, tostring, type, unpack =
-      assert, error, next, pairs, require, select, setmetatable, tostring, type, unpack
+local assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
+      assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
 local oauth = require "OAuth"
 local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
@@ -128,7 +128,8 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     if args._async then
         return self.oauth_async:PerformRequest(method, url, request, req_headers, parse_response)
     else
-        return parse_response(self.oauth_sync:PerformRequest(method, url, request, req_headers))
+        local client = self.oauth_sync
+        return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, request, req_headers)))
     end
 end
 
