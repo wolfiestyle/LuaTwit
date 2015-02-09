@@ -20,7 +20,7 @@ local api = {}
 _M.api = api
 
 -- Builds the request url and arguments for the OAuth call.
-local function build_request(base_url, path, args, rules, defaults, multipart)
+local function build_request(base_url, path, args, rules, defaults)
     local request = {}
     if defaults then
         util.map_copy(request, defaults, function(v, k)
@@ -37,10 +37,6 @@ local function build_request(base_url, path, args, rules, defaults, multipart)
         return val
     end)
     local url = base_url .. path .. ".json"
-    if multipart then
-        local mp = helpers.multipart.Request(request)
-        return url, mp.body, mp.headers
-    end
     return url, request
 end
 
@@ -106,7 +102,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     name = name or "raw_call"
     assert(util.check_args(args, rules, name))
 
-    local url, request, req_headers = build_request(self.resources._base_url, path, args, rules, defaults, mp)
+    local url, request = build_request(self.resources._base_url, path, args, rules, defaults)
 
     local function parse_response(res_code, headers, _, body)
         -- The method crashed, error is on second arg
@@ -136,11 +132,17 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         return json_data, headers
     end
 
+    local req_body, req_headers = request
+    if mp then
+        local req = helpers.multipart.Request(request)
+        req_body, req_headers = req.body, req.headers
+    end
+
     if args._async then
-        return self.oauth_async:PerformRequest(method, url, request, req_headers, parse_response)
+        return self.oauth_async:PerformRequest(method, url, req_body, req_headers, parse_response)
     else
         local client = self.oauth_sync
-        return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, request, req_headers)))
+        return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, req_body, req_headers)))
     end
 end
 
