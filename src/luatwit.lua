@@ -44,13 +44,9 @@ local function build_request(base_url, path, args, rules, defaults, multipart)
     return url, request
 end
 
---- Applies type metatables to the supplied JSON data recursively.
---
--- @param node  Table with JSON data.
--- @param tname String with the name of an object defined in `objects`.
--- @return      The `node` argument after the processing is done.
-function api:apply_types(node, tname)
-    local type_decl = self.objects[tname]
+-- Applies type metatables to the supplied JSON data recursively.
+local function apply_types(objects, node, tname)
+    local type_decl = objects[tname]
     assert(type(type_decl) == "table", "invalid object type")
     if type(node) == "table" then
         setmetatable(node, type_decl)
@@ -60,13 +56,13 @@ function api:apply_types(node, tname)
     local type_st = type(st)
     if type_st == "string" then
         for _, item in pairs(node) do
-            self:apply_types(item, st)
+            apply_types(objects, item, st)
         end
     elseif type_st == "table" then
         for k, tn in pairs(st) do
             local item = node[k]
             if item ~= nil then
-                self:apply_types(item, tn)
+                apply_types(objects, item, tn)
             end
         end
     else
@@ -124,7 +120,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         if args._raw then
             return body, headers, tname
         end
-        self:apply_types(headers, "headers")
+        apply_types(self.objects, headers, "headers")
         local json_data, err = self:parse_json(body, tname)
         if json_data == nil then
             return nil, err, headers
@@ -162,7 +158,7 @@ function api:parse_json(str, tname)
             tname = "error"
         end
         if json_data then
-            self:apply_types(json_data, tname)
+            apply_types(self.objects, json_data, tname)
         end
     end
     return json_data
@@ -197,7 +193,7 @@ function api:confirm_login(pin)
         self.oauth_async.args[4].OAuthToken = token.oauth_token
         self.oauth_async.args[4].OAuthTokenSecret = token.oauth_token_secret
     end
-    return self:apply_types(token, "access_token"), status_line, res_code, headers
+    return apply_types(self.objects, token, "access_token"), status_line, res_code, headers
 end
 
 -- inherit from `api` and `resources`

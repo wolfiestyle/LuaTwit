@@ -303,7 +303,8 @@ function user_list:get_ids()
     for _, user in ipairs(self) do
         ids[#ids + 1] = user.id_str
     end
-    return self._get_client():apply_types(ids, "userid_array")
+    ids._get_client = self._get_client
+    return setmetatable(ids, _M.userid_array)
 end
 
 --- Cursor of `user` objects.
