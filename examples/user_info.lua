@@ -11,7 +11,7 @@ local client = twitter.api.new(oauth_params)
 
 -- get info about the logged user
 local user, err = client:verify_credentials()
-assert(user, err)
+assert(user, tostring(err))
 
 -- print it
 local profile = ([[

@@ -11,7 +11,7 @@ local client = twitter.api.new(oauth_params)
 
 -- retrieve the timeline
 local tl, err = client:get_home_timeline()
-assert(tl, err)
+assert(tl, tostring(err))
 
 -- print the tweets
 for _, tweet in ipairs(tl) do
