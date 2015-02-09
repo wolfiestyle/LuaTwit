@@ -64,89 +64,97 @@
 #!/usr/bin/lua -i
 <span class="comment">--
 </span><span class="comment">-- Interactive Lua session with a Twitter client logged in.
-</span><span class="comment">-- It uses pl.pretty to display the returned data.
+</span><span class="comment">-- It uses pl.pretty and custom __tostring methods to display the returned data.
 </span><span class="comment">--
 </span><span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 pl = <span class="global">require</span> <span class="string">"pl.import_into"</span> ()
+pretty = pl.pretty
 twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
-util = <span class="global">require</span> <span class="string">"luatwit.util"</span>
 objects = <span class="global">require</span> <span class="string">"luatwit.objects"</span>
-
-<span class="comment">-- used to display raw json data
-</span><span class="keyword">local</span> table_inspect_mt = {}
-table_inspect_mt.__index = table_inspect_mt
-
-<span class="keyword">function</span> table_inspect_mt:__tostring()
-    <span class="keyword">return</span> pl.pretty.write(self)
-<span class="keyword">end</span>
-
-<span class="keyword">function</span> table_inspect_mt:save(filename)
-    filename = filename <span class="keyword">or</span> <span class="string">"tw.out"</span>
-    pl.file.write(filename, <span class="global">tostring</span>(self) .. <span class="string">"\n"</span>)
-    <span class="keyword">return</span> self
-<span class="keyword">end</span>
-
-<span class="comment">-- get a function name from the resource URL
-</span><span class="keyword">function</span> get_resource_by_url(url)
-    <span class="keyword">for</span> name, decl <span class="keyword">in</span> <span class="global">pairs</span>(twitter.resources) <span class="keyword">do</span>
-        <span class="keyword">if</span> decl[<span class="number">2</span>] == url <span class="keyword">then</span>
-            <span class="keyword">return</span> <span class="global">setmetatable</span>({ name = name, decl = decl }, table_inspect_mt)
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-    <span class="keyword">return</span> <span class="keyword">nil</span>
-<span class="keyword">end</span>
 
 <span class="comment">-- initialize the twitter client
 </span>oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 client = twitter.api.new(oauth_params)
 
-<span class="comment">-- used to display tweets
+<span class="comment">-- pretty print for resource items
+</span>client.resources._resource_base.__tostring = pl.pretty.write
+
+<span class="comment">-- pretty print for tweets
 </span><span class="keyword">function</span> client.objects.tweet:__tostring()
     <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.user.screen_name .. <span class="string">"&gt; "</span> .. self.text
 <span class="keyword">end</span>
 
-<span class="comment">-- used to display DMs
+<span class="comment">-- pretty print for DMs
 </span><span class="keyword">function</span> client.objects.dm:__tostring()
     <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.sender.screen_name .. <span class="string">"&gt; (to: "</span> .. self.recipient.screen_name .. <span class="string">") "</span> .. self.text
 <span class="keyword">end</span>
 
-<span class="comment">-- used to display user profiles
-</span><span class="keyword">local</span> user_tmpl = pl.text.Template(
+<span class="comment">-- pretty print for user profiles
+</span><span class="keyword">local</span> user_tmpl =
 <span class="string">[[Name: @$screen_name ($name)
 Bio: $description
 Location: $location
 Followers: $followers_count, Following: $friends_count, Listed: $listed_count
 Tweets: $statuses_count
----
-]]</span>)
-
+---]]</span>
 <span class="keyword">function</span> client.objects.user:__tostring()
-    <span class="keyword">return</span> user_tmpl:safe_substitute(self)
+    <span class="keyword">return</span> (user_tmpl:gsub(<span class="string">"$([%w_]+)"</span>, self))
 <span class="keyword">end</span>
 
 <span class="comment">-- used to display object lists
 </span><span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
-    <span class="keyword">return</span> <span class="global">table</span>.concat(pl.tablex.pairmap(<span class="keyword">function</span>(k, v) <span class="keyword">return</span> k .. <span class="string">": "</span> .. <span class="global">tostring</span>(v) <span class="keyword">end</span>, self), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
+    <span class="keyword">local</span> res = {}
+    <span class="keyword">for</span> i, item <span class="keyword">in</span> <span class="global">ipairs</span>(self) <span class="keyword">do</span>
+        res[#res + <span class="number">1</span>] = i .. <span class="string">": "</span> .. <span class="global">tostring</span>(item)
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="global">table</span>.concat(res, <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- writes the contents of a table to a file
+</span><span class="keyword">function</span> table_save(tbl, filename)
+    filename = filename <span class="keyword">or</span> <span class="string">"tw.out"</span>
+    pretty.dump(tbl, filename)
+    <span class="keyword">return</span> tbl
 <span class="keyword">end</span>
 
 <span class="comment">-- add default __tostring methods to all objects
 </span><span class="keyword">for</span> name, _ <span class="keyword">in</span> <span class="global">pairs</span>(objects) <span class="keyword">do</span>
     <span class="keyword">local</span> obj = client.objects[name]
     <span class="keyword">if</span> <span class="keyword">not</span> obj.__tostring <span class="keyword">then</span>
-        obj.__tostring = name:match(<span class="string">"_list$"</span>) <span class="keyword">and</span> list_tostring <span class="keyword">or</span> table_inspect_mt.__tostring
+        obj.__tostring = name:match(<span class="string">"_list$"</span>) <span class="keyword">and</span> list_tostring <span class="keyword">or</span> pretty.write
     <span class="keyword">end</span>
-    obj.save = obj.save <span class="keyword">or</span> table_inspect_mt.save
+    obj.save = obj.save <span class="keyword">or</span> table_save
 <span class="keyword">end</span>
 
 <span class="comment">-- avoid headers spam
-</span>client.objects.headers.__tostring = <span class="keyword">nil</span></pre>
+</span>client.objects.headers.__tostring = <span class="keyword">nil</span>
+
+<span class="comment">-- lists the keys of a table and the type of its values
+</span><span class="keyword">function</span> keys(obj)
+    <span class="keyword">if</span> <span class="global">type</span>(obj) ~= <span class="string">"table"</span> <span class="keyword">then</span>
+        <span class="global">print</span>(<span class="global">tostring</span>(obj) .. <span class="string">" = "</span> .. <span class="global">type</span>(obj))
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="global">pairs</span>(obj) <span class="keyword">do</span>
+        <span class="global">print</span>(<span class="global">tostring</span>(k) .. <span class="string">" = "</span> .. <span class="global">type</span>(v))
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- finds a resource item with the specified api path
+</span><span class="keyword">function</span> get_resource(path)
+    <span class="keyword">for</span> name, decl <span class="keyword">in</span> <span class="global">pairs</span>(client.resources) <span class="keyword">do</span>
+        <span class="keyword">if</span> decl[<span class="number">2</span>] == path <span class="keyword">then</span>
+            <span class="keyword">return</span> decl
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></pre>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-02-09 00:59:50 </i>
+<i style="float:right;">Last updated 2015-02-09 04:09:34 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
