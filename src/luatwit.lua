@@ -175,6 +175,15 @@ end
 -- @return      HTTP headers.
 function api:confirm_login(pin)
     local token, res_code, headers, status_line = self.oauth_sync:GetAccessToken{ oauth_verifier = tostring(pin) }
+    -- send the keys to the async service
+    if token then
+        --FIXME: could update the keys with a message, but not worth the trouble because the OAuth client should be outside of the
+        --       thread and only raw HTTP requests should be done in background. Can't do this without ugly hacks using the oauth
+        --       lib internals. Or with another OAuth lib that lets me do my own HTTP requests.
+        self.oauth_async:stop()
+        self.oauth_async.args[4].OAuthToken = token.oauth_token
+        self.oauth_async.args[4].OAuthTokenSecret = token.oauth_token_secret
+    end
     return self:apply_types(token, "access_token"), status_line, res_code, headers
 end
 
