@@ -227,6 +227,7 @@ function api.new(args, threads, resources, objects)
             local mt = objects[key]
             if mt == nil then return nil end
             local obj = tablex.copy(mt)
+            obj.__index = obj
             obj._client = self
             _self[key] = obj
             return obj

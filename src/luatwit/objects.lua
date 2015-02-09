@@ -15,7 +15,6 @@ local function new_type(subtypes)
     local self = {
         _subtypes = subtypes,
     }
-    self.__index = self
     _ = self
     return self
 end
