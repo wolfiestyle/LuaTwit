@@ -8,8 +8,9 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 - oauth
 - dkjson
 - lanes
+- penlight
 
-Also you'll need `penlight` to run the examples and `ldoc` if you want to generate the docs.
+Also you'll need `ldoc` if you want to generate the docs.
 
 ## Documentation
 

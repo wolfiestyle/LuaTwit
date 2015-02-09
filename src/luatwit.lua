@@ -9,6 +9,7 @@ local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
 local util = require "luatwit.util"
 local helpers = require "OAuth.helpers"
+local tablex = require "pl.tablex"
 
 local _M = {}
 
@@ -253,12 +254,9 @@ function api.new(args, threads, resources, objects)
         __index = function(_self, key)
             local mt = objects[key]
             if mt == nil then return nil end
-            local obj = {
-                _client = self,
-            }
-            obj.__index = obj
-            util.inherit_mt(obj, mt)
-            _self[key] = setmetatable(obj, mt)
+            local obj = tablex.copy(mt)
+            obj._client = self
+            _self[key] = obj
             return obj
         end
     })

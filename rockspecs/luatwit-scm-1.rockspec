@@ -20,6 +20,7 @@ dependencies = {
     "oauth >= 0.0.5",
     "dkjson >= 2.5",
     "lanes >= 3.9.4",
+    "penlight >= 1.3.1",
 }
 
 build = {

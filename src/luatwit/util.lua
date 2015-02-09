@@ -62,20 +62,6 @@ function _M.type(obj)
     end
 end
 
-local metamethods = { "__add", "__sub", "__mul", "__div", "__mod", "__pow", "__unm", "__concat", "__len", "__eq", "__lt", "__le", "__index", "__newindex", "__call", "__tostring", "__pairs", "__ipairs" }
-
---- Inherits methamethods from one table to another by copying them.
---
--- @param dest      Destination table.
--- @param src       Source table.
-function _M.inherit_mt(dest, src)
-    for _, name in pairs(metamethods) do
-        if dest[name] == nil then
-            dest[name] = src[name]
-        end
-    end
-end
-
 --- Copies key-value pairs from one table to another and applies a function to the values.
 -- @param dest      Destination table.
 -- @param src       Source table.
