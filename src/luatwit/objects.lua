@@ -2,11 +2,21 @@
 --
 -- @module  luatwit.objects
 -- @license MIT/X11
-local assert, io_open, ipairs, pairs, table_concat, tostring, type =
-      assert, io.open, ipairs, pairs, table.concat, tostring, type
+local assert, io_open, ipairs, pairs, setmetatable, table_concat, tostring, type =
+      assert, io.open, ipairs, pairs, setmetatable, table.concat, tostring, type
 local util = require "luatwit.util"
 
 local _M = {}
+
+-- Default members for all objects.
+local object_base = {}
+object_base.__index = object_base
+
+function object_base:_source_method(args)
+    local client = self._get_client()
+    local res = client.resources[self._source]
+    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], self._request, self._source)
+end
 
 local _
 
@@ -15,8 +25,9 @@ local function new_type(subtypes)
     local self = {
         _subtypes = subtypes,
     }
+    self.__index = self
     _ = self
-    return self
+    return setmetatable(self, object_base)
 end
 
 --- Access token returned by `luatwit.api:confirm_login`.
@@ -84,7 +95,7 @@ local user = _
 local function user_method(self, fn, args)
     args = args or {}
     args.user_id = self.id_str
-    local client = self._client
+    local client = self._get_client()
     return client[fn](client, args)
 end
 
@@ -275,7 +286,7 @@ end
 function user:get_friendship(args)
     args = args or {}
     args.target_id = self.id_str
-    return self._client:get_friendship(args)
+    return self._get_client():get_friendship(args)
 end
 
 --- @section end
@@ -292,7 +303,7 @@ function user_list:get_ids()
     for _, user in ipairs(self) do
         ids[#ids + 1] = user.id_str
     end
-    return self._client:apply_types(ids, "userid_array")
+    return self._get_client():apply_types(ids, "userid_array")
 end
 
 --- Cursor of `user` objects.
@@ -304,7 +315,7 @@ local user_cursor = _
 -- @return          Next `user_cursor` page, or `nil` if the current page is the last.
 function user_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.next_cursor_str }
+    return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user cursored request.
@@ -312,7 +323,7 @@ end
 -- @return          Previous `user_cursor` page, or `nil` if the current page is the first.
 function user_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.previous_cursor_str }
+    return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Tweet object.
@@ -324,7 +335,7 @@ local tweet = _
 local function tweet_method(self, fn, args)
     args = args or {}
     args.id = self.id_str
-    local client = self._client
+    local client = self._get_client()
     return client[fn](client, args)
 end
 
@@ -340,7 +351,7 @@ function tweet:reply(args)
     if args._mention then
         args.status = "@" .. self.user.screen_name .. " " .. args.status
     end
-    return self._client:tweet(args)
+    return self._get_client():tweet(args)
 end
 
 --- Retweets this tweet.
@@ -408,7 +419,7 @@ function tweet:get_next_in_thread(args)
     if reply_id == nil then return nil end
     args = args or {}
     args.id = reply_id
-    return self._client:get_tweet(args)
+    return self._get_client():get_tweet(args)
 end
 
 --- @section end
@@ -431,7 +442,7 @@ local dm = _
 function dm:reply(args)
     assert(type(args) == "table" and args.text, "must provide reply text in 'text' argument")
     args.user_id = self.sender_id_str
-    return self._client:send_dm(args)
+    return self._get_client():send_dm(args)
 end
 
 --- Deletes this DM.
@@ -441,7 +452,7 @@ end
 function dm:delete(args)
     args = args or {}
     args.id = self.id_str
-    return self._client:delete_dm(args)
+    return self._get_client():delete_dm(args)
 end
 
 --- @section end
@@ -474,7 +485,7 @@ local userid_array = _
 function userid_array:get_users(args)
     args = args or {}
     args.user_id = table_concat(self, ",")
-    return self._client:lookup_users(args)
+    return self._get_client():lookup_users(args)
 end
 
 --- Returns the ids in this object as a string.
@@ -493,7 +504,7 @@ local userid_cursor = _
 -- @return          Next `userid_cursor` page, or `nil` if the current page is the last.
 function userid_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.next_cursor_str }
+    return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user id cursored request.
@@ -501,7 +512,7 @@ end
 -- @return          Previous `userid_cursor` page, or `nil` if the current page is the first.
 function userid_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.previous_cursor_str }
+    return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Follow relation between the authenticated user and another one.
@@ -515,7 +526,7 @@ local friendship = _
 function friendship:get_user(args)
     args = args or {}
     args.user_id = self.id_str
-    return self._client:get_user(args)
+    return self._get_client():get_user(args)
 end
 
 --- List of `friendship` objects.
@@ -532,7 +543,7 @@ local relationship = _
 function relationship:get_source_user(args)
     args = args or {}
     args.user_id = self.source.id_str
-    return self._client:get_user(args)
+    return self._get_client():get_user(args)
 end
 
 --- Gets the user profile referenced by the target field.
@@ -542,7 +553,7 @@ end
 function relationship:get_target_user(args)
     args = args or {}
     args.user_id = self.target.id_str
-    return self._client:get_user(args)
+    return self._get_client():get_user(args)
 end
 
 --- Contains a single `relationship` object.
@@ -563,7 +574,7 @@ local suggestion_category = _
 -- @return          An `user_list` object.
 function suggestion_category:get_users()
     if self.users then return self.users end
-    return self._client:get_suggestion_users{ slug = self.slug }
+    return self._get_client():get_suggestion_users{ slug = self.slug }
 end
 
 --- List of `suggestion_category` objects.
@@ -578,7 +589,7 @@ local userlist = _
 local function userlist_method(self, fn, args)
     args = args or {}
     args.list_id = self.id_str
-    local client = self._client
+    local client = self._get_client()
     return client[fn](client, args)
 end
 
@@ -722,7 +733,7 @@ local userlist_cursor = _
 -- @return          Next `userlist_cursor` page, or `nil` if the current page is the last.
 function userlist_cursor:next()
     if self.next_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.next_cursor_str }
+    return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user list cursored request.
@@ -730,7 +741,7 @@ end
 -- @return          Previous `userlist_cursor` page, or `nil` if the current page is the first.
 function userlist_cursor:prev()
     if self.previous_cursor == 0 then return nil end
-    return self._source_method{ cursor = self.previous_cursor_str }
+    return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
 --- Saved search object.
@@ -744,7 +755,7 @@ local saved_search = _
 function saved_search:do_search(args)
     args = args or {}
     args.q = self.query
-    return self._client:search_tweets(args)
+    return self._get_client():search_tweets(args)
 end
 
 --- List of `saved_search` objects.
@@ -767,7 +778,7 @@ local place_search = _
 function place_search:create_place(args)
     args = args or {}
     args.token = self.result.token
-    return self._client:create_place(args)
+    return self._get_client():create_place(args)
 end
 
 --- Results of a `place` search.
@@ -791,7 +802,7 @@ end
 function trend:do_search(args)
     args = args or {}
     args.q = self.query
-    return self._client:search_tweets(args)
+    return self._get_client():search_tweets(args)
 end
 
 --- List of `trend` objects.
@@ -814,7 +825,7 @@ local trend_location = _
 function trend_location:get_trends(args)
     args = args or {}
     args.id = self.woeid
-    return self._client:get_trends(args)
+    return self._get_client():get_trends(args)
 end
 
 --- List of `trend_location` objects.

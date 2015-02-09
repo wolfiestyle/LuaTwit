@@ -9,7 +9,6 @@ local oauth_as = require "luatwit.oauth_async"
 local json = require "dkjson"
 local util = require "luatwit.util"
 local helpers = require "OAuth.helpers"
-local tablex = require "pl.tablex"
 local config = require "pl.config"
 
 local _M = {}
@@ -118,13 +117,11 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         if json_data == nil then
             return nil, err, headers
         end
+        json_data._get_client = self._get_client
+        json_data._source = name
+        json_data._request = request
         if json_data._type == "error" then
             return nil, json_data, headers
-        end
-        if method == "GET" and type(json_data) == "table" and type(request) == "table" then
-            json_data._source_method = function(_args)
-                return self:raw_call(method, path, _args, tname, mp, rules, request, name)
-            end
         end
         return json_data, headers
     end
@@ -217,28 +214,21 @@ function api.new(args, threads, resources, objects)
     assert(util.check_args(args, oauth_key_args, "api.new"))
     resources = resources or require("luatwit.resources")
     objects = objects or require("luatwit.objects")
+
     local self = util.make_class(api_index)
     self.resources = resources
+    self.objects = objects
     self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
     self.oauth_async = oauth_as.service.new(args, resources._endpoints, threads)
-    -- create per-client copies of `objects` items with an extra _client field
-    self.objects = setmetatable({}, {
-        __index = function(_self, key)
-            local mt = objects[key]
-            if mt == nil then return nil end
-            local obj = tablex.copy(mt)
-            obj.__index = obj
-            obj._client = self
-            _self[key] = obj
-            return obj
-        end
-    })
+    self._get_client = function() return self end
+
     -- get info about the authenticated user
     self.me = util.lazy_loader(function()
         local res, err = self:verify_credentials()
         assert(res, tostring(err))
         return res
     end)
+
     return self
 end
 
