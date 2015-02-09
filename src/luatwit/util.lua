@@ -180,4 +180,15 @@ function _M.shift_pcall_error(ok, ...)
     return ...
 end
 
+--- Performs an API call with the data on a resource object.
+--
+-- @param res       Resource object (from `luatwit.resources`).
+-- @param client    API client (`luatwit.api` instance).
+-- @param args      Table with method arguments.
+-- @return          The result of the API call.
+-- @see luatwit.api.raw_call
+function _M.resource_call(res, client, args)
+    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], res.default_args, res.name)
+end
+
 return _M

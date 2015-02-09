@@ -21,10 +21,12 @@ local api = {}
 _M.api = api
 
 -- Builds the request url and arguments for the OAuth call.
-local function build_request(base_url, path, args, defaults, multipart)
+local function build_request(base_url, path, args, rules, defaults, multipart)
     local request = {}
     if defaults then
-        util.map_copy(request, defaults)
+        util.map_copy(request, defaults, function(v, k)
+            if rules[k] ~= nil then return v end
+        end)
     end
     util.map_copy(request, args, function(v, k)
         if k:sub(1, 1) ~= "_" then return v end
@@ -97,7 +99,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     name = name or "raw_call"
     assert(util.check_args(args, rules, name))
 
-    local url, request, req_headers = build_request(self.resources._base_url, path, args, defaults, mp)
+    local url, request, req_headers = build_request(self.resources._base_url, path, args, rules, defaults, mp)
 
     local function parse_response(res_code, headers, _, body)
         -- The method crashed, error is on second arg
@@ -189,40 +191,9 @@ function api:confirm_login(pin)
     return self:apply_types(token, "access_token"), status_line, res_code, headers
 end
 
---- Constructs an `api` method from the declarations in `self.resources`.
---
--- @param name  Function name as defined in `self.resources`.
--- @return      Function implementation.
-function api:build_method(name)
-    if type(name) ~= "string" or name:sub(1, 1) == "_" then return nil end
-    local decl = self.resources[name]
-    if not decl then return nil end
-    assert(type(decl) == "table" and #decl >= 2, "invalid resource declaration for: " .. name)
-    local mp, method, path, rules, tname = decl._multipart, unpack(decl)
-    local impl = util.make_callable(function(_self, parent, args)
-        return parent:raw_call(method, path, args, tname, mp, rules, _self.defaults, name)
-    end)
-    impl._type = "api"
-    impl.path = path
-    if decl.default_args then
-        local def = util.map_copy({}, decl.default_args, function(v, k)
-            if rules[k] ~= nil then return v end
-        end)
-        if next(def) ~= nil then
-            impl.defaults = def
-        end
-    end
-    self[name] = impl
-    return impl
-end
-
--- inherit from `api` and build missing methods
+-- inherit from `api` and `resources`
 local api_index = function(self, key)
-    local val = api[key]
-    if not val then
-        return api.build_method(self, key)
-    end
-    return val
+    return api[key] or self.resources[key]
 end
 
 local oauth_key_args = {

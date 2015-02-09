@@ -3,8 +3,8 @@
 --
 -- @module  luatwit.resources
 -- @license MIT/X11
-local setmetatable =
-      setmetatable
+local pairs, setmetatable, type =
+      pairs, setmetatable, type
 local util = require "luatwit.util"
 
 local _M = {}
@@ -31,6 +31,7 @@ _M._resource_base = {
 
 local resource_mt = {
     __index = _M._resource_base,
+    __call = util.resource_call,
 }
 
 -- Sets the mt of each resource.
@@ -168,7 +169,7 @@ _M.tweet_with_media = api{ POST, "statuses/update_with_media", {
         display_coordinates = false,
     },
     "tweet",
-    _multipart = true
+    multipart = true
 }
 --- Returns fully-hydrated  tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter.
 _M.lookup_tweets = api{ GET, "statuses/lookup", {
@@ -954,5 +955,13 @@ _M.get_rate_limit = api{ GET, "application/rate_limit_status", {
     },
     "rate_limit"
 }
+
+
+-- fill in the name field
+for name, obj in pairs(_M) do
+    if type(obj) == "table" and name:sub(1, 1) ~= "_" then
+        obj.name = name
+    end
+end
 
 return _M
