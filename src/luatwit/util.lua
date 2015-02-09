@@ -191,4 +191,15 @@ function _M.resource_call(res, client, args)
     return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], res.default_args, res.name)
 end
 
+--- Performs an API call with the data from an object returned by other API calls.
+--
+-- @param obj       Table returned by `luatwit.api.raw_call`.
+-- @param args      Table with method arguments.
+-- @return          The result of the API call.
+function _M.object_call(obj, args)
+    local client = obj._get_client()
+    local res = client.resources[obj._source]
+    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], obj._request, obj._source)
+end
+
 return _M

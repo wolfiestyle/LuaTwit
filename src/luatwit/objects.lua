@@ -9,14 +9,10 @@ local util = require "luatwit.util"
 local _M = {}
 
 -- Default members for all objects.
-local object_base = {}
+local object_base = {
+    _source_method = util.object_call,
+}
 object_base.__index = object_base
-
-function object_base:_source_method(args)
-    local client = self._get_client()
-    local res = client.resources[self._source]
-    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], self._request, self._source)
-end
 
 local _
 
