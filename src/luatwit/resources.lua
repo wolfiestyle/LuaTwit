@@ -158,7 +158,7 @@ _M.get_retweeter_ids = api{ GET, "statuses/retweeters/ids", {
 --- Updates the authenticating user's current status and attaches media for upload.
 _M.tweet_with_media = api{ POST, "statuses/update_with_media", {
         status = true,
-        ["media[]"] = { required = true, types = util.make_set("table") },
+        ["media[]"] = { required = true, types = { "table" } },
         possibly_sensitive = false,
         in_reply_to_status_id = false,
         lat = false,

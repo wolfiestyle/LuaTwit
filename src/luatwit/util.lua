@@ -4,6 +4,7 @@
 -- @license MIT/X11
 local getmetatable, pairs, rawget, select, setmetatable, table_concat, type =
       getmetatable, pairs, rawget, select, setmetatable, table.concat, type
+local tablex = require "pl.tablex"
 
 local _M = {}
 
@@ -84,19 +85,7 @@ function _M.lazy_loader(fn)
     })
 end
 
---- Creates a set table from the keys in the arguments.
---
--- @param ...       Keys of the table. The values will be set to `true`.
--- @return          New set table.
-function _M.make_set(...)
-    local tbl = {}
-    for i = 1, select("#", ...) do
-        local key = select(i, ...)
-        tbl[key] = true
-    end
-    return tbl
-end
-
+-- returns all the arguments on a set of rules
 local function build_args_str(rules)
     local res = {}
     for name, _ in pairs(rules) do
@@ -105,6 +94,7 @@ local function build_args_str(rules)
     return table_concat(res, ", ")
 end
 
+-- returns the required arguments on a set of rules
 local function build_required_str(rules)
     local res = {}
     for name, req in pairs(rules) do
@@ -145,7 +135,7 @@ function _M.check_args(args, rules, res_name)
             if rule_type == "boolean" then
                 allowed_types = scalar_types
             elseif rule_type == "table" then
-                allowed_types = rule.types
+                allowed_types = tablex.makeset(rule.types)
             else
                 return false, res_name .. ": invalid rule for field '" .. name .. "'"
             end
