@@ -312,17 +312,17 @@ local user_cursor = _
 
 --- Loads the next page of an user cursored request.
 --
--- @return          Next `user_cursor` page, or `nil` if the current page is the last.
+-- @return          Next `user_cursor` page, or `false` if the current page is the last.
 function user_cursor:next()
-    if self.next_cursor == 0 then return nil end
+    if self.next_cursor == 0 then return false end
     return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user cursored request.
 --
--- @return          Previous `user_cursor` page, or `nil` if the current page is the first.
+-- @return          Previous `user_cursor` page, or `false` if the current page is the first.
 function user_cursor:prev()
-    if self.previous_cursor == 0 then return nil end
+    if self.previous_cursor == 0 then return false end
     return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
@@ -413,10 +413,10 @@ end
 --- Get the next tweet in a conversation thread.
 --
 -- @param args      Extra arguments for the `resources.get_tweet` API method.
--- @return          A `tweet` object, or `nil` if this tweet is the first in the reply chain.
+-- @return          A `tweet` object, or `false` if this tweet is the first in the reply chain.
 function tweet:get_next_in_thread(args)
     local reply_id = self.in_reply_to_status_id_str
-    if reply_id == nil then return nil end
+    if reply_id == nil then return false end
     args = args or {}
     args.id = reply_id
     return self._get_client():get_tweet(args)
@@ -501,17 +501,17 @@ local userid_cursor = _
 
 --- Loads the next page of an user id cursored request.
 --
--- @return          Next `userid_cursor` page, or `nil` if the current page is the last.
+-- @return          Next `userid_cursor` page, or `false` if the current page is the last.
 function userid_cursor:next()
-    if self.next_cursor == 0 then return nil end
+    if self.next_cursor == 0 then return false end
     return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user id cursored request.
 --
--- @return          Previous `userid_cursor` page, or `nil` if the current page is the first.
+-- @return          Previous `userid_cursor` page, or `false` if the current page is the first.
 function userid_cursor:prev()
-    if self.previous_cursor == 0 then return nil end
+    if self.previous_cursor == 0 then return false end
     return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
@@ -730,17 +730,17 @@ local userlist_cursor = _
 
 --- Loads the next page of an user list cursored request.
 --
--- @return          Next `userlist_cursor` page, or `nil` if the current page is the last.
+-- @return          Next `userlist_cursor` page, or `false` if the current page is the last.
 function userlist_cursor:next()
-    if self.next_cursor == 0 then return nil end
+    if self.next_cursor == 0 then return false end
     return self:_source_method{ cursor = self.next_cursor_str }
 end
 
 --- Loads the previous page of an user list cursored request.
 --
--- @return          Previous `userlist_cursor` page, or `nil` if the current page is the first.
+-- @return          Previous `userlist_cursor` page, or `false` if the current page is the first.
 function userlist_cursor:prev()
-    if self.previous_cursor == 0 then return nil end
+    if self.previous_cursor == 0 then return false end
     return self:_source_method{ cursor = self.previous_cursor_str }
 end
 
@@ -897,7 +897,6 @@ function rate_limit:get_for(obj)
             end
         end
     end
-    return nil
 end
 
 

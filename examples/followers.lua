@@ -26,6 +26,6 @@ repeat
     end
     pos = pos + #fw_cur.users
     -- requests the next page
-    fw_cur = fw_cur:next()
-until fw_cur == nil
-
+    fw_cur, err = fw_cur:next()
+    assert(fw_cur ~= nil, tostring(err))
+until not fw_cur
