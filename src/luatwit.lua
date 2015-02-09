@@ -127,7 +127,9 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         end
         set_client_field(json_data, self._get_client)
         json_data._source = name
-        json_data._request = request
+        if next(request) then
+            json_data._request = request
+        end
         if json_data._type == "error" then
             return nil, json_data, headers
         end
