@@ -1,5 +1,5 @@
--- fill in your app keys here
--- To avoid accidentally committing your keys your should run:
--- git update-index --assume-unchanged oauth_app_keys
-consumer_key = "key"
-consumer_secret = "secret"
+# fill in your app keys here
+# To avoid accidentally committing your keys your should run:
+# git update-index --assume-unchanged oauth_app_keys
+consumer_key = key
+consumer_secret = secret

@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT/X11
-local assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, table_concat, type =
-      assert, getmetatable, jit, loadfile, pairs, pcall, rawget, select, setfenv, setmetatable, table.concat, type
+local getmetatable, pairs, rawget, select, setmetatable, table_concat, type =
+      getmetatable, pairs, rawget, select, setmetatable, table.concat, type
 
 local _M = {}
 
@@ -18,25 +18,6 @@ function _M.make_class(base, mt)
     local mt = mt or self
     mt.__index = base
     return setmetatable(self, mt)
-end
-
---- Loads a Lua chunk from a file and executes it on it's own environment.
---
--- @param filename  Lua source file.
--- @param env       Environment used to run the code. Creates a new empty table if omitted.
--- @return          The environment where the code was executed.
--- @return          `true` if no errors found when executing the code.
--- @return          Value(s) returned by the Lua chunk, or the error message.
-function _M.load_file(filename, env)
-    env = env or {}
-    local code, err = loadfile(filename, nil, env)
-    if not code then
-        return env, false, err
-    end
-    if setfenv and not jit then
-        setfenv(code, env)
-    end
-    return env, pcall(code)
 end
 
 --- Creates a callable table.

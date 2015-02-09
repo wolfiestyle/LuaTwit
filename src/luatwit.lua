@@ -10,6 +10,7 @@ local json = require "dkjson"
 local util = require "luatwit.util"
 local helpers = require "OAuth.helpers"
 local tablex = require "pl.tablex"
+local config = require "pl.config"
 
 local _M = {}
 
@@ -272,29 +273,29 @@ end
 --- @section end
 
 --- Helper to load OAuth keys from text files.
--- Key files are loaded as Lua files in an empty environment and the values are extracted from their global namespace.
+-- Key files are loaded with `pl.config`.
 -- It also accepts tables as arguments (useful when using `require`).
 --
 -- @param ...   Filenames (Lua code) or tables with the keys to load.
 -- @return      Table with the keys found.
 function _M.load_keys(...)
-    local keys, env = {}, {}
+    local keys = {}
     for i = 1, select('#', ...) do
         local source = select(i, ...)
         local ts = type(source)
-        if ts == "table" then
-            for k, _ in pairs(oauth_key_args) do
-                keys[k] = source[k]
-            end
-        elseif ts == "string" then
-            local _, err, res = util.load_file(source, env)
-            assert(err, res)
-        else
+        if ts == "string" then
+            local cfg, err = config.read(source, { trim_quotes = true })
+            assert(cfg, err)
+            source = cfg
+        elseif ts ~= "table" then
             error("argument #" .. i .. ": invalid type " .. ts, 2)
         end
-    end
-    for k, _ in pairs(oauth_key_args) do
-        keys[k] = env[k]
+        for k, _ in pairs(oauth_key_args) do
+            local v = source[k]
+            if v ~= nil then
+                keys[k] = v
+            end
+        end
     end
     return keys
 end

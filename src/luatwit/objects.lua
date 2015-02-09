@@ -35,9 +35,9 @@ function access_token:save(filename)
     assert(file, err)
     for k, v in pairs(self) do
         if not k:match("^oauth") then
-            k = "--" .. k
+            k = "#" .. k
         end
-        file:write(k, ' = "', v, '"\n');
+        file:write(k, " = ", v, "\n");
     end
     file:close()
     return self
