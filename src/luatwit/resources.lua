@@ -22,21 +22,19 @@ _M._endpoints = {
 }
 
 -- Default members for all resources.
-_M._resource_base = {
+local resource_base = {
     _type = "resource",
     default_args = {
         stringify_ids = true,
     },
-}
-
-local resource_mt = {
-    __index = _M._resource_base,
     __call = util.resource_call,
 }
+resource_base.__index = resource_base
+_M._resource_base = resource_base
 
 -- Sets the mt of each resource.
 local function api(tbl)
-    return setmetatable(tbl, resource_mt)
+    return setmetatable(tbl, resource_base)
 end
 
 --( Timeline )--
