@@ -36,10 +36,10 @@
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../examples/async.lua.html">async.lua</a></li>
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
-  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><strong>followers.lua</strong></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
-  <li><strong>timeline.lua</strong></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
   <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
   <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
 </ul>
@@ -60,11 +60,11 @@
 
 <div id="content">
 
-    <h2>timeline.lua</h2>
+    <h2>followers.lua</h2>
 <pre>
 #!/usr/bin/lua
 <span class="comment">--
-</span><span class="comment">-- Prints the home timeline.
+</span><span class="comment">-- List the logged user's followers.
 </span><span class="comment">--
 </span><span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 <span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
@@ -73,31 +73,26 @@
 </span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 <span class="keyword">local</span> client = twitter.api.new(oauth_params)
 
-<span class="comment">-- retrieve the timeline
-</span><span class="keyword">local</span> tl, err = client:get_home_timeline()
-<span class="global">assert</span>(tl, <span class="global">tostring</span>(err))
+<span class="comment">-- get logged user info
+</span><span class="keyword">local</span> me, err = client:verify_credentials()
+<span class="global">assert</span>(me, <span class="global">tostring</span>(err))
+<span class="global">print</span>(<span class="string">"getting followers for: "</span> .. me.screen_name)
 
-<span class="comment">-- print the tweets
-</span><span class="keyword">for</span> _, tweet <span class="keyword">in</span> <span class="global">ipairs</span>(tl) <span class="keyword">do</span>
-    <span class="keyword">local</span> rt, footer = <span class="string">""</span>, {}
-    <span class="keyword">if</span> tweet.retweeted_status <span class="keyword">then</span>
-        rt = <span class="string">"[RT] "</span>
-        <span class="keyword">local</span> f = <span class="string">"retweeted by @"</span> .. tweet.user.screen_name
-        <span class="keyword">if</span> tweet.retweet_count &gt; <span class="number">1</span> <span class="keyword">then</span>
-            f = f .. <span class="string">" and "</span> .. tweet.retweet_count .. <span class="string">" others"</span>
-        <span class="keyword">end</span>
-        footer[<span class="number">1</span>] = f
-        tweet = tweet.retweeted_status
-    <span class="keyword">end</span>
-    <span class="keyword">if</span> tweet.in_reply_to_screen_name <span class="keyword">then</span>
-        footer[#footer + <span class="number">1</span>] = <span class="string">"in reply to @"</span> .. tweet.in_reply_to_screen_name
-    <span class="keyword">end</span>
-    footer[#footer + <span class="number">1</span>] = <span class="string">"via "</span> .. tweet.source:match(<span class="string">"&gt;(.+)&lt;/a&gt;$"</span>)
+<span class="comment">-- get the followers cursor
+</span><span class="keyword">local</span> fw_cur, err = client:get_followers{ user_id = me.id_str, count = <span class="number">100</span>, skip_status = <span class="keyword">true</span> }
+<span class="global">assert</span>(fw_cur, <span class="global">tostring</span>(err))
 
-    <span class="global">print</span>(rt .. (<span class="string">"@$screen_name ($name)"</span>):gsub(<span class="string">"$([%w_]+)"</span>, tweet.user))
-    <span class="global">print</span>(tweet.text)
-    <span class="global">print</span>(<span class="string">"&gt; "</span> .. <span class="global">table</span>.concat(footer, <span class="string">", "</span>) .. <span class="string">"\n"</span>)
-<span class="keyword">end</span></pre>
+<span class="comment">-- iterates the cursor
+</span><span class="keyword">local</span> pos = <span class="number">0</span>
+<span class="keyword">repeat</span>
+    <span class="keyword">for</span> i, user <span class="keyword">in</span> <span class="global">ipairs</span>(fw_cur.users) <span class="keyword">do</span>
+        <span class="global">print</span>(pos + i .. <span class="string">": "</span> .. user.screen_name .. <span class="string">" ("</span> .. user.name .. <span class="string">")"</span>)
+    <span class="keyword">end</span>
+    pos = pos + #fw_cur.users
+    <span class="comment">-- requests the next page
+</span>    fw_cur, err = fw_cur:<span class="global">next</span>()
+    <span class="global">assert</span>(fw_cur ~= <span class="keyword">nil</span>, <span class="global">tostring</span>(err))
+<span class="keyword">until</span> <span class="keyword">not</span> fw_cur</pre>
 
 
 </div> <!-- id="content" -->
