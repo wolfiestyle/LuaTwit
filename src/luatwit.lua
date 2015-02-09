@@ -75,6 +75,18 @@ function api:apply_types(node, tname)
     return node
 end
 
+-- Sets the _get_client field on each object recursively.
+local function set_client_field(node, value)
+    if node._type then
+        node._get_client = value
+    end
+    for _, item in pairs(node) do
+        if type(item) == "table" then
+            set_client_field(item, value)
+        end
+    end
+end
+
 --- Generic call to the Twitter API.
 -- This is the backend method that performs all the API calls.
 --
@@ -117,7 +129,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         if json_data == nil then
             return nil, err, headers
         end
-        json_data._get_client = self._get_client
+        set_client_field(json_data, self._get_client)
         json_data._source = name
         json_data._request = request
         if json_data._type == "error" then
