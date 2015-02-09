@@ -346,6 +346,7 @@ _M.get_followers = api{ GET, "followers/list", {
         user_id = false,
         screen_name = false,
         cursor = false,
+        count = false,
         skip_status = false,
         include_user_entities = false,
     },
