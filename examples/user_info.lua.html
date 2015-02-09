@@ -34,13 +34,13 @@
 
 <h2>Examples</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
-  <li><strong>async.lua</strong></li>
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
   <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
   <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
   <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
-  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+  <li><strong>user_info.lua</strong></li>
 </ul>
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
@@ -59,41 +59,32 @@
 
 <div id="content">
 
-    <h2>async.lua</h2>
+    <h2>user_info.lua</h2>
 <pre>
 #!/usr/bin/lua
 <span class="comment">--
-</span><span class="comment">-- Performs an asyncronous API call.
+</span><span class="comment">-- Prints the logged user's profile.
 </span><span class="comment">--
 </span><span class="global">package</span>.path = <span class="string">"../src/?.lua;"</span> .. <span class="global">package</span>.path
 <span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
-<span class="keyword">local</span> pretty = <span class="global">require</span> <span class="string">"pl.pretty"</span>
-<span class="keyword">local</span> socket = <span class="global">require</span> <span class="string">"socket"</span>
 
 <span class="comment">-- initialize the twitter client
 </span><span class="keyword">local</span> oauth_params = twitter.load_keys(<span class="string">"oauth_app_keys"</span>, <span class="string">"local_auth"</span>)
 <span class="keyword">local</span> client = twitter.api.new(oauth_params)
 
-<span class="comment">-- When the option _async is set, the methods exit immeditately and
-</span><span class="comment">-- return a future value. The request is done in a background thread.
-</span><span class="comment">-- The main thread can get the result calling :peek() or :wait()
-</span><span class="comment">-- on the future object.
-</span><span class="keyword">local</span> f = client:verify_credentials{ skip_status = <span class="keyword">true</span>, _async = <span class="keyword">true</span> }
-<span class="global">print</span> <span class="string">"request sent..."</span>
+<span class="comment">-- get info about the logged user
+</span><span class="keyword">local</span> user, err = client:verify_credentials()
+<span class="global">assert</span>(user, err)
 
-<span class="comment">-- do something else until it's ready
-</span><span class="keyword">local</span> ready, res, h
-<span class="keyword">repeat</span>
-    <span class="global">print</span> <span class="string">"waiting for response..."</span>
-    socket.sleep(<span class="number">0.25</span>)
-    <span class="comment">-- uses the same return format of normal api calls
-</span>    ready, res, h = f:peek()
-<span class="keyword">until</span> ready
+<span class="comment">-- print it
+</span><span class="keyword">local</span> profile = (<span class="string">[[
+Name: @$screen_name ($name)
+Bio: $description
+Location: $location
+Followers: $followers_count, Following: $friends_count, Listed: $listed_count
+Tweets: $statuses_count]]</span>):gsub(<span class="string">"$([%w_]+)"</span>, user)
 
-<span class="comment">-- the second return value contains the error if something went wrong
-</span><span class="global">assert</span>(res, <span class="global">tostring</span>(h))
-
-pretty.dump(res)</pre>
+<span class="global">print</span>(profile)</pre>
 
 
 </div> <!-- id="content" -->
