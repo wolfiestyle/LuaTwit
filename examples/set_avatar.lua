@@ -1,4 +1,4 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
 --
 -- Changes the user's avatar with the file passed as argument.
 --

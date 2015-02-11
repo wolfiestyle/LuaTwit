@@ -1,4 +1,4 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
 --
 -- Performs the Twitter app authorization procedure.
 --

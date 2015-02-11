@@ -1,4 +1,4 @@
-#!/usr/bin/lua -i
+#!/usr/bin/env lua -i
 --
 -- Interactive Lua session with a Twitter client logged in.
 -- It uses pl.pretty and custom __tostring methods to display the returned data.

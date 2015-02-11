@@ -1,4 +1,4 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
 --
 -- Sends a tweet with the text in the command line arguments.
 --
