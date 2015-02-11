@@ -92,7 +92,7 @@ end
 -- @param name  API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
 --              If the option `_raw` is set, instead returns an unprocessed JSON string.
---              If the option `_async` is set, instead it returns a `luatwit.oauth_async.future` object.
+--              If the option `_async` or `_callback` is set, instead it returns a `luatwit.oauth_async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If the option `_raw` is set, the type name from `resources`.
 --              This value is needed to use `api:parse_json` with the returned string.
@@ -101,6 +101,7 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     args = args or {}
     name = name or "raw_call"
     assert(util.check_args(args, rules, name))
+    assert(not args._callback or self.callback_handler, "need callback handler")
 
     local url, request = build_request(self.resources._base_url, path, args, rules, defaults)
 
@@ -138,8 +139,12 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
         req_body, req_headers = req.body, req.headers
     end
 
-    if args._async then
-        return self.oauth_async:PerformRequest(method, url, req_body, req_headers, parse_response)
+    if args._async or args._callback then
+        local fut = self.oauth_async:PerformRequest(method, url, req_body, req_headers, parse_response)
+        if args._callback then
+            return fut, self.callback_handler(fut, args._callback)
+        end
+        return fut
     else
         local client = self.oauth_sync
         return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, req_body, req_headers)))
@@ -198,6 +203,17 @@ function api:confirm_login(pin)
         self.oauth_async.args[4].OAuthTokenSecret = token.oauth_token_secret
     end
     return apply_types(self.objects, token, "access_token"), status_line, res_code, headers
+end
+
+--- Sets the callback handler function.
+-- The callback handler is called after every async request that uses the `_callback` option. This function has to do the
+-- necessary setup to watch the future and send the result to the callback when it's ready.
+-- This way we can work with external event loops in a transparent way.
+--
+-- @param fn    Callback handler function. This is called as `fn(fut, callback)`, where `fut` is the result from an async
+--              API call and `callback` is the value passed in the request's `_callback` argument.
+function api:set_callback_handler(fn)
+    self.callback_handler = fn
 end
 
 -- inherit from `api` and `resources`
