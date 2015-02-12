@@ -216,6 +216,26 @@ function api:set_callback_handler(fn)
     self.callback_handler = fn
 end
 
+local http_async_args = {
+    url = true,
+    body = false,
+    _callback = false,
+}
+
+--- Performs an asynchronous HTTP request.
+--
+-- @param args  Table with request arguments (url, body, _callback).
+-- @return      `luatwit.oauth_async.future` object with the result.
+function api:http_async(args)
+    assert(util.check_args(args, http_async_args, "http_async"))
+
+    local fut = self.oauth_async:http_request(args.url, args.body)
+    if args._callback then
+        return fut, self.callback_handler(fut, args._callback)
+    end
+    return fut
+end
+
 -- inherit from `api` and `resources`
 local api_index = function(self, key)
     return api[key] or self.resources[key]

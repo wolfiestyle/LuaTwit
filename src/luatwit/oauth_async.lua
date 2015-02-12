@@ -77,10 +77,20 @@ local start_worker_thread = lanes.gen("*", function(args, message)
     local oauth_client = require("OAuth").new(unpack(args))
 
     while true do
-        local msg, req = message:receive(nil, "request", "quit")
+        local msg, req = message:receive(nil, "request", "http", "quit")
         if msg == "request" then
             local ok, result = pcall(function()
                 return table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
+            end)
+            if not ok then
+                result = { nil, result, n = 2 }
+            end
+            message:send("response", { id = req.id, data = result })
+        elseif msg == "http" then
+            local ok, result = pcall(function()
+                local url = type(req.args) == "table" and req.args.url or req.args[1]
+                local client = require(url:match "^https:" and "ssl.https" or "socket.http")
+                return table_pack(client.request(unpackn(req.args)))
             end)
             if not ok then
                 result = { nil, result, n = 2 }
@@ -181,6 +191,17 @@ function service:_gen_id()
     local id = self.cur_id
     self.cur_id = id + 1
     return id
+end
+
+--- Performs an asynchronous HTTP request.
+--
+-- @param ...       Arguments for `http.request` (luasocket).
+-- @return          `future` object with the result.
+function service:http_request(...)
+    local args = { id = self:_gen_id(), args = table_pack(...) }
+    self:start()
+    self.message:send("http", args)
+    return future.new(args.id, self)
 end
 
 --- Performs an asynchronous OAuth request.
