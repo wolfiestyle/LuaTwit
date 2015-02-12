@@ -1,4 +1,7 @@
-#!/usr/bin/env lua -i
+#!/bin/sh
+_=[[
+exec lua -i "$0" "$@"
+]]
 --
 -- Interactive Lua session with a Twitter client logged in.
 -- It uses pl.pretty and custom __tostring methods to display the returned data.
