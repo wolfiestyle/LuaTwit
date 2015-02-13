@@ -339,7 +339,7 @@ end
 --- Sends a tweet as a reply to this tweet.
 --
 -- @param args      Extra arguments for the `resources.tweet` API method.
---                  The reply must text is passed in the `status` field.
+--                  The reply text must be passed in the `status` field.
 --                  If the `_mention` option is set, it will prepend the @screen_name to the reply text.
 -- @return          A `tweet` object.
 function tweet:reply(args)
