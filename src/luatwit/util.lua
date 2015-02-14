@@ -148,4 +148,39 @@ function _M.object_call(obj, args)
     return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], obj._request, obj._source)
 end
 
+local resource_builder_mt = {
+    _type = "resource_builder",
+}
+resource_builder_mt.__index = resource_builder_mt
+
+function resource_builder_mt:args(rules)
+    self[3] = rules
+    return self
+end
+
+function resource_builder_mt:type(tname)
+    self[4] = tname
+    return self
+end
+
+function resource_builder_mt:multipart()
+    self.multipart = true
+    return self
+end
+
+function resource_builder_mt:finish(res_name, mt)
+    self.name = res_name
+    return setmetatable(self, mt)
+end
+
+--- Creates a resource builder object. It's used to construct the fields of `luatwit.resources`.
+--
+-- @param method    HTTP method.
+-- @param path      Resource path.
+-- @return          Resource builder object. Must call `:finish()` after the construction is done.
+function _M.resource_builder(method, path)
+    local res = { method, path }
+    return setmetatable(res, resource_builder_mt)
+end
+
 return _M
