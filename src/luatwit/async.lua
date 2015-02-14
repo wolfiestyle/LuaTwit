@@ -1,6 +1,6 @@
---- Implements a service for performing asyncronous OAuth requests.
+--- Implements a service for performing asyncronous HTTP and OAuth requests.
 --
--- @module  luatwit.oauth_async
+-- @module  luatwit.async
 -- @license MIT/X11
 local pcall, select, setmetatable, unpack =
       pcall, select, setmetatable, unpack
@@ -73,12 +73,12 @@ _M.service = service
 
 -- worker thread generator
 local start_worker_thread = lanes.gen("*", function(args, message)
-    set_debug_threadname("oauth_async")
+    set_debug_threadname("async worker")
     local oauth_client = require("OAuth").new(unpack(args))
 
     while true do
-        local msg, req = message:receive(nil, "request", "http", "quit")
-        if msg == "request" then
+        local msg, req = message:receive(nil, "oauth", "http", "quit")
+        if msg == "oauth" then
             local ok, result = pcall(function()
                 return table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
             end)
@@ -210,10 +210,10 @@ end
 -- @param callback  Function that processes the response output (called when reading the `future`).
 -- @param ...       Method arguments.
 -- @return          `future` object with the result.
-function service:call_method(name, callback, ...)
+function service:call_oauth_method(name, callback, ...)
     local args = { id = self:_gen_id(), method = name, args = table_pack(...) }
     self:start()
-    self.message:send("request", args)
+    self.message:send("oauth", args)
     return future.new(args.id, self, callback)
 end
 
@@ -225,8 +225,8 @@ end
 -- @param headers   Custom HTTP headers.
 -- @param callback  Function that processes the response output.
 -- @return          `future` object with the result.
-function service:PerformRequest(method, url, request, headers, callback)
-    return self:call_method("PerformRequest", callback, method, url, request, headers)
+function service:oauth_request(method, url, request, headers, callback)
+    return self:call_oauth_method("PerformRequest", callback, method, url, request, headers)
 end
 
 return _M

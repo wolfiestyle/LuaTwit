@@ -5,7 +5,7 @@
 local assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
       assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
 local oauth = require "OAuth"
-local oauth_as = require "luatwit.oauth_async"
+local lt_async = require "luatwit.async"
 local json = require "dkjson"
 local util = require "luatwit.util"
 local helpers = require "OAuth.helpers"
@@ -92,7 +92,7 @@ end
 -- @param name  API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
 --              If the option `_raw` is set, instead returns an unprocessed JSON string.
---              If the option `_async` or `_callback` is set, instead it returns a `luatwit.oauth_async.future` object.
+--              If the option `_async` or `_callback` is set, instead it returns a `luatwit.async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If the option `_raw` is set, the type name from `resources`.
 --              This value is needed to use `api:parse_json` with the returned string.
@@ -140,13 +140,13 @@ function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
     end
 
     if args._async or args._callback then
-        local fut = self.oauth_async:PerformRequest(method, url, req_body, req_headers, parse_response)
+        local fut = self.async:oauth_request(method, url, req_body, req_headers, parse_response)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
-        local client = self.oauth_sync
+        local client = self.oauth_client
         return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, req_body, req_headers)))
     end
 end
@@ -179,8 +179,8 @@ end
 -- @return      Authorization URL.
 -- @return      HTTP Authorization header.
 function api:start_login()
-    self.oauth_sync:RequestToken{ oauth_callback = "oob" }
-    return self.oauth_sync:BuildAuthorizationUrl()
+    self.oauth_client:RequestToken{ oauth_callback = "oob" }
+    return self.oauth_client:BuildAuthorizationUrl()
 end
 
 --- Finishes the OAuth authorization.
@@ -192,15 +192,15 @@ end
 -- @return      HTTP result code.
 -- @return      HTTP headers.
 function api:confirm_login(pin)
-    local token, res_code, headers, status_line = self.oauth_sync:GetAccessToken{ oauth_verifier = tostring(pin) }
+    local token, res_code, headers, status_line = self.oauth_client:GetAccessToken{ oauth_verifier = tostring(pin) }
     -- send the keys to the async service
     if token then
         --FIXME: could update the keys with a message, but not worth the trouble because the OAuth client should be outside of the
         --       thread and only raw HTTP requests should be done in background. Can't do this without ugly hacks using the oauth
         --       lib internals. Or with another OAuth lib that lets me do my own HTTP requests.
-        self.oauth_async:stop()
-        self.oauth_async.args[4].OAuthToken = token.oauth_token
-        self.oauth_async.args[4].OAuthTokenSecret = token.oauth_token_secret
+        self.async:stop()
+        self.async.args[4].OAuthToken = token.oauth_token
+        self.async.args[4].OAuthTokenSecret = token.oauth_token_secret
     end
     return apply_types(self.objects, token, "access_token"), status_line, res_code, headers
 end
@@ -225,11 +225,11 @@ local http_async_args = {
 --- Performs an asynchronous HTTP request.
 --
 -- @param args  Table with request arguments (url, body, _callback).
--- @return      `luatwit.oauth_async.future` object with the result.
+-- @return      `luatwit.async.future` object with the result.
 function api:http_async(args)
     assert(util.check_args(args, http_async_args, "http_async"))
 
-    local fut = self.oauth_async:http_request(args.url, args.body)
+    local fut = self.async:http_request(args.url, args.body)
     if args._callback then
         return fut, self.callback_handler(fut, args._callback)
     end
@@ -266,8 +266,8 @@ function api.new(args, threads, resources, objects)
     local self = util.make_class(api_index)
     self.resources = resources
     self.objects = objects
-    self.oauth_sync = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
-    self.oauth_async = oauth_as.service.new(args, resources._endpoints, threads)
+    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    self.async = lt_async.service.new(args, resources._endpoints, threads)
     self._get_client = function() return self end
 
     -- get info about the authenticated user
