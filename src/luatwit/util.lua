@@ -8,29 +8,6 @@ local tablex = require "pl.tablex"
 
 local _M = {}
 
---- Create a new class prototype or instance.
---
--- @param base      Table used as a base class. Creates a new empty table if omitted.
--- @param mt        Metatable for the new class. Sets `base` as metatable if omitted.
---                  The `__index` metamethod of this table will be set to the `base` argument.
--- @return          New class table.
-function _M.make_class(base, mt)
-    local self = {}
-    local mt = mt or self
-    mt.__index = base
-    return setmetatable(self, mt)
-end
-
---- Creates a callable table.
---
--- @param fn        Function.
--- @return          Table with the `__call` metamethod set to the provided function.
-function _M.make_callable(fn)
-    local self = {}
-    self.__call = fn
-    return setmetatable(self, self)
-end
-
 --- Gets the type of the supplied object or the _type value if present.
 --
 -- @param obj       Any value.
@@ -62,27 +39,6 @@ function _M.map_copy(dest, src, fn)
         end
     end
     return dest
-end
-
---- Creates a lazy table that loads its contents on field access.
---
--- @param fn        Function that returns the table content.
---                  This function will be called on the first field read attempt.
---                  The returned table fields will be copied to this table.
--- @return          New lazy table.
-function _M.lazy_loader(fn)
-    return setmetatable({}, {
-        __index = function(self, key)
-            local obj = fn()
-            for k, v in pairs(obj) do
-                if rawget(self, k) == nil then
-                    self[k] = v
-                end
-            end
-            setmetatable(self, getmetatable(obj))
-            return self[key]
-        end
-    })
 end
 
 -- returns all the arguments on a set of rules

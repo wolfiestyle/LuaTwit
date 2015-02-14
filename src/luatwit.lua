@@ -237,7 +237,7 @@ function api:http_async(args)
 end
 
 -- inherit from `api` and `resources`
-local api_index = function(self, key)
+local function api_index(self, key)
     return api[key] or self.resources[key]
 end
 
@@ -260,24 +260,18 @@ local oauth_key_args = {
 -- @see luatwit.objects.access_token
 function api.new(args, threads, resources, objects)
     assert(util.check_args(args, oauth_key_args, "api.new"))
-    resources = resources or require("luatwit.resources")
-    objects = objects or require("luatwit.objects")
 
-    local self = util.make_class(api_index)
-    self.resources = resources
-    self.objects = objects
-    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, resources._endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
-    self.async = lt_async.service.new(args, resources._endpoints, threads)
+    local self = {
+        __index = api_index,
+        resources = resources or require("luatwit.resources"),
+        objects = objects or require("luatwit.objects"),
+    }
+    local endpoints = self.resources._endpoints
+    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
+    self.async = lt_async.service.new(args, endpoints, threads)
     self._get_client = function() return self end
 
-    -- get info about the authenticated user
-    self.me = util.lazy_loader(function()
-        local res, err = self:verify_credentials()
-        assert(res, tostring(err))
-        return res
-    end)
-
-    return self
+    return setmetatable(self, self)
 end
 
 --- @section end
