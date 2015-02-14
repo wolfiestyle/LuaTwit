@@ -134,7 +134,7 @@ end
 -- @return          The result of the API call.
 -- @see luatwit.api.raw_call
 function _M.resource_call(res, client, args)
-    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], res.default_args, res.name)
+    return client:raw_call(res.method, res.path, args, res.res_type, res.multipart, res.rules, res.default_args, res.name)
 end
 
 --- Performs an API call with the data from an object returned by other API calls.
@@ -145,7 +145,7 @@ end
 function _M.object_call(obj, args)
     local client = obj._get_client()
     local res = client.resources[obj._source]
-    return client:raw_call(res[1], res[2], args, res[4], res.multipart, res[3], obj._request, obj._source)
+    return client:raw_call(res.method, res.path, args, res.res_type, res.multipart, res.rules, obj._request, obj._source)
 end
 
 local resource_builder_mt = {
@@ -154,12 +154,12 @@ local resource_builder_mt = {
 resource_builder_mt.__index = resource_builder_mt
 
 function resource_builder_mt:args(rules)
-    self[3] = rules
+    self.rules = rules
     return self
 end
 
 function resource_builder_mt:type(tname)
-    self[4] = tname
+    self.res_type = tname
     return self
 end
 
@@ -179,7 +179,10 @@ end
 -- @param path      Resource path.
 -- @return          Resource builder object. Must call `:finish()` after the construction is done.
 function _M.resource_builder(method, path)
-    local res = { method, path }
+    local res = {
+        method = method,
+        path = path,
+    }
     return setmetatable(res, resource_builder_mt)
 end
 

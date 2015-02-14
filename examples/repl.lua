@@ -83,7 +83,7 @@ end
 -- finds a resource item with the specified api path
 function get_resource(path)
     for name, decl in pairs(client.resources) do
-        if decl[2] == path then
+        if decl.path == path then
             return decl
         end
     end

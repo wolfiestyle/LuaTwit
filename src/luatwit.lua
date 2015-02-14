@@ -85,7 +85,7 @@ end
 -- @param method    HTTP method.
 -- @param path  API method path.
 -- @param args  Table with the method arguments.
--- @param tname Type name as defined in `resources`.
+-- @param tname Result type name as defined in `resources`.
 -- @param mp    `true` if the request should be done as multipart.
 -- @param rules Rules for checking args (with `luatwit.util.check_args`).
 -- @param defaults  Default method arguments.
@@ -154,7 +154,7 @@ end
 --- Parses a JSON string and applies type metatables.
 --
 -- @param str   JSON string.
--- @param tname Type name as defined in `resources`.
+-- @param tname Result type name as defined in `resources`.
 --              If set, the function will set type metatables.
 -- @return      A table with the decoded JSON data, or `nil` on error.
 function api:parse_json(str, tname)
