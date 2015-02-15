@@ -162,13 +162,14 @@ function api:parse_json(str, tname)
     if json_data == nil then
         return nil, err
     end
+    if type(json_data) ~= "table" then
+        return nil, "root json element is not an object"
+    end
+    if json_data.errors then
+        tname = "error"
+    end
     if tname then
-        if type(json_data) == "table" and json_data.errors then
-            tname = "error"
-        end
-        if json_data then
-            apply_types(self.objects, json_data, tname)
-        end
+        apply_types(self.objects, json_data, tname)
     end
     return json_data
 end
