@@ -85,10 +85,10 @@ end
 -- @param method    HTTP method.
 -- @param path      API method path.
 -- @param args      Table with the method arguments.
--- @param tname     Result type name as defined in `resources`.
 -- @param mp        `true` if the request should be done as multipart.
--- @param rules     Rules for checking args (with `luatwit.util.check_args`).
 -- @param base_url  Base URL for the method endpoint.
+-- @param tname     Result type name as defined in `resources`.
+-- @param rules     Rules for checking args (with `luatwit.util.check_args`).
 -- @param defaults  Default method arguments.
 -- @param name      API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
@@ -98,7 +98,7 @@ end
 -- @return      If the option `_raw` is set, the type name from `resources`.
 --              This value is needed to use `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
-function api:raw_call(method, path, args, tname, mp, rules, base_url, defaults, name)
+function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, name)
     args = args or {}
     name = name or "raw_call"
     base_url = base_url or self.resources._base_url

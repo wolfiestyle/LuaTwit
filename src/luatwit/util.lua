@@ -134,7 +134,7 @@ end
 -- @return          The result of the API call.
 -- @see luatwit.api.raw_call
 function _M.resource_call(res, client, args)
-    return client:raw_call(res.method, res.path, args, res.res_type, res.multipart, res.rules, res.base_url, res.default_args, res.name)
+    return client:raw_call(res.method, res.path, args, res.multipart, res.base_url, res.res_type, res.rules, res.default_args, res.name)
 end
 
 --- Performs an API call with the data from an object returned by other API calls.
@@ -145,7 +145,7 @@ end
 function _M.object_call(obj, args)
     local client = obj._get_client()
     local res = client.resources[obj._source]
-    return client:raw_call(res.method, res.path, args, res.res_type, res.multipart, res.rules, res.base_url, obj._request, obj._source)
+    return client:raw_call(res.method, res.path, args, res.multipart, res.base_url, res.res_type, res.rules, obj._request, obj._source)
 end
 
 local resource_builder_mt = {
