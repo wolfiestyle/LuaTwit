@@ -83,13 +83,14 @@ end
 -- This is the backend method that performs all the API calls.
 --
 -- @param method    HTTP method.
--- @param path  API method path.
--- @param args  Table with the method arguments.
--- @param tname Result type name as defined in `resources`.
--- @param mp    `true` if the request should be done as multipart.
--- @param rules Rules for checking args (with `luatwit.util.check_args`).
+-- @param path      API method path.
+-- @param args      Table with the method arguments.
+-- @param tname     Result type name as defined in `resources`.
+-- @param mp        `true` if the request should be done as multipart.
+-- @param rules     Rules for checking args (with `luatwit.util.check_args`).
+-- @param base_url  Base URL for the method endpoint.
 -- @param defaults  Default method arguments.
--- @param name  API method name. Used internally for building error messages.
+-- @param name      API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
 --              If the option `_raw` is set, instead returns an unprocessed JSON string.
 --              If the option `_async` or `_callback` is set, instead it returns a `luatwit.async.future` object.
@@ -97,13 +98,14 @@ end
 -- @return      If the option `_raw` is set, the type name from `resources`.
 --              This value is needed to use `api:parse_json` with the returned string.
 --              If an API error ocurred, instead it will be the HTTP headers of the request.
-function api:raw_call(method, path, args, tname, mp, rules, defaults, name)
+function api:raw_call(method, path, args, tname, mp, rules, base_url, defaults, name)
     args = args or {}
     name = name or "raw_call"
+    base_url = base_url or self.resources._base_url
     assert(util.check_args(args, rules, name))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    local url, request = build_request(self.resources._base_url, path, args, rules, defaults)
+    local url, request = build_request(base_url, path, args, rules, defaults)
 
     local function parse_response(res_code, headers, _, body)
         -- The method crashed, error is on second arg

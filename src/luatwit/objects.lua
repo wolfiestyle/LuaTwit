@@ -427,6 +427,19 @@ _M.tweet_list = new_type("tweet")
 --- Results of a `tweet` search.
 _M.tweet_search = new_type{ statuses = "tweet_list" }
 
+--- Uploaded media object.
+_M.media = new_type()
+local media = _
+
+--- Sends a tweet using this uploaded media.
+--
+-- @param args      Extra arguments for the `resources.tweet` API method.
+-- @return          A `tweet` object.
+function media:tweet(args)
+    args.media_ids = self.media_id_string
+    return self._get_client():tweet(args)
+end
+
 --- Direct message object.
 -- @type dm
 _M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }

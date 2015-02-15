@@ -4,6 +4,7 @@
 --
 package.path = "../src/?.lua;" .. package.path
 local lapp = require "pl.lapp"
+local pretty = require "pl.pretty"
 local twitter = require "luatwit"
 
 -- read tweet text from arguments
@@ -28,21 +29,24 @@ local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
 local client = twitter.api.new(oauth_params)
 
 -- send the tweet
-local tw, headers
+local tw, err
 if img_data then
-    tw, headers = client:tweet_with_media{
-        status = msg,
-        ["media[]"] = {
+    local media, err_ = client:upload_media{
+        media = {
             filename = args.media:match("([^/]*)$"),
             data = img_data,
         },
     }
+    assert(media, tostring(err_))
+    media._request = nil  -- don't print binary data to the tty
+    print("media = " .. pretty.write(media))
+    tw, err = media:tweet{ status = msg }
 else
-    tw, headers = client:tweet{ status = msg }
+    tw, err = client:tweet{ status = msg }
 end
 
--- the second return value contains the error if something went wrong
-assert(tw, tostring(headers))
+-- the second return value contains the error if something went wrong, or http headers on success
+assert(tw, tostring(err))
 
 -- the result is json data in a Lua table
 print("user: @" .. tw.user.screen_name .. " (" .. tw.user.name .. ")")

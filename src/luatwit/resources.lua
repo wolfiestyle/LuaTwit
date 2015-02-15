@@ -189,11 +189,12 @@ _M.lookup_tweets = GET "statuses/lookup"
     :type "tweet_list"
 
 --- Upload media (images) to Twitter, to use in a Tweet or Twitter-hosted Card.
--- FIXME: needs special base url "https://upload.twitter.com/1.1/"
 _M.upload_media = POST "media/upload"
     :args{
         media = { required = true, types = { "table" } },
     }
+    :type "media"
+    :base_url "https://upload.twitter.com/1.1/"
     :multipart()
 
 --( Search )--
