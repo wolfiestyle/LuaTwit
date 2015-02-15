@@ -119,11 +119,13 @@ _M.tweet = POST "statuses/update"
     :args{
         status = true,
         in_reply_to_status_id = false,
+        possibly_sensitive = false,
         lat = false,
         long = false,
         place_id = false,
         display_coordinates = false,
         trim_user = false,
+        media_ids = false,
     }
     :type "tweet"
 
@@ -147,6 +149,8 @@ _M.oembed = GET "statuses/oembed"
         align = false,
         related = false,
         lang = false,
+        widget_type = false,
+        hide_tweet = false,
     }
     :type "oembed"
 
@@ -159,7 +163,7 @@ _M.get_retweeter_ids = GET "statuses/retweeters/ids"
     }
     :type "userid_cursor"
 
---- Updates the authenticating user's current status and attaches media for upload.
+--- Updates the authenticating user's current status and attaches media for upload. DEPRECATED
 _M.tweet_with_media = POST "statuses/update_with_media"
     :args{
         status = true,
@@ -183,6 +187,14 @@ _M.lookup_tweets = GET "statuses/lookup"
         map = false,
     }
     :type "tweet_list"
+
+--- Upload media (images) to Twitter, to use in a Tweet or Twitter-hosted Card.
+-- FIXME: needs special base url "https://upload.twitter.com/1.1/"
+_M.upload_media = POST "media/upload"
+    :args{
+        media = { required = true, types = { "table" } },
+    }
+    :multipart()
 
 --( Search )--
 
@@ -356,6 +368,7 @@ _M.get_following = GET "friends/list"
         user_id = false,
         screen_name = false,
         cursor = false,
+        count = false,
         skip_status = false,
         include_user_entities = false,
     }
@@ -416,6 +429,7 @@ _M.update_profile = POST "account/update_profile"
         url = false,
         location = false,
         description = false,
+        profile_link_color = false,
         include_entities = false,
         skip_status = false,
     }
@@ -429,19 +443,6 @@ _M.set_profile_background_image = POST "account/update_profile_background_image"
         include_entities = false,
         skip_status = false,
         use = false,
-    }
-    :type "user"
-
---- Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.
-_M.set_profile_colors = POST "account/update_profile_colors"
-    :args{
-        profile_background_color = false,
-        profile_link_color = false,
-        profile_sidebar_border_color = false,
-        profile_sidebar_fill_color = false,
-        profile_text_color = false,
-        include_entities = false,
-        skip_status = false,
     }
     :type "user"
 
@@ -519,6 +520,8 @@ _M.search_users = GET "users/search"
     }
     :type "user_list"
 
+--[[ These methods always return the error "Your credentials do not allow access to this resource".
+     Not documented in official site, so possibly retired or internal use.
 --- Returns a collection of users that the specified user can "contribute" to.
 _M.get_contributees = GET "users/contributees"
     :args{
@@ -538,6 +541,7 @@ _M.get_contributors = GET "users/contributors"
         skip_status = false,
     }
     :type "user_list"
+]]
 
 --- Removes the uploaded profile banner for the authenticating user.
 _M.remove_profile_banner = POST "account/remove_profile_banner"
@@ -692,6 +696,7 @@ _M.get_lists_following_user = GET "lists/memberships"
     :args{
         user_id = false,
         screen_name = false,
+        count = false,
         cursor = false,
         filter_to_owned_lists = false,
     }
@@ -704,6 +709,7 @@ _M.get_list_followers = GET "lists/subscribers"
         slug = false,
         owner_screen_name = false,
         owner_id = false,
+        count = false,
         cursor = false,
         include_entities = false,
         skip_status = false,
@@ -777,6 +783,7 @@ _M.get_list_members = GET "lists/members"
         slug = false,
         owner_screen_name = false,
         owner_id = false,
+        count = false,
         cursor = false,
         include_entities = false,
         skip_status = false,
@@ -936,7 +943,7 @@ _M.search_places = GET "geo/search"
     }
     :type "place_search"
 
---- Locates places near the given coordinates which are similar in name.
+--- Locates places near the given coordinates which are similar in name. UNDOCUMENTED
 _M.get_similar_places = GET "geo/similar_places"
     :args{
         lat = true,
@@ -947,19 +954,6 @@ _M.get_similar_places = GET "geo/similar_places"
         --callback = false,     -- generates JSONP, only for web apps
     }
     :type "place_search"
-
---- As of December 2nd, 2013, this endpoint is deprecated and retired and no longer functions.
-_M.create_place = POST "geo/place"
-    :args{
-        name = true,
-        contained_within = true,
-        token = true,
-        lat = true,
-        long = true,
-        --attribute = false,    -- misc attribute:<key> values
-        --callback = false,     -- generates JSONP, only for web apps
-    }
-    :type "place"
 
 --( Trends )--
 
@@ -1032,6 +1026,13 @@ _M.get_rate_limit = GET "application/rate_limit_status"
         resources = false,
     }
     :type "rate_limit"
+
+-- Stuff seen in the rate limit info:
+-- "users/derived_info" -> error: Client is not permitted to perform this action.
+-- "device/token" -> { token = <random string> }
+-- "help/settings" -> lots of stuff, seem to be propietary app data
+-- "direct_messages/sent_and_received" -> error: Sorry, that page does not exist
+-- "account/login_verification_enrollment" -> error: Client is not permitted to perform this action.
 
 
 -- fill in the name field and set the mt
