@@ -167,7 +167,7 @@ _M.get_retweeter_ids = GET "statuses/retweeters/ids"
 _M.tweet_with_media = POST "statuses/update_with_media"
     :args{
         status = true,
-        ["media[]"] = { required = true, types = { "table" } },
+        ["media[]"] = { required = true, type = "table" },
         possibly_sensitive = false,
         in_reply_to_status_id = false,
         lat = false,
@@ -191,7 +191,7 @@ _M.lookup_tweets = GET "statuses/lookup"
 --- Upload media (images) to Twitter, to use in a Tweet or Twitter-hosted Card.
 _M.upload_media = POST "media/upload"
     :args{
-        media = { required = true, types = { "table" } },
+        media = { required = true, type = "table" },
     }
     :type "media"
     :base_url "https://upload.twitter.com/1.1/"

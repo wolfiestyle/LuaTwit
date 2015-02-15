@@ -2,8 +2,8 @@
 --
 -- @module  luatwit.util
 -- @license MIT/X11
-local getmetatable, pairs, rawget, select, setmetatable, table_concat, type =
-      getmetatable, pairs, rawget, select, setmetatable, table.concat, type
+local assert, error, getmetatable, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
+      assert, error, getmetatable, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type
 local tablex = require "pl.tablex"
 
 local _M = {}
@@ -41,76 +41,111 @@ function _M.map_copy(dest, src, fn)
     return dest
 end
 
--- returns all the arguments on a set of rules
-local function build_args_str(rules)
+-- Returns a string with the arguments on a set of rules.
+local function build_args_str(rules, only_req)
     local res = {}
-    for name, _ in pairs(rules) do
+    for name, _ in pairs(rules.required) do
         res[#res + 1] = name
     end
-    return table_concat(res, ", ")
-end
-
--- returns the required arguments on a set of rules
-local function build_required_str(rules)
-    local res = {}
-    for name, req in pairs(rules) do
-        if req then
+    if not only_req then
+        for name, _ in pairs(rules.optional) do
             res[#res + 1] = name
         end
     end
-    return table_concat(res, ", ")
+    return "(" .. table_concat(res, ", ") .. ")"
 end
 
-local scalar_types = { string = true, number = true, boolean = true }
+-- Builds a rule table from it's declaration in resources.
+local function build_rules(args_decl)
+    local req_list, opt_list = {}, {}
+    for name, decl in pairs(args_decl) do
+        assert(type(name) == "string", "argument name must be a string")
+        local td = type(decl)
+        local required, handler
+        if td == "boolean" then
+            required = decl
+            handler = "any"
+        elseif td == "string" then
+            handler = decl
+        elseif td == "table" then
+            required = decl.required
+            handler = decl.type
+        else
+            error "invalid argument declaration"
+        end
+        (required and req_list or opt_list)[name] = handler
+    end
+    return { required = req_list, optional = opt_list }
+end
+
+local type_handlers = {}
+
+-- type "any": accept anything
+function type_handlers.any(x)
+    return x
+end
+
+-- type "boolean": accept only boolean
+function type_handlers.boolean(x)
+    if type(x) == "boolean" then
+        return x
+    end
+end
+
+-- type "number": accept valid number
+type_handlers.number = tonumber
+
+-- type "string": coerce non-object types to string
+function type_handlers.string(x)
+    local t = type(x)
+    if t == "string" or t == "number" or t == "boolean" then
+        return tostring(x)
+    end
+end
+
+-- type "table": accept only tables
+function type_handlers.table(x)
+    if type(x) == "table" then
+        return x
+    end
+end
 
 --- Checks if the arguments in the specified table match the rules.
 --
 -- @param args      Table with arguments to be checked.
 -- @param rules     Rules to check against.
--- @param res_name  Name of the resource that is being checked (for error messages)
--- @return          `true` if `args` is valid, otherwise `false`.
+-- @param r_name    Name of the resource that is being checked (for error messages).
+-- @return          The `args` table with the values coerced to their types, or `nil` on error.
 -- @return          The error string if `args` is invalid.
-function _M.check_args(args, rules, res_name)
-    res_name = res_name or "error"
+function _M.check_args(args, rules, r_name)
+    r_name = r_name or "error"
     if type(args) ~= "table" then
-        return false, res_name .. ": arguments must be passed in a table"
+        return nil, r_name .. ": arguments must be passed in a table"
     end
-    if not rules then return true end
-    -- check for valid args (names starting with _ are ignored)
+    if not rules then return args end
+    for name, _ in pairs(rules.required) do
+        if args[name] == nil then
+            return nil, r_name .. ": missing required argument '" .. name .. "' in " .. build_args_str(rules, true)
+        end
+    end
     for name, val in pairs(args) do
-        if type(name) ~= "string" then
-            return false, res_name .. ": keys must be strings"
-        end
         if name:sub(1, 1) ~= "_" then
-            local rule = rules[name]
-            if rule == nil then
-                return false, res_name .. ": invalid argument '" .. name .. "' not in (" .. build_args_str(rules) .. ")"
+            local handler = rules.optional[name] or rules.required[name]
+            if handler == nil then
+                return nil, r_name .. ": invalid argument '" .. name .. "' not in " .. build_args_str(rules)
             end
-            local rule_type = type(rule)
-            local allowed_types
-            if rule_type == "boolean" then
-                allowed_types = scalar_types
-            elseif rule_type == "table" then
-                allowed_types = tablex.makeset(rule.types)
-            else
-                return false, res_name .. ": invalid rule for field '" .. name .. "'"
+            local handler_fn = type_handlers[handler]
+            if not handler_fn then
+                return nil, r_name .. ": unknown type '" .. handler .. "' in resource declaration"
             end
-            if not allowed_types[type(val)] then
-                return false, res_name .. ": argument '" .. name .. "' must be of type (" .. build_args_str(allowed_types) .. ")"
+            local parsed = handler_fn(val)
+            if parsed == nil then
+                return nil, r_name .. ": invalid " .. handler .. " value for '" .. name .."'"
             end
+            args[name] = parsed
         end
     end
-    -- check if required args are present
-    for name, rule in pairs(rules) do
-        local required = rule
-        if type(rule) == "table" then
-            required = rule.required
-        end
-        if required and args[name] == nil then
-            return false, res_name .. ": missing required argument '" .. name .. "' in (" .. build_required_str(rules) .. ")"
-        end
-    end
-    return true
+    return args
 end
 
 --- Removes the first value from a `pcall` result and returns errors in Lua style.
@@ -153,8 +188,8 @@ local resource_builder_mt = {
 }
 resource_builder_mt.__index = resource_builder_mt
 
-function resource_builder_mt:args(rules)
-    self.rules = rules
+function resource_builder_mt:args(args_decl)
+    self.rules = build_rules(args_decl)
     return self
 end
 

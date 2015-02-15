@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT/X11
-local assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
-      assert, error, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
+local assert, error, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
+      assert, error, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
 local oauth = require "OAuth"
 local lt_async = require "luatwit.async"
 local json = require "dkjson"
@@ -105,7 +105,7 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
     assert(util.check_args(args, rules, name))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    local url, request = build_request(base_url, path, args, rules, defaults)
+    local url, request = build_request(base_url, path, args, rules.optional, defaults)
 
     local function parse_response(res_code, headers, _, body)
         -- The method crashed, error is on second arg
@@ -220,9 +220,12 @@ function api:set_callback_handler(fn)
 end
 
 local http_async_args = {
-    url = true,
-    body = false,
-    _callback = false,
+    required = {
+        url = "string",
+    },
+    optional = {
+        body = "string",
+    },
 }
 
 --- Performs an asynchronous HTTP request.
@@ -231,6 +234,7 @@ local http_async_args = {
 -- @return      `luatwit.async.future` object with the result.
 function api:http_async(args)
     assert(util.check_args(args, http_async_args, "http_async"))
+    assert(not args._callback or self.callback_handler, "need callback handler")
 
     local fut = self.async:http_request(args.url, args.body)
     if args._callback then
@@ -244,11 +248,15 @@ local function api_index(self, key)
     return api[key] or self.resources[key]
 end
 
-local oauth_key_args = {
-    consumer_key = true,
-    consumer_secret = true,
-    oauth_token = false,
-    oauth_token_secret = false,
+local api_new_args = {
+    required = {
+        consumer_key = "string",
+        consumer_secret = "string",
+    },
+    optional = {
+        oauth_token = "string",
+        oauth_token_secret = "string",
+    },
 }
 
 --- Creates a new `api` object with the supplied keys.
@@ -262,7 +270,7 @@ local oauth_key_args = {
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function api.new(args, threads, resources, objects)
-    assert(util.check_args(args, oauth_key_args, "api.new"))
+    assert(util.check_args(args, api_new_args, "api.new"))
 
     local self = {
         __index = api_index,
@@ -276,6 +284,8 @@ function api.new(args, threads, resources, objects)
 
     return setmetatable(self, self)
 end
+
+local oauth_key_names = { "consumer_key", "consumer_secret", "oauth_token", "oauth_token_secret" }
 
 --- @section end
 
@@ -297,7 +307,7 @@ function _M.load_keys(...)
         elseif ts ~= "table" then
             error("argument #" .. i .. ": invalid type " .. ts, 2)
         end
-        for k, _ in pairs(oauth_key_args) do
+        for _, k in ipairs(oauth_key_names) do
             local v = source[k]
             if v ~= nil then
                 keys[k] = v
