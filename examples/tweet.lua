@@ -13,16 +13,9 @@ Sends a tweet.
     -m,--media (default "")     Image file to be included with the tweet
     <text...>  (string)         Tweet text
 ]]
-local msg = table.concat(args.text, " ")
 
--- read the image file
-local img_data
-if args.media:len() > 0 then
-    local file, err = io.open(args.media)
-    assert(file, err)
-    img_data = file:read("*a")
-    file:close()
-end
+local msg = table.concat(args.text, " ")
+local img_file = args.media ~= "" and args.media or nil
 
 -- initialize the twitter client
 local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
@@ -30,13 +23,8 @@ local client = twitter.api.new(oauth_params)
 
 -- send the tweet
 local tw, err
-if img_data then
-    local media, err_ = client:upload_media{
-        media = {
-            filename = args.media:match("([^/]*)$"),
-            data = img_data,
-        },
-    }
+if img_file then
+    local media, err_ = client:upload_media{ media = assert(twitter.attach_file(img_file)) }
     assert(media, tostring(err_))
     media._request = nil  -- don't print binary data to the tty
     print("media = " .. pretty.write(media))

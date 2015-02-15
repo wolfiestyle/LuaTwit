@@ -2,8 +2,8 @@
 --
 -- @module  luatwit
 -- @license MIT/X11
-local assert, error, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
-      assert, error, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
+local assert, error, io_open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
+      assert, error, io.open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
 local oauth = require "OAuth"
 local lt_async = require "luatwit.async"
 local json = require "dkjson"
@@ -315,6 +315,24 @@ function _M.load_keys(...)
         end
     end
     return keys
+end
+
+--- Builds a file object for a multipart request.
+--
+-- @param filename  File to be read.
+-- @return          On success, a table with the file contents. On error `nil`.
+-- @return          The error message in case of failure.
+function _M.attach_file(filename)
+    local file, err = io_open(filename, "rb")
+    if file == nil then
+        return nil, err
+    end
+    local res = {
+        filename = filename:match "([^/]*)$",
+        data = file:read "*a",
+    }
+    file:close()
+    return res
 end
 
 return _M
