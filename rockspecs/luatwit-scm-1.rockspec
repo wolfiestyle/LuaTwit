@@ -27,8 +27,10 @@ build = {
     type = "builtin",
     modules = {
         luatwit = "src/luatwit.lua",
+        ["luatwit.async"] = "src/luatwit/async.lua",
         ["luatwit.objects"] = "src/luatwit/objects.lua",
         ["luatwit.resources"] = "src/luatwit/resources.lua",
         ["luatwit.util"] = "src/luatwit/util.lua",
-    }
+    },
+    copy_directories = { "examples" },
 }
