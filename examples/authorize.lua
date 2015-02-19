@@ -2,12 +2,12 @@
 --
 -- Performs the Twitter app authorization procedure.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"(true)
 local twitter = require "luatwit"
 
--- load the app consumer keys from "oauth_app_keys"
+-- load the app consumer keys from "~/.config/luatwit/oauth_app_keys"
 -- you need to fill in valid app keys before using this script
-local oauth_params = twitter.load_keys("oauth_app_keys")
+local oauth_params = twitter.load_keys(cfg.app_keys)
 local client = twitter.api.new(oauth_params)
 
 -- First auth step: generate auth URL and obtain PIN
@@ -22,4 +22,4 @@ assert(token, err)
 
 -- save the access token
 print("-- logged in as " .. token.screen_name)
-token:save("local_auth")
+token:save(cfg.user_keys)

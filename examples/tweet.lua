@@ -2,7 +2,7 @@
 --
 -- Sends a tweet with the text in the command line arguments.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"()
 local lapp = require "pl.lapp"
 local pretty = require "pl.pretty"
 local twitter = require "luatwit"
@@ -18,7 +18,7 @@ local msg = table.concat(args.text, " ")
 local img_file = args.media ~= "" and args.media or nil
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- send the tweet

@@ -2,11 +2,11 @@
 --
 -- Prints the logged user's profile.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"()
 local twitter = require "luatwit"
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- get info about the logged user

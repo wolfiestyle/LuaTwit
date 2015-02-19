@@ -2,7 +2,7 @@
 --
 -- Changes the user's avatar with the file passed as argument.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"()
 local twitter = require "luatwit"
 local base64 = require "base64"
 
@@ -11,7 +11,7 @@ local filename = select(1, ...)
 assert(filename, "missing argument")
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- read image file

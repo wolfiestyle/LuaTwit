@@ -3,7 +3,7 @@
 -- Simple GUI client built with GTK.
 -- It uses the 'lgi' library (Gtk 3) for building the UI.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"()
 local twitter = require "luatwit"
 local pretty = require "pl.pretty"
 local lgi = require "lgi"
@@ -13,7 +13,7 @@ local Gdk = lgi.Gdk
 local GdkPixbuf = lgi.GdkPixbuf
 
 -- load twitter keys (TODO: make a gui for the auth process)
-local oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params, 4)
 
 -- create the main window

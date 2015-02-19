@@ -6,14 +6,14 @@ exec lua -i "$0" "$@"
 -- Interactive Lua session with a Twitter client logged in.
 -- It uses pl.pretty and custom __tostring methods to display the returned data.
 --
-package.path = "../src/?.lua;" .. package.path
+local cfg = require "_config"()
 pl = require "pl.import_into" ()
 pretty = pl.pretty
 twitter = require "luatwit"
 objects = require "luatwit.objects"
 
 -- initialize the twitter client
-oauth_params = twitter.load_keys("oauth_app_keys", "local_auth")
+oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 client = twitter.api.new(oauth_params)
 
 -- pretty print for resource items
