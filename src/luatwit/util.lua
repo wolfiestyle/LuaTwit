@@ -130,6 +130,9 @@ function _M.check_args(args, rules, r_name)
         end
     end
     for name, val in pairs(args) do
+        if type(name) ~= "string" then
+            return nil, r_name .. ": argument name not a string"
+        end
         if name:sub(1, 1) ~= "_" then
             local handler = rules.optional[name] or rules.required[name]
             if handler == nil then
