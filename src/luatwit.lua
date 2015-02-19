@@ -311,6 +311,8 @@ function _M.load_keys(...)
             local cfg, err = config.read(source, { trim_quotes = true })
             assert(cfg, err)
             source = cfg
+        elseif ts == "nil" then
+            source = {}
         elseif ts ~= "table" then
             error("argument #" .. i .. ": invalid type " .. ts, 2)
         end
