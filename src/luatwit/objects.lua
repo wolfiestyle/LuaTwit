@@ -1,6 +1,7 @@
 --- Metatables used to create objects from the data returned by the Twitter API.
 --
 -- @module  luatwit.objects
+-- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local assert, io_open, ipairs, pairs, setmetatable, table_concat, tostring, type =
       assert, io.open, ipairs, pairs, setmetatable, table.concat, tostring, type

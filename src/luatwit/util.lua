@@ -1,6 +1,7 @@
 --- Misc utility functions used by the `luatwit` library.
 --
 -- @module  luatwit.util
+-- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local assert, error, getmetatable, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
       assert, error, getmetatable, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type

@@ -1,6 +1,7 @@
 --- Implements a service for performing asyncronous HTTP and OAuth requests.
 --
 -- @module  luatwit.async
+-- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local pcall, select, setmetatable, unpack =
       pcall, select, setmetatable, unpack

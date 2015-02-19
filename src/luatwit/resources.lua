@@ -2,6 +2,7 @@
 -- This is the data used to construct the `luatwit.api` function calls.
 --
 -- @module  luatwit.resources
+-- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local util = require "luatwit.util"
 

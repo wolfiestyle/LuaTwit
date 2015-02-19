@@ -1,6 +1,7 @@
 --- Lua library for accessing the Twitter REST API v1.1
 --
 -- @module  luatwit
+-- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local assert, error, io_open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
       assert, error, io.open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
@@ -229,6 +230,7 @@ local http_async_args = {
 }
 
 --- Performs an asynchronous HTTP request.
+-- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
 -- @param args  Table with request arguments (url, body, _callback).
 -- @return      `luatwit.async.future` object with the result.
@@ -293,7 +295,7 @@ local oauth_key_names = { "consumer_key", "consumer_secret", "oauth_token", "oau
 -- Key files are loaded with `pl.config`.
 -- It also accepts tables as arguments (useful when using `require`).
 --
--- @param ...   Filenames (Lua code) or tables with the keys to load.
+-- @param ...   Filenames (config files) or tables with the keys to load.
 -- @return      Table with the keys found.
 function _M.load_keys(...)
     local keys = {}
@@ -317,11 +319,12 @@ function _M.load_keys(...)
     return keys
 end
 
---- Builds a file object for a multipart request.
+--- Loads a file and prepares it for a multipart request.
 --
 -- @param filename  File to be read.
 -- @return          On success, a table with the file contents. On error `nil`.
 -- @return          The error message in case of failure.
+-- @see luatwit.resources.upload_media
 function _M.attach_file(filename)
     local file, err = io_open(filename, "rb")
     if file == nil then
