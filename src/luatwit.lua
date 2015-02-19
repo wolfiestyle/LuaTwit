@@ -220,7 +220,7 @@ function api:set_callback_handler(fn)
     self.callback_handler = fn
 end
 
-local http_async_args = {
+local http_request_args = {
     required = {
         url = "string",
     },
@@ -229,20 +229,25 @@ local http_async_args = {
     },
 }
 
---- Performs an asynchronous HTTP request.
+--- Performs an HTTP request.
 -- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
--- @param args  Table with request arguments (url, body, _callback).
--- @return      `luatwit.async.future` object with the result.
-function api:http_async(args)
-    assert(util.check_args(args, http_async_args, "http_async"))
+-- @param args  Table with request arguments (url, body, _async, _callback).
+-- @return      Request response, or a `luatwit.async.future` object if the `_async` or `_callback` options were used.
+function api:http_request(args)
+    assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    local fut = self.async:http_request(args.url, args.body)
-    if args._callback then
-        return fut, self.callback_handler(fut, args._callback)
+    if args._async or args._callback then
+        local fut = self.async:http_request(args.url, args.body)
+        if args._callback then
+            return fut, self.callback_handler(fut, args._callback)
+        end
+        return fut
+    else
+        local client = require(args.url:match "^https:" and "ssl.https" or "socket.http")
+        return client.request(args.url, args.body)
     end
-    return fut
 end
 
 -- inherit from `api` and `resources`

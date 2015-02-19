@@ -218,7 +218,7 @@ local function ui_request_avatar(item, user)
     -- first request
     avatar_store[url] = false
     avatar_pending[url] = { item }
-    client:http_async{
+    client:http_request{
         url = url,
         _callback = function(data, code)
             if code == 200 then
