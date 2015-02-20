@@ -35,7 +35,7 @@ _M._resource_base = resource_base
 
 --( Timeline )--
 
---- Returns the 20 most recent mentions (tweets containing a users's @screen_name) for the authenticating user.
+--- Returns the 20 most recent mentions (tweets containing a users’s @screen_name) for the authenticating user.
 _M.get_mentions = GET "statuses/mentions_timeline"
     :args{
         count = "integer",
@@ -116,7 +116,7 @@ _M.delete_tweet = POST "statuses/destroy/:id"
     }
     :type "tweet"
 
---- Updates the authenticating user's current status, also known as tweeting.
+--- Updates the authenticating user’s current status, also known as tweeting.
 _M.tweet = POST "statuses/update"
     :args{
         status = required "string",
@@ -165,7 +165,7 @@ _M.get_retweeter_ids = GET "statuses/retweeters/ids"
     }
     :type "userid_cursor"
 
---- Updates the authenticating user's current status and attaches media for upload. DEPRECATED
+--- Updates the authenticating user’s current status and attaches media for upload.
 _M.tweet_with_media = POST "statuses/update_with_media"
     :args{
         status = required "string",
@@ -227,7 +227,7 @@ _M.search_tweets = GET "search/tweets"
 
 --( Direct Messages )--
 
---- Returns the 20 most recent direct messages sent to the authenticating user.
+--- Returns the most recent direct messages sent to the authenticating user.
 _M.get_received_dms = GET "direct_messages"
     :args{
         since_id = "integer",
@@ -282,7 +282,7 @@ _M.get_disabled_rt_ids = GET "friendships/no_retweets/ids"
     }
     :type "userid_array"
 
---- Returns a cursored collection of user IDs for every user the specified user is following (otherwise known as their "friends").
+--- Returns a cursored collection of user IDs for every user the specified user is following (otherwise known as their “friends”).
 _M.get_following_ids = GET "friends/ids"
     :args{
         user_id = "integer",
@@ -365,7 +365,7 @@ _M.get_friendship = GET "friendships/show"
     }
     :type "relationship_container"
 
---- Returns a cursored collection of user objects for every user the specified user is following (otherwise known as their "friends").
+--- Returns a cursored collection of user objects for every user the specified user is following (otherwise known as their “friends”).
 _M.get_following = GET "friends/list"
     :args{
         user_id = "integer",
@@ -406,7 +406,7 @@ _M.verify_credentials = GET "account/verify_credentials"
     }
     :type "user"
 
---- Updates the authenticating user's settings.
+--- Updates the authenticating user’s settings.
 _M.set_account_settings = POST "account/settings"
     :args{
         trend_location_woeid = "integer",
@@ -425,7 +425,7 @@ _M.update_delivery_device = POST "account/update_delivery_device"
         include_entities = "boolean",
     }
 
---- Sets values that users are able to set under the "Account" tab of their settings page.
+--- Sets some values that users are able to set under the “Account” tab of their settings page.
 _M.update_profile = POST "account/update_profile"
     :args{
         name = "string",
@@ -438,7 +438,7 @@ _M.update_profile = POST "account/update_profile"
     }
     :type "user"
 
---- Updates the authenticating user's profile background image.
+--- Updates the authenticating user’s profile background image.
 _M.set_profile_background_image = POST "account/update_profile_background_image"
     :args{
         image = "base64",
@@ -449,7 +449,7 @@ _M.set_profile_background_image = POST "account/update_profile_background_image"
     }
     :type "user"
 
---- Updates the authenticating user's profile image.
+--- Updates the authenticating user’s profile image.
 _M.set_profile_image = POST "account/update_profile_image"
     :args{
         image = required "base64",
@@ -562,7 +562,7 @@ _M.set_profile_banner = POST "account/update_profile_banner"
         offset_top = "integer",
     }
 
---- Returns a map of the available size variations of the specified user's profile banner.
+--- Returns a map of the available size variations of the specified user’s profile banner.
 _M.get_profile_banner = GET "users/profile_banner"
     :args{
         user_id = "integer",
@@ -612,7 +612,7 @@ _M.get_suggestion_category = GET "users/suggestions/:slug"
     }
     :type "suggestion_category"
 
---- Access to Twitter's suggested user list.
+--- Access to Twitter’s suggested user list.
 _M.get_suggestion_categories = GET "users/suggestions"
     :args{
         lang = "string",
@@ -881,7 +881,7 @@ _M.get_own_lists = GET "lists/ownerships"
 
 --( Saved Searches )--
 
---- Returns the authenticated user's saved search queries.
+--- Returns the authenticated user’s saved search queries.
 _M.get_saved_searches = GET "saved_searches/list"
     :args{
         -- empty
@@ -995,7 +995,7 @@ _M.report_spam = POST "users/report_spam"
 
 --( Help )--
 
---- Returns the current configuration used by Twitter including twitter.
+--- Returns the current configuration used by Twitter including twitter.com slugs which are not usernames, maximum photo resolutions, and t.co URL lengths.
 _M.get_service_config = GET "help/configuration"
     :args{
         -- empty
@@ -1009,7 +1009,7 @@ _M.get_languages = GET "help/languages"
     }
     :type "language_list"
 
---- Returns Twitter's Privacy Policy.
+--- Returns Twitter’s Privacy Policy.
 _M.get_privacy_policy = GET "help/privacy"
     :args{
         -- empty
