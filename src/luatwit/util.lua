@@ -5,7 +5,6 @@
 -- @license MIT/X11
 local assert, error, getmetatable, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
       assert, error, getmetatable, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type
-local tablex = require "pl.tablex"
 
 local _M = {}
 
@@ -56,6 +55,8 @@ local function build_args_str(rules, only_req)
     return "(" .. table_concat(res, ", ") .. ")"
 end
 
+local type_handlers = {}
+
 -- Builds a rule table from it's declaration in resources.
 local function build_rules(args_decl)
     local req_list, opt_list = {}, {}
@@ -74,12 +75,12 @@ local function build_rules(args_decl)
         else
             error "invalid argument declaration"
         end
-        (required and req_list or opt_list)[name] = handler
+        assert(type_handlers[handler], "unknown type handler: " .. handler)
+        local list = required and req_list or opt_list
+        list[name] = handler
     end
     return { required = req_list, optional = opt_list }
 end
-
-local type_handlers = {}
 
 -- type "any": accept anything
 function type_handlers.any(x)
@@ -93,8 +94,20 @@ function type_handlers.boolean(x)
     end
 end
 
--- type "number": accept valid number
-type_handlers.number = tonumber
+-- type "integer": accept valid integer, reject decimals
+function type_handlers.integer(x)
+    local t = type(x)
+    if t == "number" and x % 1 == 0 or t == "string" and x:match "^%-?%d+$" then
+        return x
+    end
+end
+
+-- type "real": accept valid number
+function type_handlers.real(x)
+    if type(x) == "number" or type(x) == "string" then
+        return tonumber(x)
+    end
+end
 
 -- type "string": coerce non-object types to string
 function type_handlers.string(x)
@@ -104,9 +117,44 @@ function type_handlers.string(x)
     end
 end
 
--- type "table": accept only tables
-function type_handlers.table(x)
+-- type "integer_list": concat tables and check valid int
+function type_handlers.integer_list(x)
+    local t = type(x)
+    if t == "table" then
+        local ints = {}
+        for i, v in ipairs(x) do
+            local p = type_handlers.integer(v)
+            if p == nil then return end
+            ints[i] = p
+        end
+        return table_concat(ints, ",")
+    elseif t == "string" then
+        -- rough check, should parse each number individually
+        if x:match "^%d[%d,]*%d$" then
+            return x
+        end
+    end
+    return type_handlers.integer(x)
+end
+
+-- type "string_list": concat tables or conv to string
+function type_handlers.string_list(x)
     if type(x) == "table" then
+        return table_concat(x, ",")
+    end
+    return type_handlers.string(x)
+end
+
+-- type "date": accept YYYY-MM-DD
+function type_handlers.date(x)
+    if type(x) == "string" and x:match "^%d%d%d%d%-%d%d%-%d%d$" then
+        return x
+    end
+end
+
+-- type "file": accept tables with the 'data' field (created by `attach_file`)
+function type_handlers.file(x)
+    if type(x) == "table" and x.data then
         return x
     end
 end
