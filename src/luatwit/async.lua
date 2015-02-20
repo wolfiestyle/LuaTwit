@@ -90,7 +90,7 @@ local start_worker_thread = lanes.gen("*", function(args, message)
         elseif msg == "http" then
             local ok, result = pcall(function()
                 local url = type(req.args) == "table" and req.args.url or req.args[1]
-                local client = require(url:match "^https:" and "ssl.https" or "socket.http")
+                local client = require(url:find "^https:" and "ssl.https" or "socket.http")
                 return table_pack(client.request(unpackn(req.args)))
             end)
             if not ok then

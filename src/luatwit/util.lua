@@ -97,7 +97,7 @@ end
 -- type "integer": accept valid integer, reject decimals
 function type_handlers.integer(x)
     local t = type(x)
-    if t == "number" and x % 1 == 0 or t == "string" and x:match "^%-?%d+$" then
+    if t == "number" and x % 1 == 0 or t == "string" and x:find "^%-?%d+$" then
         return x
     end
 end
@@ -131,7 +131,7 @@ function type_handlers.integer_list(x)
         return table_concat(ints, ",")
     elseif t == "string" then
         -- rough check, should parse each number individually
-        if x:match "^%d[%d,]*%d$" then
+        if x:find "^%d[%d,]*%d$" then
             return x
         end
     end
@@ -148,7 +148,7 @@ end
 
 -- type "date": accept YYYY-MM-DD
 function type_handlers.date(x)
-    if type(x) == "string" and x:match "^%d%d%d%d%-%d%d%-%d%d$" then
+    if type(x) == "string" and x:find "^%d%d%d%d%-%d%d%-%d%d$" then
         return x
     end
 end

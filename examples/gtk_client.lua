@@ -101,7 +101,7 @@ end
 -- compares two string ids (twitter id's are too big for Lua, we use id_str)
 local function strnum_cmp(a, b)
     if a == b then return 0 end
-    local la, lb = a:len(), b:len()
+    local la, lb = #a, #b
     if la ~= lb then return la - lb end
     return a > b and 1 or -1
 end

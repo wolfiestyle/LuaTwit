@@ -41,7 +41,7 @@ function access_token:save(filename)
     local file, err = io_open(filename, "w")
     assert(file, err)
     for k, v in pairs(self) do
-        if not k:match("^oauth") then
+        if not k:find("^oauth") then
             k = "#" .. k
         end
         file:write(k, " = ", v, "\n");

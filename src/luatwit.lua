@@ -245,7 +245,7 @@ function api:http_request(args)
         end
         return fut
     else
-        local client = require(args.url:match "^https:" and "ssl.https" or "socket.http")
+        local client = require(args.url:find "^https:" and "ssl.https" or "socket.http")
         return client.request(args.url, args.body)
     end
 end
