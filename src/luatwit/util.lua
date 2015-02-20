@@ -153,6 +153,13 @@ function type_handlers.date(x)
     end
 end
 
+-- type "base64": accept valid base64
+function type_handlers.base64(x)
+    if type(x) == "string" and #x % 4 == 0 and x:find "^[%w+/\n]+=?=?$" then
+        return x
+    end
+end
+
 -- type "file": accept tables with the 'data' field (created by `attach_file`)
 function type_handlers.file(x)
     if type(x) == "table" and x.data then

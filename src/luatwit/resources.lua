@@ -441,7 +441,7 @@ _M.update_profile = POST "account/update_profile"
 --- Updates the authenticating user's profile background image.
 _M.set_profile_background_image = POST "account/update_profile_background_image"
     :args{
-        image = "string",
+        image = "base64",
         tile = "boolean",
         include_entities = "boolean",
         skip_status = "boolean",
@@ -452,7 +452,7 @@ _M.set_profile_background_image = POST "account/update_profile_background_image"
 --- Updates the authenticating user's profile image.
 _M.set_profile_image = POST "account/update_profile_image"
     :args{
-        image = required "string",
+        image = required "base64",
         include_entities = "boolean",
         skip_status = "boolean",
     }
@@ -555,7 +555,7 @@ _M.remove_profile_banner = POST "account/remove_profile_banner"
 --- Uploads a profile banner on behalf of the authenticating user.
 _M.set_profile_banner = POST "account/update_profile_banner"
     :args{
-        banner = required "string",
+        banner = required "base64",
         width = "integer",
         height = "integer",
         offset_left = "integer",
