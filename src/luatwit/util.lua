@@ -3,8 +3,8 @@
 -- @module  luatwit.util
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, getmetatable, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
-      assert, error, getmetatable, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type
+local assert, error, getmetatable, ipairs, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
+      assert, error, getmetatable, ipairs, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type
 
 local _M = {}
 
@@ -104,7 +104,8 @@ end
 
 -- type "real": accept valid number
 function type_handlers.real(x)
-    if type(x) == "number" or type(x) == "string" then
+    local t = type(x)
+    if t == "number" or t == "string" then
         return tonumber(x)
     end
 end
