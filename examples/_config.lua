@@ -1,4 +1,5 @@
 local lfs = require "lfs"
+local pl_file = require "pl.file"
 
 local function find_app_keys(config_dir)
     local filename = config_dir .. "oauth_app_keys"
@@ -6,16 +7,14 @@ local function find_app_keys(config_dir)
         return filename
     end
 
-    local file, err = io.open(filename, "w")
-    assert(file, err)
-    file:write "# fill in your app keys here\nconsumer_key = key\nconsumer_secret = secret\n"
-    file:close()
+    assert(pl_file.write(filename, "# fill in your app keys here\nconsumer_key = key\nconsumer_secret = secret\n"))
 
     local msg = ([[
   Error: App keys not found.
   A file named '%s' was created.
   Fill it with the consumer keys of your app.
   If you don't have them, create an app at https://apps.twitter.com
+  Then authorize the app with "authorize.lua".
 
   ]]):format(filename)
     io.stderr:write(msg)
@@ -58,6 +57,7 @@ local function do_config(is_auth)
     local config = {}
     local config_dir = get_config_dir()
 
+    config.config_dir = config_dir
     config.app_keys = assert(find_app_keys(config_dir), "config failed")
     config.user_keys = assert(find_user_keys(config_dir, is_auth), "config failed")
 
