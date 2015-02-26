@@ -3,14 +3,14 @@
 -- @module  luatwit
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, io_open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack =
-      assert, error, io.open, ipairs, next, pairs, pcall, require, select, setmetatable, tostring, type, unpack
-local oauth = require "OAuth"
+local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable, table_concat, type =
+      assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, table.concat, type
+local oauth = require "oauth_light"
 local lt_async = require "luatwit.async"
 local json = require "dkjson"
 local util = require "luatwit.util"
-local helpers = require "OAuth.helpers"
 local config = require "pl.config"
+local ltn12 = require "ltn12"
 
 local _M = {}
 
@@ -108,19 +108,20 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
 
     local url, request = build_request(base_url, path, args, rules.optional, defaults)
 
-    local function parse_response(res_code, headers, _, body)
-        -- The method crashed, error is on second arg
-        if res_code == nil then
-            return nil, headers
-        end
-        -- OAuth.PerformRequest returns body = {} on error and the error string in 'res_code'
-        if type(body) ~= "string" then
+    local function parse_response(body, res_code, headers, status)
+        -- The method failed, error is on second arg
+        if body == nil then
             return nil, res_code
+        end
+        -- HTTP request failed
+        if res_code ~= 200 then
+            return nil, status
         end
         if args._raw then
             return body, headers, tname
         end
         apply_types(self.objects, headers, "headers")
+        --TODO: check content-type
         local json_data, err = self:parse_json(body, tname)
         if json_data == nil then
             return nil, err, headers
@@ -136,22 +137,12 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
         return json_data, headers
     end
 
-    local req_body, req_headers = request
-    if mp then
-        local req = helpers.multipart.Request(request)
-        req_body, req_headers = req.body, req.headers
-    end
+    local req_url, req_body, req_headers = oauth.build_request(method, url, request, self.oauth_config, mp)
 
-    if args._async or args._callback then
-        local fut = self.async:oauth_request(method, url, req_body, req_headers, parse_response)
-        if args._callback then
-            return fut, self.callback_handler(fut, args._callback)
-        end
-        return fut
-    else
-        local client = self.oauth_client
-        return parse_response(util.shift_pcall_error(pcall(client.PerformRequest, client, method, url, req_body, req_headers)))
-    end
+    return self:http_request{
+        method = method, url = req_url, body = req_body, headers = req_headers,
+        _async = args._async, _callback = args._callback, _filter = parse_response,
+    }
 end
 
 --- Parses a JSON string and applies type metatables.
@@ -177,36 +168,74 @@ function api:parse_json(str, tname)
     return json_data
 end
 
+-- Parses a form encoded OAuth token.
+local function parse_oauth_token(body, res_code, status, oauth_config)
+    if body == nil then
+        return nil, res_code
+    end
+    if res_code ~= 200 then
+        return nil, status
+    end
+    local token = oauth.form_decode_pairs(body)
+    if token.oauth_token == nil or token.oauth_token_secret == nil then
+        return nil, "received invalid token"
+    end
+    oauth_config.oauth_token = token.oauth_token
+    oauth_config.oauth_token_secret = token.oauth_token_secret
+    return token
+end
+
 --- Begins the OAuth authorization.
 -- This method generates the URL that the user must visit to authorize the app and get the PIN needed for `api:confirm_login`.
 --
+-- @param args  Extra arguments for the request_token method.
 -- @return      Authorization URL.
--- @return      HTTP Authorization header.
-function api:start_login()
-    self.oauth_client:RequestToken{ oauth_callback = "oob" }
-    return self.oauth_client:BuildAuthorizationUrl()
+-- @return      The request token.
+function api:start_login(args)
+    args = args or {}
+    args.oauth_callback = "oob"
+
+    local function parse_response(body, res_code, headers, status)
+        local token, err = parse_oauth_token(body, res_code, status, self.oauth_config)
+        if not token then
+            return nil, err
+        end
+        local auth_url = self.resources._endpoints.AuthorizeUser .. "?oauth_token=" .. oauth.url_encode(token.oauth_token)
+        return auth_url, token
+    end
+
+    local url, body, headers = oauth.build_request("POST", self.resources._endpoints.RequestToken, args, self.oauth_config)
+
+    return self:http_request{
+        method = "POST", url = url, body = body, headers = headers,
+        _async = args._async, _callback = args._callback, _filter = parse_response,
+    }
 end
 
 --- Finishes the OAuth authorization.
 -- This method receives the PIN number obtained in the `api:start_login` step and authorizes the client to make API calls.
 --
 -- @param pin   PIN number obtained after the user succefully authorized the app.
+-- @param args  Extra arguments for the access_token method.
 -- @return      An `access_token` object.
--- @return      HTTP Status line.
--- @return      HTTP result code.
--- @return      HTTP headers.
-function api:confirm_login(pin)
-    local token, res_code, headers, status_line = self.oauth_client:GetAccessToken{ oauth_verifier = tostring(pin) }
-    -- send the keys to the async service
-    if token then
-        --FIXME: could update the keys with a message, but not worth the trouble because the OAuth client should be outside of the
-        --       thread and only raw HTTP requests should be done in background. Can't do this without ugly hacks using the oauth
-        --       lib internals. Or with another OAuth lib that lets me do my own HTTP requests.
-        self.async:stop()
-        self.async.args[4].OAuthToken = token.oauth_token
-        self.async.args[4].OAuthTokenSecret = token.oauth_token_secret
+function api:confirm_login(pin, args)
+    args = args or {}
+    args.oauth_verifier = pin
+
+    local function parse_response(body, res_code, headers, status)
+        local token, err = parse_oauth_token(body, res_code, status, self.oauth_config)
+        if not token then
+            return nil, err
+        end
+        return apply_types(self.objects, token, "access_token")
     end
-    return apply_types(self.objects, token, "access_token"), status_line, res_code, headers
+
+    local url, body, headers = oauth.build_request("POST", self.resources._endpoints.AccessToken, args, self.oauth_config)
+
+    return self:http_request{
+        method = "POST", url = url, body = body, headers = headers,
+        _async = args._async, _callback = args._callback, _filter = parse_response,
+    }
 end
 
 --- Sets the callback handler function.
@@ -225,7 +254,9 @@ local http_request_args = {
         url = "string",
     },
     optional = {
-        body = "string",
+        method = "string",
+        body = "any",   -- string or table
+        headers = "table",
     },
 }
 
@@ -238,15 +269,42 @@ function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
+    if type(args.body) == "table" then
+        local req = helpers.multipart.Request(args.body)
+        args.body = req.body
+        if not args.headers then args.headers = {} end
+        args.headers["Content-Length"] = req.headers["Content-Length"]
+        args.headers["Content-Type"] = req.headers["Content-Type"]
+    end
+
     if args._async or args._callback then
-        local fut = self.async:http_request(args.url, args.body)
+        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
         local client = require(args.url:find "^https:" and "ssl.https" or "socket.http")
-        return client.request(args.url, args.body)
+
+        local resp_body = {}
+        local ok, code, headers, status = client.request{
+            method = args.method,
+            url = args.url,
+            headers = args.headers,
+            source = args.body and ltn12.source.string(args.body) or nil,
+            sink = ltn12.sink.table(resp_body),
+        }
+
+        if ok then
+            local body = table_concat(resp_body)
+            if args._filter then
+                return args._filter(body, code, headers, status)
+            else
+                return body, code, headers, status
+            end
+        else
+            return nil, code
+        end
     end
 end
 
@@ -270,23 +328,29 @@ local api_new_args = {
 -- An object created with only the consumer keys must call `api:start_login` and `api:confirm_login` to get the access token,
 -- otherwise it won't be able to make API calls.
 --
--- @param args      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
+-- @param keys      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
 -- @param threads   Number of threads for the async requests (default 1).
 -- @param resources Table with the API interface definition (default `luatwit.resources`).
 -- @param objects   Table with the API objects definition (default `luatwit.objects`).
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
-function api.new(args, threads, resources, objects)
-    assert(util.check_args(args, api_new_args, "api.new"))
+function api.new(keys, threads, resources, objects)
+    assert(util.check_args(keys, api_new_args, "api.new"))
 
     local self = {
         __index = api_index,
         resources = resources or require("luatwit.resources"),
         objects = objects or require("luatwit.objects"),
+        oauth_config = {
+            consumer_key = keys.consumer_key,
+            consumer_secret = keys.consumer_secret,
+            oauth_token = keys.oauth_token,
+            oauth_token_secret = keys.oauth_token_secret,
+            sig_method = "HMAC-SHA1",
+            use_auth_header = true,
+        },
     }
-    local endpoints = self.resources._endpoints
-    self.oauth_client = oauth.new(args.consumer_key, args.consumer_secret, endpoints, { OAuthToken = args.oauth_token, OAuthTokenSecret = args.oauth_token_secret })
-    self.async = lt_async.service.new(args, endpoints, threads)
+    self.async = lt_async.service.new(threads)
     self._get_client = function() return self end
 
     return setmetatable(self, self)

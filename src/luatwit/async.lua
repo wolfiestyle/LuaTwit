@@ -1,10 +1,10 @@
---- Implements a service for performing asyncronous HTTP and OAuth requests.
+--- Implements a service for performing asyncronous HTTP requests.
 --
 -- @module  luatwit.async
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local pcall, select, setmetatable, unpack =
-      pcall, select, setmetatable, unpack
+local select, setmetatable, unpack =
+      select, setmetatable, unpack
 local lanes = require "lanes"
 
 if lanes.configure then
@@ -22,8 +22,8 @@ local _M = {}
 local future = { _type = "future" }
 future.__index = future
 
-function future.new(id, svc, callback)
-    local self = { id = id, svc = svc, callback = callback }
+function future.new(id, svc, filter)
+    local self = { id = id, svc = svc, filter = filter }
     return setmetatable(self, future)
 end
 
@@ -33,8 +33,8 @@ local function future_get(self, method)
         local svc = self.svc
         local data = svc[method](svc, self.id)
         if data ~= nil then
-            if self.callback then
-                value = table_pack(self.callback(unpackn(data)))
+            if self.filter then
+                value = table_pack(self.filter(unpackn(data)))
             else
                 value = data
             end
@@ -73,25 +73,28 @@ service.__index = service
 _M.service = service
 
 -- worker thread generator
-local start_worker_thread = lanes.gen("*", function(args, message)
+local start_worker_thread = lanes.gen("*", function(message)
     set_debug_threadname("async worker")
-    local oauth_client = require("OAuth").new(unpack(args))
+    local ltn12 = require "ltn12"
 
     while true do
-        local msg, req = message:receive(nil, "oauth", "http", "quit")
-        if msg == "oauth" then
+        local msg, req = message:receive(nil, "http", "quit")
+        if msg == "http" then
             local ok, result = pcall(function()
-                return table_pack(oauth_client[req.method](oauth_client, unpackn(req.args)))
-            end)
-            if not ok then
-                result = { nil, result, n = 2 }
-            end
-            message:send("response", { id = req.id, data = result })
-        elseif msg == "http" then
-            local ok, result = pcall(function()
-                local url = type(req.args) == "table" and req.args.url or req.args[1]
-                local client = require(url:find "^https:" and "ssl.https" or "socket.http")
-                return table_pack(client.request(unpackn(req.args)))
+                local client = require(req.url:find "^https:" and "ssl.https" or "socket.http")
+                local resp_body = {}
+                local ok, code, headers, status = client.request{
+                    method = req.method,
+                    url = req.url,
+                    headers = req.headers,
+                    source = req.body and ltn12.source.string(req.body) or nil,
+                    sink = ltn12.sink.table(resp_body),
+                }
+                if ok then
+                    return table_pack(table.concat(resp_body), code, headers, status)
+                else
+                    return { nil, code, n = 2 }
+                end
             end)
             if not ok then
                 result = { nil, result, n = 2 }
@@ -103,17 +106,14 @@ local start_worker_thread = lanes.gen("*", function(args, message)
     end
 end)
 
---- Creates a new async OAuth client.
+--- Creates a new async http client.
 --
--- @param keys  Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
--- @param endp  Table with OAuth endpoints.
 -- @param threads Number of threads to create (default 1).
 -- @return      New instance of the oauth async client.
-function service.new(keys, endp, threads)
+function service.new(threads)
     local self = {
         cur_id = 1,
         store = {},
-        args = { keys.consumer_key, keys.consumer_secret, endp, { OAuthToken = keys.oauth_token, OAuthTokenSecret = keys.oauth_token_secret } },
         num_th = threads or 1,
     }
     self.message = lanes.linda()
@@ -125,7 +125,7 @@ function service:start()
     if not self.threads then
         self.threads = {}
         for i = 1, self.num_th do
-            self.threads[i] = start_worker_thread(self.args, self.message)
+            self.threads[i] = start_worker_thread(self.message)
         end
     end
 end
@@ -196,38 +196,17 @@ end
 
 --- Performs an asynchronous HTTP request.
 --
--- @param ...       Arguments for `http.request` (luasocket).
--- @return          `future` object with the result.
-function service:http_request(...)
-    local args = { id = self:_gen_id(), args = table_pack(...) }
-    self:start()
-    self.message:send("http", args)
-    return future.new(args.id, self)
-end
-
---- Performs an asynchronous OAuth request.
---
--- @param name      Method name.
--- @param callback  Function that processes the response output (called when reading the `future`).
--- @param ...       Method arguments.
--- @return          `future` object with the result.
-function service:call_oauth_method(name, callback, ...)
-    local args = { id = self:_gen_id(), method = name, args = table_pack(...) }
-    self:start()
-    self.message:send("oauth", args)
-    return future.new(args.id, self, callback)
-end
-
---- Async wrapper for `OAuth.PerformRequest`.
---
 -- @param method    HTTP method.
 -- @param url       Request URL.
--- @param request   Table with request pairs.
--- @param headers   Custom HTTP headers.
--- @param callback  Function that processes the response output.
+-- @param body      Body for POST requests.
+-- @param headers   Extra headers.
+-- @param filter    Function to be called on the result data.
 -- @return          `future` object with the result.
-function service:oauth_request(method, url, request, headers, callback)
-    return self:call_oauth_method("PerformRequest", callback, method, url, request, headers)
+function service:http_request(method, url, body, headers, filter)
+    local args = { id = self:_gen_id(), method = method, url = url, body = body, headers = headers }
+    self:start()
+    self.message:send("http", args)
+    return future.new(args.id, self, filter)
 end
 
 return _M

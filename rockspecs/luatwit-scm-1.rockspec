@@ -17,9 +17,10 @@ description = {
 
 dependencies = {
     "lua >= 5.1",
-    "oauth >= 0.0.5",
     "dkjson >= 2.5",
     "lanes >= 3.9.4",
+    "luasec >= 0.5",
+    "oauth_light >= 0.1",
     "penlight >= 1.3.1",
 }
 

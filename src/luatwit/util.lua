@@ -167,6 +167,13 @@ function type_handlers.file(x)
     end
 end
 
+-- type "table": accept only tables
+function type_handlers.table(x)
+    if type(x) == "table" then
+        return x
+    end
+end
+
 --- Checks if the arguments in the specified table match the rules.
 --
 -- @param args      Table with arguments to be checked.
