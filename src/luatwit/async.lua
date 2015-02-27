@@ -78,18 +78,27 @@ _M.service = service
 
 --- Creates a new async http client.
 --
--- @param max_conn  Maximum number of concurrent connections (default unlimited).
 -- @return          New instance of the async client.
-function service.new(max_conn)
+function service.new()
     local self = {
         pending = 0,
         store = {},
     }
     self.curl_multi = curl.multi()
-    if max_conn then
-        self.curl_multi:setopt_max_total_connections(max_conn)
-    end
     return setmetatable(self, service)
+end
+
+--- Sets the connection limits.
+--
+-- @param total_conn    Maximum number of total connections (default unlimited).
+-- @param host_conn     Maximum number of connections per host (default unlimited).
+function service:set_conn_limits(total_conn, host_conn)
+    if total_conn then
+        self.curl_multi:setopt_max_total_connections(total_conn)
+    end
+    if host_conn then
+        self.curl_multi:setopt_max_host_connections(host_conn)
+    end
 end
 
 --- Checks if there is data pending to be received.
