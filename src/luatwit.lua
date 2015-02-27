@@ -6,11 +6,11 @@
 local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable, table_concat, type =
       assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, table.concat, type
 local oauth = require "oauth_light"
-local lt_async = require "luatwit.async"
 local json = require "dkjson"
-local util = require "luatwit.util"
+local curl = require "lcurl"
 local config = require "pl.config"
-local ltn12 = require "ltn12"
+local lt_async = require "luatwit.async"
+local util = require "luatwit.util"
 
 local _M = {}
 
@@ -106,16 +106,16 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
     assert(util.check_args(args, rules, name))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    local url, request = build_request(base_url, path, args, rules.optional, defaults)
+    local url, request = build_request(base_url, path, args, rules and rules.optional, defaults)
 
-    local function parse_response(body, res_code, headers, status)
+    local function parse_response(body, res_code, headers)
         -- The method failed, error is on second arg
         if body == nil then
             return nil, res_code
         end
         -- HTTP request failed
         if res_code ~= 200 then
-            return nil, status
+            return nil, headers[1]
         end
         if args._raw then
             return body, headers, tname
@@ -169,12 +169,12 @@ function api:parse_json(str, tname)
 end
 
 -- Parses a form encoded OAuth token.
-local function parse_oauth_token(body, res_code, status, oauth_config)
+local function parse_oauth_token(body, res_code, oauth_config)
     if body == nil then
         return nil, res_code
     end
     if res_code ~= 200 then
-        return nil, status
+        return nil, headers[1]
     end
     local token = oauth.form_decode_pairs(body)
     if token.oauth_token == nil or token.oauth_token_secret == nil then
@@ -195,8 +195,8 @@ function api:start_login(args)
     args = args or {}
     args.oauth_callback = "oob"
 
-    local function parse_response(body, res_code, headers, status)
-        local token, err = parse_oauth_token(body, res_code, status, self.oauth_config)
+    local function parse_response(body, res_code, headers)
+        local token, err = parse_oauth_token(body, res_code, self.oauth_config)
         if not token then
             return nil, err
         end
@@ -222,8 +222,8 @@ function api:confirm_login(pin, args)
     args = args or {}
     args.oauth_verifier = pin
 
-    local function parse_response(body, res_code, headers, status)
-        local token, err = parse_oauth_token(body, res_code, status, self.oauth_config)
+    local function parse_response(body, res_code, headers)
+        local token, err = parse_oauth_token(body, res_code, self.oauth_config)
         if not token then
             return nil, err
         end
@@ -269,41 +269,48 @@ function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    if type(args.body) == "table" then
-        local req = helpers.multipart.Request(args.body)
-        args.body = req.body
-        if not args.headers then args.headers = {} end
-        args.headers["Content-Length"] = req.headers["Content-Length"]
-        args.headers["Content-Type"] = req.headers["Content-Type"]
+    local req = curl.easy()
+    req:setopt_url(args.url)
+    :setopt_accept_encoding ""
+    if args.method then req:setopt_customrequest(args.method) end
+    if args.headers then req:setopt_httpheader(util.join_pairs(args.headers, ": ")) end
+
+    if args.body then
+        if type(args.body) == "table" then  -- multipart
+            local form = curl.form()
+            for k, v in pairs(args.body) do
+                if type(v) == "table" then
+                    form:add_buffer(k, v.filename, v.data)
+                else
+                    form:add_content(k, v)
+                end
+            end
+            req:setopt_httppost(form)
+        else
+            req:setopt_postfields(args.body)
+        end
     end
 
     if args._async or args._callback then
-        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter)
+        local fut = self.async:http_request(req, args._filter)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
-        local client = require(args.url:find "^https:" and "ssl.https" or "socket.http")
+        local resp_body, resp_headers = {}, {}
+        req:setopt_writefunction(util.table_writer, resp_body)
+        :setopt_headerfunction(util.table_writer, resp_headers)
 
-        local resp_body = {}
-        local ok, code, headers, status = client.request{
-            method = args.method,
-            url = args.url,
-            headers = args.headers,
-            source = args.body and ltn12.source.string(args.body) or nil,
-            sink = ltn12.sink.table(resp_body),
-        }
+        local code = req:perform():getinfo(curl.INFO_RESPONSE_CODE)
+        req:close()
+        local body = table_concat(resp_body)
+        local headers = util.parse_headers(resp_headers)
 
-        if ok then
-            local body = table_concat(resp_body)
-            if args._filter then
-                return args._filter(body, code, headers, status)
-            else
-                return body, code, headers, status
-            end
+        if args._filter then
+            return args._filter(body, code, headers)
         else
-            return nil, code
+            return body, code, headers
         end
     end
 end
@@ -329,12 +336,12 @@ local api_new_args = {
 -- otherwise it won't be able to make API calls.
 --
 -- @param keys      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
--- @param threads   Number of threads for the async requests (default 1).
+-- @param max_conn  Maximum number of concurrent connections for async requests (default unlimited).
 -- @param resources Table with the API interface definition (default `luatwit.resources`).
 -- @param objects   Table with the API objects definition (default `luatwit.objects`).
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
-function api.new(keys, threads, resources, objects)
+function api.new(keys, max_conn, resources, objects)
     assert(util.check_args(keys, api_new_args, "api.new"))
 
     local self = {
@@ -350,7 +357,7 @@ function api.new(keys, threads, resources, objects)
             use_auth_header = true,
         },
     }
-    self.async = lt_async.service.new(threads)
+    self.async = lt_async.service.new(max_conn)
     self._get_client = function() return self end
 
     return setmetatable(self, self)

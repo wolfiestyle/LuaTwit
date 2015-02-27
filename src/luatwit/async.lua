@@ -3,13 +3,10 @@
 -- @module  luatwit.async
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local select, setmetatable, unpack =
-      select, setmetatable, unpack
-local lanes = require "lanes"
-
-if lanes.configure then
-    lanes = lanes.configure()
-end
+local select, setmetatable, table_concat, unpack =
+      select, setmetatable, table.concat, unpack
+local util = require "luatwit.util"
+local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
 local unpackn = function(t) return unpack(t, 1, t.n) end
@@ -22,8 +19,8 @@ local _M = {}
 local future = { _type = "future" }
 future.__index = future
 
-function future.new(id, svc, filter)
-    local self = { id = id, svc = svc, filter = filter }
+function future.new(handle, svc, filter)
+    local self = { handle = handle, svc = svc, filter = filter }
     return setmetatable(self, future)
 end
 
@@ -31,14 +28,21 @@ local function future_get(self, method)
     local value = self.value
     if not value then
         local svc = self.svc
-        local data = svc[method](svc, self.id)
+        local data = svc[method](svc, self.handle)
         if data ~= nil then
-            if self.filter then
-                value = table_pack(self.filter(unpackn(data)))
+            if data.error then
+                value = { nil, data.error, n = 2 }
             else
-                value = data
+                local body = table_concat(data.body)
+                local headers = util.parse_headers(data.headers)
+                if self.filter then
+                    value = table_pack(self.filter(body, data.code, headers))
+                else
+                    value = { body, data.code, headers, n = 3 }
+                end
             end
             self.value = value
+            self.handle = nil
         end
     end
     return value
@@ -65,148 +69,94 @@ end
 
 --- @section end
 
---- OAuth service object.
--- Executes OAuth requests on background threads.
+--- HTTP service object.
+-- Executes HTTP requests on background (with `curl.multi`).
 -- @type service
 local service = {}
 service.__index = service
 _M.service = service
 
--- worker thread generator
-local start_worker_thread = lanes.gen("*", function(message)
-    set_debug_threadname("async worker")
-    local ltn12 = require "ltn12"
-
-    while true do
-        local msg, req = message:receive(nil, "http", "quit")
-        if msg == "http" then
-            local ok, result = pcall(function()
-                local client = require(req.url:find "^https:" and "ssl.https" or "socket.http")
-                local resp_body = {}
-                local ok, code, headers, status = client.request{
-                    method = req.method,
-                    url = req.url,
-                    headers = req.headers,
-                    source = req.body and ltn12.source.string(req.body) or nil,
-                    sink = ltn12.sink.table(resp_body),
-                }
-                if ok then
-                    return table_pack(table.concat(resp_body), code, headers, status)
-                else
-                    return { nil, code, n = 2 }
-                end
-            end)
-            if not ok then
-                result = { nil, result, n = 2 }
-            end
-            message:send("response", { id = req.id, data = result })
-        elseif msg == "quit" then
-            break
-        end
-    end
-end)
-
 --- Creates a new async http client.
 --
--- @param threads Number of threads to create (default 1).
--- @return      New instance of the oauth async client.
-function service.new(threads)
+-- @param max_conn  Maximum number of concurrent connections (default unlimited).
+-- @return          New instance of the async client.
+function service.new(max_conn)
     local self = {
-        cur_id = 1,
+        pending = 0,
         store = {},
-        num_th = threads or 1,
     }
-    self.message = lanes.linda()
+    self.curl_multi = curl.multi()
+    if max_conn then
+        self.curl_multi:setopt_max_total_connections(max_conn)
+    end
     return setmetatable(self, service)
 end
 
---- Starts the worker threads.
-function service:start()
-    if not self.threads then
-        self.threads = {}
-        for i = 1, self.num_th do
-            self.threads[i] = start_worker_thread(self.message)
-        end
-    end
-end
-
---- Stops the worker threads.
-function service:stop()
-    if self.threads then
-        local n = #self.threads
-        for i = 1, n do
-            self.message:send("quit", true)
-        end
-        -- join threads by reading their result
-        for i = 1, n do
-            local _ = self.threads[i][1]
-        end
-        self.threads = nil
-    end
-end
-
 --- Checks if there is data pending to be received.
--- @return      `true` if there is data pending on the message queue, otherwise `false`.
+--
+-- @return      If there is data available, the current number of unfinished requests. Otherwise `nil`.
 function service:data_available()
-    local count = self.message:count("response")
-    return count ~= nil and count > 0
+    local n = self.curl_multi:perform()
+    if n ~= self.pending then
+        self.pending = n
+        return n
+    end
+end
+
+-- Reads the result from finished requests.
+function service:_fetch_handle_results()
+    while true do
+        local handle, ok, err = self.curl_multi:info_read()
+        if handle == 0 then break end
+        if not ok then
+            self.store[handle].error = err
+        end
+        self.store[handle].code = handle:getinfo(curl.INFO_RESPONSE_CODE)
+        self.curl_multi:remove_handle(handle)
+        handle:close()
+    end
 end
 
 -- Non-blocking consumer
-function service:_poll_data_for(id)
-    local data = self.store[id]
-    if data == nil and self:data_available() then
-        while true do
-            local k, v = self.message:receive(0, "response")
-            if k == nil then break end
-            self.store[v.id] = v.data
-        end
-        data = self.store[id]
+function service:_poll_data_for(handle)
+    local data = self.store[handle]
+    if data.code == nil and self:data_available() then
+        self:_fetch_handle_results()
     end
-    if data ~= nil then
-        self.store[id] = nil
+    if data.code ~= nil then
+        self.store[handle] = nil
+        return data
     end
-    return data
 end
 
 -- Blocking consumer
-function service:_wait_data_for(id)
-    local data = self.store[id]
-    if data == nil then
+function service:_wait_data_for(handle)
+    local data = self.store[handle]
+    if data.code == nil then
         repeat
-            local k, v = self.message:receive(nil, "response")
-            if k ~= nil then
-                self.store[v.id] = v.data
+            while not self:data_available() do
+                self.curl_multi:wait(1000)
             end
-            data = self.store[id]
-        until data ~= nil
-    end
-    if data ~= nil then
-        self.store[id] = nil
+            self:_fetch_handle_results()
+        until data.code ~= nil
+        self.store[handle] = nil
     end
     return data
-end
-
--- Generates a request id
-function service:_gen_id()
-    local id = self.cur_id
-    self.cur_id = id + 1
-    return id
 end
 
 --- Performs an asynchronous HTTP request.
 --
--- @param method    HTTP method.
--- @param url       Request URL.
--- @param body      Body for POST requests.
--- @param headers   Extra headers.
+-- @param request   Request objected created by `curl.easy`.
 -- @param filter    Function to be called on the result data.
 -- @return          `future` object with the result.
-function service:http_request(method, url, body, headers, filter)
-    local args = { id = self:_gen_id(), method = method, url = url, body = body, headers = headers }
-    self:start()
-    self.message:send("http", args)
-    return future.new(args.id, self, filter)
+function service:http_request(request, filter)
+    local body, headers = {}, {}
+    self.store[request] = { body = body, headers = headers }
+    self.pending = self.pending + 1
+    request:setopt_writefunction(util.table_writer, body)
+    :setopt_headerfunction(util.table_writer, headers)
+    self.curl_multi:add_handle(request):perform()
+    return future.new(request, self, filter)
 end
 
 return _M

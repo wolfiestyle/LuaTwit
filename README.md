@@ -6,8 +6,7 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 ## Dependencies
 
 - dkjson
-- lanes
-- luasec
+- lua-curl
 - oauth_light
 - penlight
 
