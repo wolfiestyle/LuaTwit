@@ -93,12 +93,9 @@ end
 -- @param defaults  Default method arguments.
 -- @param name      API method name. Used internally for building error messages.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
---              If the option `_raw` is set, instead returns an unprocessed JSON string.
 --              If the option `_async` or `_callback` is set, instead it returns a `luatwit.async.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
--- @return      If the option `_raw` is set, the type name from `resources`.
---              This value is needed to use `api:parse_json` with the returned string.
---              If an API error ocurred, instead it will be the HTTP headers of the request.
+-- @return      If an API error ocurred, the HTTP headers of the request.
 function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, name)
     args = args or {}
     name = name or "raw_call"
@@ -109,32 +106,20 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
     local url, request = build_request(base_url, path, args, rules and rules.optional, defaults)
 
     local function parse_response(body, res_code, headers)
-        -- The method failed, error is on second arg
-        if body == nil then
-            return nil, res_code
-        end
-        -- HTTP request failed
-        if res_code ~= 200 then
-            return nil, headers[1]
-        end
-        if args._raw then
-            return body, headers, tname
-        end
-        apply_types(self.objects, headers, "headers")
-        --TODO: check content-type
-        local json_data, err = self:parse_json(body, tname)
-        if json_data == nil then
+        local data, err = self:_parse_response(body, res_code, headers, tname)
+        if data == nil then
             return nil, err, headers
         end
-        set_client_field(json_data, self._get_client)
-        json_data._source = name
-        if next(request) then
-            json_data._request = request
+        if type(data) == "table" and data._type then
+            data._source = name
+            if next(request) then
+                data._request = request
+            end
+            if data._type == "error" then
+                return nil, data, headers
+            end
         end
-        if json_data._type == "error" then
-            return nil, json_data, headers
-        end
-        return json_data, headers
+        return data, headers
     end
 
     local req_url, req_body, req_headers = oauth.build_request(method, url, request, self.oauth_config, mp)
@@ -145,13 +130,8 @@ function api:raw_call(method, path, args, mp, base_url, tname, rules, defaults, 
     }
 end
 
---- Parses a JSON string and applies type metatables.
---
--- @param str   JSON string.
--- @param tname Result type name as defined in `resources`.
---              If set, the function will set type metatables.
--- @return      A table with the decoded JSON data, or `nil` on error.
-function api:parse_json(str, tname)
+-- Parses a JSON string and applies type metatables.
+local function parse_json(self, str, tname)
     local json_data, _, err = json.decode(str, nil, nil, nil)
     if json_data == nil then
         return nil, err
@@ -164,6 +144,7 @@ function api:parse_json(str, tname)
     end
     if tname then
         apply_types(self.objects, json_data, tname)
+        set_client_field(json_data, self._get_client)
     end
     return json_data
 end
@@ -183,6 +164,25 @@ local function parse_oauth_token(body, res_code, oauth_config)
     oauth_config.oauth_token = token.oauth_token
     oauth_config.oauth_token_secret = token.oauth_token_secret
     return token
+end
+
+-- Parses the response body according to the content-type value.
+function api:_parse_response(body, res_code, headers, tname)
+    -- The method failed, error is on second arg
+    if body == nil then
+        return nil, res_code
+    end
+    -- HTTP request failed
+    if res_code ~= 200 then
+        return nil, headers[1]
+    end
+    apply_types(self.objects, headers, "headers")
+    local content_type = headers:get_content_type()
+    if content_type == "application/json" then
+        return parse_json(self, body, tname)
+    else
+        return body
+    end
 end
 
 --- Begins the OAuth authorization.

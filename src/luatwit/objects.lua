@@ -54,6 +54,16 @@ end
 _M.headers = new_type()
 local headers = _
 
+--- Extracts the content-type info from the HTTP headers.
+--
+-- @return          The `Content-Type` value, or `nil` if not present.
+function headers:get_content_type()
+    local content_type = self["content-type"]
+    if content_type then
+        return content_type:match "^[^;]+"
+    end
+end
+
 --- Extracts the rate limit info from the HTTP headers.
 --
 -- @return          Table with rate limit values.

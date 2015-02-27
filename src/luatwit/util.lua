@@ -320,7 +320,7 @@ function _M.parse_headers(list)
                 headers[#headers + 1] = line
             end
         else
-            headers[k] = v
+            headers[k:lower()] = v  -- case insensitive
         end
     end
     return headers
