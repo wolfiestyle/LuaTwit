@@ -3,8 +3,8 @@
 -- @module  luatwit.util
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, getmetatable, ipairs, pairs, rawget, select, setmetatable, table_concat, tonumber, tostring, type =
-      assert, error, getmetatable, ipairs, pairs, rawget, select, setmetatable, table.concat, tonumber, tostring, type
+local assert, error, ipairs, pairs, setmetatable, table_concat, tonumber, tostring, type =
+      assert, error, ipairs, pairs, setmetatable, table.concat, tonumber, tostring, type
 
 local _M = {}
 
@@ -213,19 +213,6 @@ function _M.check_args(args, rules, r_name)
         end
     end
     return args
-end
-
---- Removes the first value from a `pcall` result and returns errors in Lua style.
---
--- @param ok        Success status from `pcall`.
--- @param ...       List of returned values.
--- @return          On success, the function return values. On failure `nil`.
--- @return          The error string.
-function _M.shift_pcall_error(ok, ...)
-    if not ok then
-        return nil, ...
-    end
-    return ...
 end
 
 --- Performs an API call with the data on a resource object.

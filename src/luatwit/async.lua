@@ -3,13 +3,14 @@
 -- @module  luatwit.async
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local select, setmetatable, table_concat, unpack =
-      select, setmetatable, table.concat, unpack
+local select, setmetatable, table_concat =
+      select, setmetatable, table.concat
 local util = require "luatwit.util"
 local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
-local unpackn = function(t) return unpack(t, 1, t.n) end
+local table_unpack = table.unpack or unpack
+local unpackn = function(t) return table_unpack(t, 1, t.n) end
 
 local _M = {}
 

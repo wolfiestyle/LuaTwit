@@ -62,7 +62,7 @@ local function apply_types(objects, node, tname)
             end
         end
     else
-        error("subtype declaration must be string or table")
+        error "subtype declaration must be string or table"
     end
     return node
 end
@@ -357,7 +357,7 @@ function _M.attach_file(filename)
         return nil, err
     end
     local res = {
-        filename = filename:match "([^/]*)$",
+        filename = filename:match "[^/]*$",
         data = file:read "*a",
     }
     file:close()
