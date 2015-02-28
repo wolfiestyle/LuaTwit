@@ -19,6 +19,7 @@ Available online [here](http://darkstalker.github.io/LuaTwit/).
 ## Installation
 
 Using LuaRocks:
+
     luarocks install luatwit
 
 ## Usage
