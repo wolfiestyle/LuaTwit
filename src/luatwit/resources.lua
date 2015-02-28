@@ -13,25 +13,41 @@ local POST = function(path) return util.resource_builder("POST", path) end
 local required = function(t) return { required = true, type = t } end
 
 -- Base URL of the Twitter REST API.
-_M._base_url = "https://api.twitter.com/1.1/"
+_M._base_url = "https://api.twitter.com/1.1/%s.json"
 
--- OAuth endpoints for the Twitter API.
-_M._endpoints = {
-    RequestToken = "https://api.twitter.com/oauth/request_token",
-    AuthorizeUser = "https://api.twitter.com/oauth/authorize",
-    AccessToken = "https://api.twitter.com/oauth/access_token",
-}
+-- URL of the OAuth authorization page
+_M._authorize_url = "https://api.twitter.com/oauth/authorize"
 
 -- Default members for all resources.
 local resource_base = {
     _type = "resource",
     default_args = {
         stringify_ids = true,
+        oauth_callback = "oob",
     },
     __call = util.resource_call,
 }
 resource_base.__index = resource_base
 _M._resource_base = resource_base
+
+--( OAuth )--
+
+--- Allows a Consumer application to obtain an OAuth Request Token to request user authorization.
+_M.oauth_request_token = POST "request_token"
+    :args{
+        oauth_callback = "string",
+        x_auth_access_type = "string",
+    }
+    :base_url "https://api.twitter.com/oauth/%s"
+    :type "access_token"
+
+--- Allows a Consumer application to exchange the OAuth Request Token for an OAuth Access Token.
+_M.oauth_access_token = POST "access_token"
+    :args{
+        oauth_verifier = required "string",
+    }
+    :base_url "https://api.twitter.com/oauth/%s"
+    :type "access_token"
 
 --( Timeline )--
 
@@ -196,7 +212,7 @@ _M.upload_media = POST "media/upload"
         media = required "file",
     }
     :type "media"
-    :base_url "https://upload.twitter.com/1.1/"
+    :base_url "https://upload.twitter.com/1.1/%s.json"
     :multipart()
 
 --( Search )--

@@ -37,8 +37,7 @@ local function build_request(base_url, path, args, rules, defaults)
         request[key] = nil
         return val
     end)
-    local url = base_url .. path .. ".json"
-    return url, request
+    return base_url:format(path), request
 end
 
 -- Applies type metatables to the supplied JSON data recursively.
@@ -150,20 +149,14 @@ local function parse_json(self, str, tname)
 end
 
 -- Parses a form encoded OAuth token.
-local function parse_oauth_token(body, res_code, oauth_config)
-    if body == nil then
-        return nil, res_code
-    end
-    if res_code ~= 200 then
-        return nil, headers[1]
-    end
+local function parse_oauth_token(self, body, tname)
     local token = oauth.form_decode_pairs(body)
     if token.oauth_token == nil or token.oauth_token_secret == nil then
         return nil, "received invalid token"
     end
-    oauth_config.oauth_token = token.oauth_token
-    oauth_config.oauth_token_secret = token.oauth_token_secret
-    return token
+    self.oauth_config.oauth_token = token.oauth_token
+    self.oauth_config.oauth_token_secret = token.oauth_token_secret
+    return apply_types(self.objects, token, "access_token")
 end
 
 -- Parses the response body according to the content-type value.
@@ -180,62 +173,18 @@ function api:_parse_response(body, res_code, headers, tname)
     local content_type = headers:get_content_type()
     if content_type == "application/json" then
         return parse_json(self, body, tname)
+    elseif tname == "access_token" then -- twitter returns "text/html" as content-type for the tokens..
+        return parse_oauth_token(self, body, tname)
     else
         return body
     end
 end
 
---- Begins the OAuth authorization.
--- This method generates the URL that the user must visit to authorize the app and get the PIN needed for `api:confirm_login`.
+--- Generates the OAuth authorization URL.
 --
--- @param args  Extra arguments for the request_token method.
 -- @return      Authorization URL.
--- @return      The request token.
-function api:start_login(args)
-    args = args or {}
-    args.oauth_callback = "oob"
-
-    local function parse_response(body, res_code, headers)
-        local token, err = parse_oauth_token(body, res_code, self.oauth_config)
-        if not token then
-            return nil, err
-        end
-        local auth_url = self.resources._endpoints.AuthorizeUser .. "?oauth_token=" .. oauth.url_encode(token.oauth_token)
-        return auth_url, token
-    end
-
-    local url, body, headers = oauth.build_request("POST", self.resources._endpoints.RequestToken, args, self.oauth_config)
-
-    return self:http_request{
-        method = "POST", url = url, body = body, headers = headers,
-        _async = args._async, _callback = args._callback, _filter = parse_response,
-    }
-end
-
---- Finishes the OAuth authorization.
--- This method receives the PIN number obtained in the `api:start_login` step and authorizes the client to make API calls.
---
--- @param pin   PIN number obtained after the user succefully authorized the app.
--- @param args  Extra arguments for the access_token method.
--- @return      An `access_token` object.
-function api:confirm_login(pin, args)
-    args = args or {}
-    args.oauth_verifier = pin
-
-    local function parse_response(body, res_code, headers)
-        local token, err = parse_oauth_token(body, res_code, self.oauth_config)
-        if not token then
-            return nil, err
-        end
-        return apply_types(self.objects, token, "access_token")
-    end
-
-    local url, body, headers = oauth.build_request("POST", self.resources._endpoints.AccessToken, args, self.oauth_config)
-
-    return self:http_request{
-        method = "POST", url = url, body = body, headers = headers,
-        _async = args._async, _callback = args._callback, _filter = parse_response,
-    }
+function api:oauth_authorize_url()
+    return self.resources._authorize_url .. "?oauth_token=" .. oauth.url_encode(self.oauth_config.oauth_token)
 end
 
 --- Sets the callback handler function.

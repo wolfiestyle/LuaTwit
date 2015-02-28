@@ -10,14 +10,16 @@ local twitter = require "luatwit"
 local oauth_params = twitter.load_keys(cfg.app_keys)
 local client = twitter.api.new(oauth_params)
 
--- First auth step: generate auth URL and obtain PIN
-local auth_url = client:start_login()
-print("-- auth url: " .. auth_url)
+-- First auth step: obtain a temporary request token
+client:oauth_request_token()
 
--- Second auth step: read the PIN and obtain access token
+-- Second auth step: display the auth URL so the user can obtain a PIN
+print("-- auth url: " .. client:oauth_authorize_url())
 io.write("-- enter pin: ")
 local pin = assert(io.read():match("%d+"), "invalid number")
-local token, err = client:confirm_login(pin)
+
+-- Third auth step: use the PIN to obtain an access token
+local token, err = client:oauth_access_token{ oauth_verifier = pin }
 assert(token, err)
 
 -- save the access token
