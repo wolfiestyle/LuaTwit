@@ -184,6 +184,7 @@ end
 --
 -- @return      Authorization URL.
 function api:oauth_authorize_url()
+    assert(self.oauth_config.oauth_token, "no oauth_token")
     return self.resources._authorize_url .. "?oauth_token=" .. oauth.url_encode(self.oauth_config.oauth_token)
 end
 
