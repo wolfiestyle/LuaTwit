@@ -94,16 +94,8 @@
 	<td class="summary">Generic call to the Twitter API.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#api:parse_json">api:parse_json (str, tname)</a></td>
-	<td class="summary">Parses a JSON string and applies type metatables.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#api:start_login">api:start_login ()</a></td>
-	<td class="summary">Begins the OAuth authorization.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#api:confirm_login">api:confirm_login (pin)</a></td>
-	<td class="summary">Finishes the OAuth authorization.</td>
+	<td class="name" nowrap><a href="#api:oauth_authorize_url">api:oauth_authorize_url ()</a></td>
+	<td class="summary">Generates the OAuth authorization URL.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#api:set_callback_handler">api:set_callback_handler (fn)</a></td>
@@ -114,7 +106,7 @@
 	<td class="summary">Performs an HTTP request.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#api.new">api.new (args, threads, resources, objects)</a></td>
+	<td class="name" nowrap><a href="#api.new">api.new (keys, resources, objects)</a></td>
 	<td class="summary">Creates a new <a href="../modules/luatwit.html#api">api</a> object with the supplied keys.</td>
 	</tr>
 </table>
@@ -235,15 +227,12 @@
     <h3>Returns:</h3>
     <ol>
         <li>
-              A table with the decoded JSON data from the response, or <code>nil</code> on error.
-              If the option <code>_raw</code> is set, instead returns an unprocessed JSON string.
+        A table with the decoded JSON data from the response, or <code>nil</code> on error.
               If the option <code>_async</code> or <code>_callback</code> is set, instead it returns a <a href="../modules/luatwit.async.html#future">luatwit.async.future</a> object.</li>
         <li>
         HTTP headers. On error, instead it will be a string or a <a href="../modules/luatwit.objects.html#error">luatwit.objects.error</a> describing the error.</li>
         <li>
-              If the option <code>_raw</code> is set, the type name from <code>resources</code>.
-              This value is needed to use <a href="../modules/luatwit.html#api:parse_json">api:parse_json</a> with the returned string.
-              If an API error ocurred, instead it will be the HTTP headers of the request.</li>
+        If an API error ocurred, the HTTP headers of the request.</li>
     </ol>
 
 
@@ -251,84 +240,18 @@
 
 </dd>
     <dt>
-    <a name = "api:parse_json"></a>
-    <strong>api:parse_json (str, tname)</strong>
+    <a name = "api:oauth_authorize_url"></a>
+    <strong>api:oauth_authorize_url ()</strong>
     </dt>
     <dd>
-    Parses a JSON string and applies type metatables.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">str</span>
-           JSON string.
-        </li>
-        <li><span class="parameter">tname</span>
-         Result type name as defined in <code>resources</code>.
-              If set, the function will set type metatables.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        A table with the decoded JSON data, or <code>nil</code> on error.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "api:start_login"></a>
-    <strong>api:start_login ()</strong>
-    </dt>
-    <dd>
-    Begins the OAuth authorization.
- This method generates the URL that the user must visit to authorize the app and get the PIN needed for <a href="../modules/luatwit.html#api:confirm_login">api:confirm_login</a>.
-
+    Generates the OAuth authorization URL.
 
 
 
     <h3>Returns:</h3>
     <ol>
-        <li>
-        Authorization URL.</li>
-        <li>
-        HTTP Authorization header.</li>
-    </ol>
 
-
-
-
-</dd>
-    <dt>
-    <a name = "api:confirm_login"></a>
-    <strong>api:confirm_login (pin)</strong>
-    </dt>
-    <dd>
-    Finishes the OAuth authorization.
- This method receives the PIN number obtained in the <a href="../modules/luatwit.html#api:start_login">api:start_login</a> step and authorizes the client to make API calls.
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">pin</span>
-           PIN number obtained after the user succefully authorized the app.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        An <code>access_token</code> object.</li>
-        <li>
-        HTTP Status line.</li>
-        <li>
-        HTTP result code.</li>
-        <li>
-        HTTP headers.</li>
+        Authorization URL.
     </ol>
 
 
@@ -389,22 +312,19 @@
 </dd>
     <dt>
     <a name = "api.new"></a>
-    <strong>api.new (args, threads, resources, objects)</strong>
+    <strong>api.new (keys, resources, objects)</strong>
     </dt>
     <dd>
     Creates a new <a href="../modules/luatwit.html#api">api</a> object with the supplied keys.
- An object created with only the consumer keys must call <a href="../modules/luatwit.html#api:start_login">api:start_login</a> and <a href="../modules/luatwit.html#api:confirm_login">api:confirm_login</a> to get the access token,
+ An object created with only the consumer keys must call <code>api:start_login</code> and <code>api:confirm_login</code> to get the access token,
  otherwise it won't be able to make API calls.
 
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">args</span>
+        <li><span class="parameter">keys</span>
               Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
-        </li>
-        <li><span class="parameter">threads</span>
-           Number of threads for the async requests (default 1).
         </li>
         <li><span class="parameter">resources</span>
          Table with the API interface definition (default <a href="../modules/luatwit.resources.html#">luatwit.resources</a>).
@@ -435,7 +355,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-02-20 21:25:42 </i>
+<i style="float:right;">Last updated 2015-02-27 21:42:47 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

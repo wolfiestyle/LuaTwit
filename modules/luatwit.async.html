@@ -67,7 +67,7 @@
 <div id="content">
 
 <h1>Module <code>luatwit.async</code></h1>
-<p>Implements a service for performing asyncronous HTTP and OAuth requests.</p>
+<p>Implements a service for performing asyncronous HTTP requests.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -90,32 +90,20 @@
 <h2><a href="#Class_service">Class service </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#service.new">service.new (keys, endp, threads)</a></td>
-	<td class="summary">Creates a new async OAuth client.</td>
+	<td class="name" nowrap><a href="#service.new">service.new ()</a></td>
+	<td class="summary">Creates a new async http client.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#service:start">service:start ()</a></td>
-	<td class="summary">Starts the worker threads.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#service:stop">service:stop ()</a></td>
-	<td class="summary">Stops the worker threads.</td>
+	<td class="name" nowrap><a href="#service:set_conn_limits">service:set_conn_limits (total_conn, host_conn)</a></td>
+	<td class="summary">Sets the connection limits.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#service:data_available">service:data_available ()</a></td>
 	<td class="summary">Checks if there is data pending to be received.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#service:http_request">service:http_request (...)</a></td>
+	<td class="name" nowrap><a href="#service:http_request">service:http_request (request, filter)</a></td>
 	<td class="summary">Performs an asynchronous HTTP request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#service:call_oauth_method">service:call_oauth_method (name, callback, ...)</a></td>
-	<td class="summary">Performs an asynchronous OAuth request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#service:oauth_request">service:oauth_request (method, url, request, headers, callback)</a></td>
-	<td class="summary">Async wrapper for <code>OAuth.PerformRequest</code>.</td>
 	</tr>
 </table>
 
@@ -171,34 +159,22 @@
 </dl>
     <h2><a name="Class_service"></a>Class service </h2>
 
-        OAuth service object.
- Executes OAuth requests on background threads.
+        HTTP service object.
+ Executes HTTP requests on background (with <code>curl.multi</code>).
     <dl class="function">
     <dt>
     <a name = "service.new"></a>
-    <strong>service.new (keys, endp, threads)</strong>
+    <strong>service.new ()</strong>
     </dt>
     <dd>
-    Creates a new async OAuth client.
+    Creates a new async http client.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">keys</span>
-          Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
-        </li>
-        <li><span class="parameter">endp</span>
-          Table with OAuth endpoints.
-        </li>
-        <li><span class="parameter">threads</span>
-         Number of threads to create (default 1).
-        </li>
-    </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        New instance of the oauth async client.
+        New instance of the async client.
     </ol>
 
 
@@ -206,27 +182,22 @@
 
 </dd>
     <dt>
-    <a name = "service:start"></a>
-    <strong>service:start ()</strong>
+    <a name = "service:set_conn_limits"></a>
+    <strong>service:set_conn_limits (total_conn, host_conn)</strong>
     </dt>
     <dd>
-    Starts the worker threads.
+    Sets the connection limits.
 
 
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "service:stop"></a>
-    <strong>service:stop ()</strong>
-    </dt>
-    <dd>
-    Stops the worker threads.
-
-
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">total_conn</span>
+            Maximum number of total connections (default unlimited).
+        </li>
+        <li><span class="parameter">host_conn</span>
+             Maximum number of connections per host (default unlimited).
+        </li>
+    </ul>
 
 
 
@@ -245,7 +216,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        <code>true</code> if there is data pending on the message queue, otherwise <code>false</code>.
+        If there is data available, the current number of unfinished requests. Otherwise <code>nil</code>.
     </ol>
 
 
@@ -254,7 +225,7 @@
 </dd>
     <dt>
     <a name = "service:http_request"></a>
-    <strong>service:http_request (...)</strong>
+    <strong>service:http_request (request, filter)</strong>
     </dt>
     <dd>
     Performs an asynchronous HTTP request.
@@ -262,76 +233,11 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">...</span>
-               Arguments for <code>http.request</code> (luasocket).
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        <a href="../modules/luatwit.async.html#future">future</a> object with the result.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "service:call_oauth_method"></a>
-    <strong>service:call_oauth_method (name, callback, ...)</strong>
-    </dt>
-    <dd>
-    Performs an asynchronous OAuth request.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">name</span>
-              Method name.
-        </li>
-        <li><span class="parameter">callback</span>
-          Function that processes the response output (called when reading the <a href="../modules/luatwit.async.html#future">future</a>).
-        </li>
-        <li><span class="parameter">...</span>
-               Method arguments.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        <a href="../modules/luatwit.async.html#future">future</a> object with the result.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "service:oauth_request"></a>
-    <strong>service:oauth_request (method, url, request, headers, callback)</strong>
-    </dt>
-    <dd>
-    Async wrapper for <code>OAuth.PerformRequest</code>.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">method</span>
-            HTTP method.
-        </li>
-        <li><span class="parameter">url</span>
-               Request URL.
-        </li>
         <li><span class="parameter">request</span>
-           Table with request pairs.
+           Request objected created by <code>curl.easy</code>.
         </li>
-        <li><span class="parameter">headers</span>
-           Custom HTTP headers.
-        </li>
-        <li><span class="parameter">callback</span>
-          Function that processes the response output.
+        <li><span class="parameter">filter</span>
+            Function to be called on the result data.
         </li>
     </ul>
 
@@ -352,7 +258,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-02-20 21:25:42 </i>
+<i style="float:right;">Last updated 2015-02-27 21:42:47 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
