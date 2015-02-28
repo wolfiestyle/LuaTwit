@@ -10,15 +10,20 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 - oauth_light
 - penlight
 
-Also you'll need `ldoc` if you want to generate the docs.
+Also you'll need `ldoc` if you want to build the docs.
 
 ## Documentation
 
 Available online [here](http://darkstalker.github.io/LuaTwit/).
 
+## Installation
+
+Using LuaRocks:
+    luarocks install luatwit
+
 ## Usage
 
-First, you need a set of app keys. You can get them from [here](https://dev.twitter.com/apps).
+First, you need a set of app keys. You can get them from [here](https://apps.twitter.com/).
 
     local luatwit = require "luatwit"
 
@@ -53,8 +58,8 @@ The type metatables also provide convenience methods:
     result[1]:set_favorite():retweet()
     result[1]:reply{ status = "answer!", _mention = true }
 
-The methods can be called in async mode, and they'll return a future object that can be read with `peek()` and `wait()`:
+The methods can be called in async mode, and they'll return a future object that can be read with `:peek()` and `:wait()`:
 
-    local res_f = client:get_user{ user_id = 174958347, _async = true }
+    local res_f = client:get_user{ user_id = 783214, _async = true }
     print(res_f._type)          -- "future"
     print(res_f:wait().screen_name)
