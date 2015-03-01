@@ -100,7 +100,7 @@ function api:raw_call(decl, args, defaults)
     local function parse_response(body, res_code, headers)
         local data, err = self:_parse_response(body, res_code, headers, decl.res_type)
         if data == nil then
-            return nil, err, headers
+            return nil, err
         end
         if type(data) == "table" and data._type then
             data._source = name

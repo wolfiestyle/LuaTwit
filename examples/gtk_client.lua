@@ -447,10 +447,11 @@ local requests = {}
 
 -- checks if any of the requests are done and dispatches the callbacks
 local function update_requests()
+    client.async:update()
     local n = #requests
     while n > 0 do
         local fut, callback = unpack(requests[n])
-        local ready, res, hdr = fut:peek()
+        local ready, res, hdr = fut:peek(true)
         if ready then
             table.remove(requests, n)
             if res == nil then  -- error

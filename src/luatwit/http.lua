@@ -41,22 +41,26 @@ function future.new(handle, svc, filter)
     return setmetatable(self, future)
 end
 
+local function unpack_response(data)
+    if data.error then
+        return nil, data.error
+    else
+        local body = table_concat(data.body)
+        local headers = parse_headers(data.headers)
+        return body, data.code, headers
+    end
+end
+
 local function future_get(self, method)
     local value = self.value
     if not value then
         local svc = self.svc
         local data = svc[method](svc, self.handle)
         if data ~= nil then
-            if data.error then
-                value = { nil, data.error, n = 2 }
+            if self.filter then
+                value = table_pack(self.filter(unpack_response(data)))
             else
-                local body = table_concat(data.body)
-                local headers = parse_headers(data.headers)
-                if self.filter then
-                    value = table_pack(self.filter(body, data.code, headers))
-                else
-                    value = { body, data.code, headers, n = 3 }
-                end
+                value = table_pack(unpack_response(data))
             end
             self.value = value
             self.handle = nil
@@ -67,10 +71,11 @@ end
 
 --- Checks (non-blocking) and returns the value of the future if it's ready.
 --
+-- @param no_upd Don't ask the service for new data, just return the current stored value (default `false`).
 -- @return      `true` if the value is ready, otherwise `false`.
 -- @return      List of return values from the HTTP request.
-function future:peek()
-    local value = future_get(self, "_poll_data_for")
+function future:peek(no_upd)
+    local value = future_get(self, no_upd and "_get_data" or "_poll_data")
     if value then
         return true, unpackn(value)
     end
@@ -81,7 +86,14 @@ end
 --
 -- @return      List of return values from the HTTP request.
 function future:wait()
-    return unpackn(future_get(self, "_wait_data_for"))
+    return unpackn(future_get(self, "_wait_data"))
+end
+
+--- Cancels the HTTP request associated with this object.
+--
+-- @return      `nil` if successfully cancelled, or the result values if called after the request finished.
+function future:cancel()
+    return unpackn(future_get(self, "_cancel"))
 end
 
 --- @section end
@@ -118,36 +130,32 @@ function service:set_conn_limits(total_conn, host_conn)
     end
 end
 
---- Checks if there is data pending to be received.
+--- Performs data transfers and checks for finished requests.
 --
--- @return      If there is data available, the current number of unfinished requests. Otherwise `nil`.
-function service:data_available()
+-- @return      If there was data available, the current number of unfinished requests. Otherwise `nil`.
+function service:update()
     local n = self.curl_multi:perform()
     if n ~= self.pending then
+        while true do
+            local handle, ok, err = self.curl_multi:info_read()
+            if handle == 0 then break end
+            if not ok then
+                self.store[handle].error = err
+            end
+            self.store[handle].code = handle:getinfo(curl.INFO_RESPONSE_CODE)
+            self.curl_multi:remove_handle(handle)
+            handle:close()
+        end
         self.pending = n
         return n
     end
 end
 
--- Reads the result from finished requests.
-function service:_fetch_handle_results()
-    while true do
-        local handle, ok, err = self.curl_multi:info_read()
-        if handle == 0 then break end
-        if not ok then
-            self.store[handle].error = err
-        end
-        self.store[handle].code = handle:getinfo(curl.INFO_RESPONSE_CODE)
-        self.curl_multi:remove_handle(handle)
-        handle:close()
-    end
-end
-
 -- Non-blocking consumer
-function service:_poll_data_for(handle)
+function service:_poll_data(handle)
     local data = self.store[handle]
-    if data.code == nil and self:data_available() then
-        self:_fetch_handle_results()
+    if data.code == nil then
+        self:update()
     end
     if data.code ~= nil then
         self.store[handle] = nil
@@ -156,18 +164,38 @@ function service:_poll_data_for(handle)
 end
 
 -- Blocking consumer
-function service:_wait_data_for(handle)
+function service:_wait_data(handle)
     local data = self.store[handle]
     if data.code == nil then
-        repeat
-            while not self:data_available() do
-                self.curl_multi:wait(1000)
-            end
-            self:_fetch_handle_results()
-        until data.code ~= nil
+        while true do
+            self:update()
+            if data.code ~= nil then break end
+            self.curl_multi:wait(1000)
+        end
         self.store[handle] = nil
     end
     return data
+end
+
+-- Read value without updating
+function service:_get_data(handle)
+    local data = self.store[handle]
+    if data.code ~= nil then
+        self.store[handle] = nil
+        return data
+    end
+end
+
+-- Cancel the request
+function service:_cancel(handle)
+    local data = self.store[handle]
+    self.store[handle] = nil
+    if data.code ~= nil then
+        return data
+    end
+    self.curl_multi:remove_handle(handle)
+    handle:close()
+    return { error = "cancelled" }
 end
 
 -- Appends data to a table.
