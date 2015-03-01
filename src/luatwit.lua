@@ -8,7 +8,7 @@ local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable
 local oauth = require "oauth_light"
 local json = require "dkjson"
 local config = require "pl.config"
-local http = require "luatwit.async"
+local http = require "luatwit.http"
 local util = require "luatwit.util"
 
 local _M = {}
@@ -85,7 +85,7 @@ end
 -- @param args      Table with the method arguments.
 -- @param defaults  Default method arguments.
 -- @return      A table with the decoded JSON data from the response, or `nil` on error.
---              If the option `_async` or `_callback` is set, instead it returns a `luatwit.async.future` object.
+--              If the option `_async` or `_callback` is set, instead it returns a `luatwit.http.future` object.
 -- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return      If an API error ocurred, the HTTP headers of the request.
 function api:raw_call(decl, args, defaults)
@@ -207,7 +207,7 @@ local http_request_args = {
 -- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
 -- @param args  Table with request arguments (method, url, body, headers, _async, _callback).
--- @return      Request response, or a `luatwit.async.future` object if the `_async` or `_callback` options were used.
+-- @return      Request response, or a `luatwit.http.future` object if the `_async` or `_callback` options were used.
 function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")

@@ -1,6 +1,6 @@
 --- Implements a service for performing HTTP requests.
 --
--- @module  luatwit.async
+-- @module  luatwit.http
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
 local ipairs, pairs, select, setmetatable, table_concat, type =
@@ -229,6 +229,8 @@ function service:http_request(method, url, body, headers, filter)
     self.curl_multi:add_handle(request):perform()
     return future.new(request, self, filter)
 end
+
+--- @section end
 
 --- Performs an HTTP request.
 --
