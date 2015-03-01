@@ -32,6 +32,7 @@
 
 <h2>Contents</h2>
 <ul>
+<li><a href="#Functions">Functions</a></li>
 <li><a href="#Class_future">Class future </a></li>
 <li><a href="#Class_service">Class service </a></li>
 </ul>
@@ -40,7 +41,7 @@
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../modules/luatwit.html">luatwit</a></li>
-  <li><strong>luatwit.async</strong></li>
+  <li><strong>luatwit.http</strong></li>
   <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
   <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
   <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
@@ -66,8 +67,8 @@
 
 <div id="content">
 
-<h1>Module <code>luatwit.async</code></h1>
-<p>Implements a service for performing asyncronous HTTP requests.</p>
+<h1>Module <code>luatwit.http</code></h1>
+<p>Implements a service for performing HTTP requests.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -76,6 +77,13 @@
     </ul>
 
 
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#request">request (method, url, body, headers, filter)</a></td>
+	<td class="summary">Performs an HTTP request.</td>
+	</tr>
+</table>
 <h2><a href="#Class_future">Class future </a></h2>
 <table class="function_list">
 	<tr>
@@ -91,7 +99,7 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#service.new">service.new ()</a></td>
-	<td class="summary">Creates a new async http client.</td>
+	<td class="summary">Creates a new async HTTP client.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#service:set_conn_limits">service:set_conn_limits (total_conn, host_conn)</a></td>
@@ -102,7 +110,7 @@
 	<td class="summary">Checks if there is data pending to be received.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#service:http_request">service:http_request (request, filter)</a></td>
+	<td class="name" nowrap><a href="#service:http_request">service:http_request (method, url, body, headers, filter)</a></td>
 	<td class="summary">Performs an asynchronous HTTP request.</td>
 	</tr>
 </table>
@@ -111,10 +119,55 @@
 <br/>
 
 
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "request"></a>
+    <strong>request (method, url, body, headers, filter)</strong>
+    </dt>
+    <dd>
+    Performs an HTTP request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">url</span>
+               Request URL.
+        </li>
+        <li><span class="parameter">body</span>
+              Post body. Form-encoded string (single part) or table (multipart).
+        </li>
+        <li><span class="parameter">headers</span>
+           Additional headers.
+        </li>
+        <li><span class="parameter">filter</span>
+            Function to be called on the result data.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        Response body.</li>
+        <li>
+        Status code.</li>
+        <li>
+        Response headers.</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
     <h2><a name="Class_future"></a>Class future </h2>
 
         Future object.
- It contains the result of an asynchronous API call.
+ It contains the result of an asynchronous HTTP request.
     <dl class="function">
     <dt>
     <a name = "future:peek"></a>
@@ -130,7 +183,7 @@
         <li>
         <code>true</code> if the value is ready, otherwise <code>false</code>.</li>
         <li>
-        List of return values from the API call.</li>
+        List of return values from the HTTP request.</li>
     </ol>
 
 
@@ -149,7 +202,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        List of return values from the API call.
+        List of return values from the HTTP request.
     </ol>
 
 
@@ -167,7 +220,7 @@
     <strong>service.new ()</strong>
     </dt>
     <dd>
-    Creates a new async http client.
+    Creates a new async HTTP client.
 
 
 
@@ -225,7 +278,7 @@
 </dd>
     <dt>
     <a name = "service:http_request"></a>
-    <strong>service:http_request (request, filter)</strong>
+    <strong>service:http_request (method, url, body, headers, filter)</strong>
     </dt>
     <dd>
     Performs an asynchronous HTTP request.
@@ -233,8 +286,17 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">request</span>
-           Request objected created by <code>curl.easy</code>.
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">url</span>
+               Request URL.
+        </li>
+        <li><span class="parameter">body</span>
+              Post body. Form-encoded string (single part) or table (multipart).
+        </li>
+        <li><span class="parameter">headers</span>
+           Additional headers.
         </li>
         <li><span class="parameter">filter</span>
             Function to be called on the result data.
@@ -244,7 +306,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        <a href="../modules/luatwit.async.html#future">future</a> object with the result.
+        <a href="../modules/luatwit.http.html#future">future</a> object with the result.
     </ol>
 
 
@@ -258,7 +320,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-02-28 16:37:40 </i>
+<i style="float:right;">Last updated 2015-02-28 22:08:20 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
