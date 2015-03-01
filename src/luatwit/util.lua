@@ -280,45 +280,4 @@ function _M.resource_builder(method, path)
     return setmetatable(res, resource_builder_mt)
 end
 
---- Creates a list from a table by joining key-value pairs.
---
--- @param tbl       Source table.
--- @param sep       Separator used to join the keys and values.
--- @return          List table.
-function _M.join_pairs(tbl, sep)
-    local res = {}
-    for k, v in pairs(tbl) do
-        res[#res + 1] = k .. sep .. v
-    end
-    return res
-end
-
---- Extracts key-value pairs from a HTTP headers list.
---
--- @param list      List table with the header strings.
--- @return          Headers table.
-function _M.parse_headers(list)
-    local headers = {}
-    for _, line in ipairs(list) do
-        line = line:gsub("\r?\n$", "")
-        local k, v = line:match "^([^:]+): (.*)"
-        if not k then   -- status line
-            if line ~= "" then
-                headers[#headers + 1] = line
-            end
-        else
-            headers[k:lower()] = v  -- case insensitive
-        end
-    end
-    return headers
-end
-
---- Appends data to a table.
---
--- @param tbl       Destination table.
--- @param data      Data to append.
-function _M.table_writer(tbl, data)
-    tbl[#tbl + 1] = data
-end
-
 return _M

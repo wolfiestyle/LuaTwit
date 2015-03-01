@@ -1,11 +1,10 @@
---- Implements a service for performing asyncronous HTTP requests.
+--- Implements a service for performing HTTP requests.
 --
 -- @module  luatwit.async
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local select, setmetatable, table_concat =
-      select, setmetatable, table.concat
-local util = require "luatwit.util"
+local ipairs, pairs, select, setmetatable, table_concat, type =
+      ipairs, pairs, select, setmetatable, table.concat, type
 local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -14,8 +13,25 @@ local unpackn = function(t) return table_unpack(t, 1, t.n) end
 
 local _M = {}
 
+-- Extracts key-value pairs from a HTTP headers list.
+local function parse_headers(list)
+    local headers = {}
+    for _, line in ipairs(list) do
+        line = line:gsub("\r?\n$", "")
+        local k, v = line:match "^([^:]+): (.*)"
+        if not k then   -- status line
+            if line ~= "" then
+                headers[#headers + 1] = line
+            end
+        else
+            headers[k:lower()] = v  -- case insensitive
+        end
+    end
+    return headers
+end
+
 --- Future object.
--- It contains the result of an asynchronous API call.
+-- It contains the result of an asynchronous HTTP request.
 -- @type future
 local future = { _type = "future" }
 future.__index = future
@@ -35,7 +51,7 @@ local function future_get(self, method)
                 value = { nil, data.error, n = 2 }
             else
                 local body = table_concat(data.body)
-                local headers = util.parse_headers(data.headers)
+                local headers = parse_headers(data.headers)
                 if self.filter then
                     value = table_pack(self.filter(body, data.code, headers))
                 else
@@ -52,7 +68,7 @@ end
 --- Checks (non-blocking) and returns the value of the future if it's ready.
 --
 -- @return      `true` if the value is ready, otherwise `false`.
--- @return      List of return values from the API call.
+-- @return      List of return values from the HTTP request.
 function future:peek()
     local value = future_get(self, "_poll_data_for")
     if value then
@@ -63,7 +79,7 @@ end
 
 --- Waits (blocks) until the value of the future is ready.
 --
--- @return      List of return values from the API call.
+-- @return      List of return values from the HTTP request.
 function future:wait()
     return unpackn(future_get(self, "_wait_data_for"))
 end
@@ -77,7 +93,7 @@ local service = {}
 service.__index = service
 _M.service = service
 
---- Creates a new async http client.
+--- Creates a new async HTTP client.
 --
 -- @return          New instance of the async client.
 function service.new()
@@ -154,19 +170,88 @@ function service:_wait_data_for(handle)
     return data
 end
 
+-- Appends data to a table.
+local function table_writer(tbl, data)
+    tbl[#tbl + 1] = data
+end
+
+-- Creates a list from a table by joining key-value pairs.
+local function join_pairs(tbl, sep)
+    local res = {}
+    for k, v in pairs(tbl) do
+        res[#res + 1] = k .. sep .. v
+    end
+    return res
+end
+
+-- Builds the curl.easy object that is used on both regular and async requests.
+local function build_easy_handle(method, url, body, headers)
+    local resp_body, resp_headers = {}, {}
+    local handle = curl.easy()
+    :setopt_url(url)
+    :setopt_accept_encoding ""
+    :setopt_writefunction(table_writer, resp_body)
+    :setopt_headerfunction(table_writer, resp_headers)
+    if method then handle:setopt_customrequest(method) end
+    if headers then handle:setopt_httpheader(join_pairs(headers, ": ")) end
+
+    if body then
+        if type(body) == "table" then  -- multipart
+            local form = curl.form()
+            for k, v in pairs(body) do
+                if type(v) == "table" then
+                    form:add_buffer(k, v.filename, v.data)
+                else
+                    form:add_content(k, v)
+                end
+            end
+            handle:setopt_httppost(form)
+        else
+            handle:setopt_postfields(body)
+        end
+    end
+
+    return handle, resp_body, resp_headers
+end
+
 --- Performs an asynchronous HTTP request.
 --
--- @param request   Request objected created by `curl.easy`.
+-- @param method    HTTP method.
+-- @param url       Request URL.
+-- @param body      Post body. Form-encoded string (single part) or table (multipart).
+-- @param headers   Additional headers.
 -- @param filter    Function to be called on the result data.
 -- @return          `future` object with the result.
-function service:http_request(request, filter)
-    local body, headers = {}, {}
-    self.store[request] = { body = body, headers = headers }
+function service:http_request(method, url, body, headers, filter)
+    local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
+    self.store[request] = { body = resp_body, headers = resp_headers }
     self.pending = self.pending + 1
-    request:setopt_writefunction(util.table_writer, body)
-    :setopt_headerfunction(util.table_writer, headers)
     self.curl_multi:add_handle(request):perform()
     return future.new(request, self, filter)
+end
+
+--- Performs an HTTP request.
+--
+-- @param method    HTTP method.
+-- @param url       Request URL.
+-- @param body      Post body. Form-encoded string (single part) or table (multipart).
+-- @param headers   Additional headers.
+-- @param filter    Function to be called on the result data.
+-- @return          Response body.
+-- @return          Status code.
+-- @return          Response headers.
+function _M.request(method, url, body, headers, filter)
+    local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
+    local code = request:perform():getinfo(curl.INFO_RESPONSE_CODE)
+    request:close()
+    resp_body = table_concat(resp_body)
+    resp_headers = parse_headers(resp_headers)
+
+    if filter then
+        return filter(resp_body, code, resp_headers)
+    else
+        return resp_body, code, resp_headers
+    end
 end
 
 return _M

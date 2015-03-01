@@ -3,13 +3,12 @@
 -- @module  luatwit
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable, table_concat, type =
-      assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, table.concat, type
+local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable, type =
+      assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, type
 local oauth = require "oauth_light"
 local json = require "dkjson"
-local curl = require "lcurl"
 local config = require "pl.config"
-local lt_async = require "luatwit.async"
+local http = require "luatwit.async"
 local util = require "luatwit.util"
 
 local _M = {}
@@ -207,55 +206,20 @@ local http_request_args = {
 --- Performs an HTTP request.
 -- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
--- @param args  Table with request arguments (url, body, _async, _callback).
+-- @param args  Table with request arguments (method, url, body, headers, _async, _callback).
 -- @return      Request response, or a `luatwit.async.future` object if the `_async` or `_callback` options were used.
 function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
 
-    local req = curl.easy()
-    req:setopt_url(args.url)
-    :setopt_accept_encoding ""
-    if args.method then req:setopt_customrequest(args.method) end
-    if args.headers then req:setopt_httpheader(util.join_pairs(args.headers, ": ")) end
-
-    if args.body then
-        if type(args.body) == "table" then  -- multipart
-            local form = curl.form()
-            for k, v in pairs(args.body) do
-                if type(v) == "table" then
-                    form:add_buffer(k, v.filename, v.data)
-                else
-                    form:add_content(k, v)
-                end
-            end
-            req:setopt_httppost(form)
-        else
-            req:setopt_postfields(args.body)
-        end
-    end
-
     if args._async or args._callback then
-        local fut = self.async:http_request(req, args._filter)
+        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
-        local resp_body, resp_headers = {}, {}
-        req:setopt_writefunction(util.table_writer, resp_body)
-        :setopt_headerfunction(util.table_writer, resp_headers)
-
-        local code = req:perform():getinfo(curl.INFO_RESPONSE_CODE)
-        req:close()
-        local body = table_concat(resp_body)
-        local headers = util.parse_headers(resp_headers)
-
-        if args._filter then
-            return args._filter(body, code, headers)
-        else
-            return body, code, headers
-        end
+        return http.request(args.method, args.url, args.body, args.headers, args._filter)
     end
 end
 
@@ -300,7 +264,7 @@ function api.new(keys, resources, objects)
             use_auth_header = true,
         },
     }
-    self.async = lt_async.service.new()
+    self.async = http.service.new()
     self._get_client = function() return self end
 
     return setmetatable(self, self)
