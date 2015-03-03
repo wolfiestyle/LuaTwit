@@ -3,8 +3,8 @@
 -- @module  luatwit.http
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local ipairs, pairs, select, setmetatable, table_concat, type =
-      ipairs, pairs, select, setmetatable, table.concat, type
+local ipairs, pairs, select, setmetatable, table_concat, table_remove, type =
+      ipairs, pairs, select, setmetatable, table.concat, table.remove, type
 local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -93,6 +93,105 @@ end
 --
 -- @return      `nil` if successfully cancelled, or the result values if called after the request finished.
 function future:cancel()
+    return unpackn(future_get(self, "_cancel"))
+end
+
+--- @section end
+
+--- Stream object.
+-- It represents an open connection that continuously receives data.
+-- @type stream
+local stream = { _type = "stream" }
+stream.__index = stream
+
+local function no_filter(line)
+    return line
+end
+
+function stream.new(handle, svc, in_buffer, filter)
+    local self = {
+        handle = handle,
+        svc = svc,
+        in_buffer = in_buffer,
+        out_buffer = {},
+        filter = filter or no_filter,
+    }
+
+    function self.get_headers()
+        local headers = self.headers
+        if not headers then
+            local raw = svc.store[handle].headers
+            if #raw > 0 then
+                headers = parse_headers(raw)
+                self.headers = headers
+            end
+        end
+        return headers
+    end
+
+    return setmetatable(self, stream)
+end
+
+-- Extracts the stream data by splitting \r\n separated sections.
+local function process_stream(input, output, filter, get_headers)
+    local buffer = table_concat(input)
+    local endpos = 1
+    for line, pos in buffer:gmatch "(.-)\r\n()" do
+        if #line > 0 then
+            local val, err = filter(line, 200, get_headers())
+            if val == nil then
+                val = { error = err }
+            end
+            output[#output + 1] = val
+        end
+        endpos = pos
+    end
+
+    for k, _ in pairs(input) do
+        input[k] = nil
+    end
+
+    if #buffer > endpos - 1 then
+        input[1] = buffer:sub(endpos)
+    end
+end
+
+--- Checks if the stream connection is open.
+--
+-- @param no_upd    Don't ask the service for new data, just use the current stored state (default `false`).
+-- @return          `true` if the connection is open, or `false` and the response if it's closed.
+function stream:is_active(no_upd)
+    local value = future_get(self, no_upd and "_get_data" or "_poll_data")
+    if value then
+        return false, unpackn(value)
+    end
+    return true
+end
+
+--- Returns the next object in the stream queue.
+--
+-- @param no_upd    Don't ask the service for new data, just use the current stored state (default `false`).
+-- @return          A stream object, or `nil` if there is no more data available.
+function stream:next(no_upd)
+    if not no_upd then
+        self.svc:update()
+        process_stream(self.in_buffer, self.out_buffer, self.filter, self.get_headers)
+    end
+    return table_remove(self.out_buffer, 1)
+end
+
+--- Convenience function for iterating the stream in a for loop.
+--
+-- @return          Stream iterator.
+function stream:iter()
+    return stream.next, self
+end
+
+--- Closes the stream connection.
+--
+-- @return          HTTP request result.
+-- @see future:cancel
+function stream:close()
     return unpackn(future_get(self, "_cancel"))
 end
 
@@ -249,13 +348,18 @@ end
 -- @param body      Post body. Form-encoded string (single part) or table (multipart).
 -- @param headers   Additional headers.
 -- @param filter    Function to be called on the result data.
+-- @param is_stream Indicates if it's a streaming connection or not.
 -- @return          `future` object with the result.
-function service:http_request(method, url, body, headers, filter)
+function service:http_request(method, url, body, headers, filter, is_stream)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     self.store[request] = { body = resp_body, headers = resp_headers }
     self.pending = self.pending + 1
     self.curl_multi:add_handle(request):perform()
-    return future.new(request, self, filter)
+    if is_stream then
+        return stream.new(request, self, resp_body, filter)
+    else
+        return future.new(request, self, filter)
+    end
 end
 
 --- @section end

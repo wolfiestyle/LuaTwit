@@ -234,13 +234,6 @@ _M.search_tweets = GET "search/tweets"
     }
     :type "tweet_search"
 
---( Streaming )--   TODO: streaming won't work with blocking oauth.PerformRequest()
--- POST statuses/filter
--- GET statuses/sample
--- GET statuses/firehose
--- GET user
--- GET site
-
 --( Direct Messages )--
 
 --- Returns the most recent direct messages sent to the authenticating user.
@@ -1045,6 +1038,66 @@ _M.get_rate_limit = GET "application/rate_limit_status"
         resources = "string_list",
     }
     :type "rate_limit"
+
+--( Streaming )--
+
+--- Returns a small random sample of all public statuses.
+_M.stream_sample = GET "statuses/sample"
+    :args{
+        delimited = "string",
+        stall_warnings = "boolean",
+    }
+    :base_url "https://stream.twitter.com/1.1/%s.json"
+    :stream()
+
+--- Returns public statuses that match one or more filter predicates.
+_M.stream_filter = POST "statuses/filter"
+    :args{
+        follow = "integer_list",
+        track = "string_list",
+        locations = "string_list",
+        delimited = "string",
+        stall_warnings = "boolean",
+    }
+    :base_url "https://stream.twitter.com/1.1/%s.json"
+    :stream()
+
+--- Streams messages for a single user, as described in User streams.
+_M.stream_user = GET "user"
+    :args{
+        delimited = "string",
+        stall_warnings = "boolean",
+        with = "string",
+        replies = "string",
+        track = "string_list",
+        locations = "string_list",
+        stringify_friend_ids = "boolean",
+    }
+    :base_url "https://userstream.twitter.com/1.1/%s.json"
+    :stream()
+
+--- Streams messages for a set of users, as described in Site streams.
+_M.stream_site = GET "site"
+    :args{
+        follow = "integer_list",
+        delimited = "string",
+        stall_warnings = "boolean",
+        with = "string",
+        replies = "string",
+        stringify_friend_ids = "boolean",
+    }
+    :base_url "https://sitestream.twitter.com/1.1/%s.json"
+    :stream()
+
+--- Returns all public statuses.
+_M.stream_firehose = GET "statuses/firehose"
+    :args{
+        count = "integer",
+        delimited = "string",
+        stall_warnings = "boolean",
+    }
+    :base_url "https://stream.twitter.com/1.1/%s.json"
+    :stream()
 
 -- Stuff seen in the rate limit info:
 -- "users/derived_info" -> error: Client is not permitted to perform this action.

@@ -92,7 +92,6 @@ function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"
     assert(util.check_args(args, decl.rules, name))
-    assert(not args._callback or self.callback_handler, "need callback handler")
 
     local base_url = decl.base_url or self.resources._base_url
     local url, request = build_request(base_url, decl.path, args, decl.rules and decl.rules.optional, defaults)
@@ -118,7 +117,7 @@ function api:raw_call(decl, args, defaults)
 
     return self:http_request{
         method = decl.method, url = req_url, body = req_body, headers = req_headers,
-        _async = args._async, _callback = args._callback, _filter = parse_response,
+        _async = args._async, _callback = args._callback, _stream = decl.stream, _filter = parse_response,
     }
 end
 
@@ -129,7 +128,7 @@ local function parse_json(self, str, tname)
         return nil, err
     end
     if type(json_data) ~= "table" then
-        return nil, "root json element is not an object"
+        return json_data
     end
     if json_data.errors then
         tname = "error"
@@ -162,7 +161,9 @@ function api:_parse_response(body, res_code, headers, tname)
     if res_code ~= 200 then
         return nil, headers[1]
     end
-    apply_types(self.objects, headers, "headers")
+    if not headers._type then
+        apply_types(self.objects, headers, "headers")
+    end
     local content_type = headers:get_content_type()
     if content_type == "application/json" then
         return parse_json(self, body, tname)
@@ -206,14 +207,15 @@ local http_request_args = {
 --- Performs an HTTP request.
 -- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
--- @param args  Table with request arguments (method, url, body, headers, _async, _callback).
+-- @param args  Table with request arguments (method, url, body, headers, _async, _callback, _stream).
 -- @return      Request response, or a `luatwit.http.future` object if the `_async` or `_callback` options were used.
 function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
+    assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
     if args._async or args._callback then
-        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter)
+        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter, args._stream)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end

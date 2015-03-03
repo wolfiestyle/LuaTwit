@@ -262,6 +262,11 @@ function resource_builder_mt:base_url(url)
     return self
 end
 
+function resource_builder_mt:stream()
+    self.stream = true
+    return self
+end
+
 function resource_builder_mt:finish(res_name, mt)
     self.name = res_name
     return setmetatable(self, mt)
