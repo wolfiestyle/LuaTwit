@@ -66,9 +66,6 @@ for name, _ in pairs(objects) do
     obj.save = obj.save or table_save
 end
 
--- avoid headers spam
-client.objects.headers.__tostring = nil
-
 -- lists the keys of a table and the type of its values
 function keys(obj)
     if type(obj) ~= "table" then
