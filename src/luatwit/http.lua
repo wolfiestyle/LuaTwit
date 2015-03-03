@@ -13,6 +13,18 @@ local unpackn = function(t) return table_unpack(t, 1, t.n) end
 
 local _M = {}
 
+-- HTTP Headers returned by the requests.
+local headers_mt = {}
+headers_mt.__index = headers_mt
+
+-- Extracts the content-type info from the HTTP headers.
+function headers_mt:get_content_type()
+    local content_type = self["content-type"]
+    if content_type then
+        return content_type:match "^[^;]+"
+    end
+end
+
 -- Extracts key-value pairs from a HTTP headers list.
 local function parse_headers(list)
     local headers = {}
@@ -27,7 +39,7 @@ local function parse_headers(list)
             headers[k:lower()] = v  -- case insensitive
         end
     end
-    return headers
+    return setmetatable(headers, headers_mt)
 end
 
 --- Future object.

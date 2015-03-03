@@ -49,31 +49,6 @@ function access_token:save(filename)
     return self
 end
 
---- HTTP Headers returned by the API calls.
-_M.headers = new_type()
-local headers = _
-
---- Extracts the content-type info from the HTTP headers.
---
--- @return          The `Content-Type` value, or `nil` if not present.
-function headers:get_content_type()
-    local content_type = self["content-type"]
-    if content_type then
-        return content_type:match "^[^;]+"
-    end
-end
-
---- Extracts the rate limit info from the HTTP headers.
---
--- @return          Table with rate limit values.
-function headers:get_rate_limit()
-    return {
-        remaining = self["x-rate-limit-remaining"],
-        limit = self["x-rate-limit-limit"],
-        reset = self["x-rate-limit-reset"],
-    }
-end
-
 --- Error description returned by the API calls.
 _M.error = new_type()
 local error = _

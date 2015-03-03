@@ -161,9 +161,6 @@ function api:_parse_response(body, res_code, headers, tname)
     if res_code ~= 200 then
         return nil, headers[1]
     end
-    if not headers._type then
-        apply_types(self.objects, headers, "headers")
-    end
     local content_type = headers:get_content_type()
     if content_type == "application/json" then
         return parse_json(self, body, tname)
