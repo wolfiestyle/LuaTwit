@@ -1,6 +1,6 @@
 # LuaTwit
 
-Lua library for accessing the Twitter REST API v1.1.
+Lua library for accessing the Twitter REST and Streaming API v1.1.
 It implements simple parameter checking and returns metatable-typed JSON data.
 
 ## Dependencies

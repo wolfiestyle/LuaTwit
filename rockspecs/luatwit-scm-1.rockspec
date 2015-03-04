@@ -6,9 +6,9 @@ source = {
 }
 
 description = {
-    summary = "Lua library for accessing the Twitter REST API v1.1",
+    summary = "Lua library for accessing the Twitter REST and Streaming API v1.1",
     detailed = [[
-        Lua library for accessing the Twitter REST API v1.1.
+        Lua library for accessing the Twitter REST and Streaming API v1.1.
         It implements simple parameter checking and returns metatable-typed JSON data.
     ]],
     homepage = "https://github.com/darkstalker/LuaTwit",

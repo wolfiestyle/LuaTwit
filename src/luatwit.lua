@@ -1,4 +1,4 @@
---- Lua library for accessing the Twitter REST API v1.1
+--- Lua library for accessing the Twitter REST and Streaming API v1.1
 --
 -- @module  luatwit
 -- @author  darkstalker <https://github.com/darkstalker>
