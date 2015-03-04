@@ -39,25 +39,35 @@ local function build_request(base_url, path, args, rules, defaults)
     return base_url:format(path), request
 end
 
--- Applies type metatables to the supplied JSON data recursively.
-local function apply_types(objects, node, tname)
-    local type_decl = objects[tname]
-    assert(type(type_decl) == "table", "invalid object type")
-    if type(node) == "table" then
-        setmetatable(node, type_decl)
+-- Guesses an object's type by checking known field names.
+local function guess_type(self, data)
+    for field, tname in pairs(self.type_hints) do
+        if data[field] ~= nil then
+            return tname
+        end
     end
+end
+
+-- Applies type metatables to the supplied JSON data recursively.
+local function apply_types(self, node, tname)
+    if tname == "_guess" then
+        tname = guess_type(self, node)
+    end
+    local type_decl = self.objects[tname]
+    if type_decl == nil then return node end
+    setmetatable(node, type_decl)
     local st = type_decl._subtypes
     if st == nil then return node end
     local type_st = type(st)
     if type_st == "string" then
         for _, item in pairs(node) do
-            apply_types(objects, item, st)
+            apply_types(self, item, st)
         end
     elseif type_st == "table" then
         for k, tn in pairs(st) do
             local item = node[k]
             if item ~= nil then
-                apply_types(objects, item, tn)
+                apply_types(self, item, tn)
             end
         end
     else
@@ -106,7 +116,7 @@ function api:raw_call(decl, args, defaults)
             if next(request) then
                 data._request = request
             end
-            if data._type == "error" then
+            if not decl.stream and data._type == "error" then
                 return nil, data, headers
             end
         end
@@ -134,7 +144,7 @@ local function parse_json(self, str, tname)
         tname = "error"
     end
     if tname then
-        apply_types(self.objects, json_data, tname)
+        apply_types(self, json_data, tname)
         set_client_field(json_data, self._get_client)
     end
     return json_data
@@ -148,7 +158,7 @@ local function parse_oauth_token(self, body, tname)
     end
     self.oauth_config.oauth_token = token.oauth_token
     self.oauth_config.oauth_token_secret = token.oauth_token_secret
-    return apply_types(self.objects, token, "access_token")
+    return apply_types(self, token, "access_token")
 end
 
 -- Parses the response body according to the content-type value.
@@ -254,6 +264,7 @@ function api.new(keys, resources, objects)
         __index = api_index,
         resources = resources or require("luatwit.resources"),
         objects = objects or require("luatwit.objects"),
+        type_hints = {},
         oauth_config = {
             consumer_key = keys.consumer_key,
             consumer_secret = keys.consumer_secret,
@@ -265,6 +276,14 @@ function api.new(keys, resources, objects)
     }
     self.async = http.service.new()
     self._get_client = function() return self end
+
+    -- collect type hints
+    for name, item in pairs(self.objects) do
+        local hint = item._type_hint
+        if hint then
+            self.type_hints[hint] = name
+        end
+    end
 
     return setmetatable(self, self)
 end

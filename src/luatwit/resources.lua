@@ -24,6 +24,7 @@ local resource_base = {
     default_args = {
         stringify_ids = true,
         oauth_callback = "oob",
+        stringify_friend_ids = true,
     },
     __call = util.resource_call,
 }
@@ -1047,6 +1048,7 @@ _M.stream_sample = GET "statuses/sample"
         delimited = "string",
         stall_warnings = "boolean",
     }
+    :type "_guess"
     :base_url "https://stream.twitter.com/1.1/%s.json"
     :stream()
 
@@ -1059,6 +1061,7 @@ _M.stream_filter = POST "statuses/filter"
         delimited = "string",
         stall_warnings = "boolean",
     }
+    :type "_guess"
     :base_url "https://stream.twitter.com/1.1/%s.json"
     :stream()
 
@@ -1073,6 +1076,7 @@ _M.stream_user = GET "user"
         locations = "string_list",
         stringify_friend_ids = "boolean",
     }
+    :type "_guess"
     :base_url "https://userstream.twitter.com/1.1/%s.json"
     :stream()
 
@@ -1086,6 +1090,7 @@ _M.stream_site = GET "site"
         replies = "string",
         stringify_friend_ids = "boolean",
     }
+    :type "_guess"
     :base_url "https://sitestream.twitter.com/1.1/%s.json"
     :stream()
 
@@ -1096,6 +1101,7 @@ _M.stream_firehose = GET "statuses/firehose"
         delimited = "string",
         stall_warnings = "boolean",
     }
+    :type "_guess"
     :base_url "https://stream.twitter.com/1.1/%s.json"
     :stream()
 

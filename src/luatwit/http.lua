@@ -152,7 +152,7 @@ local function process_stream(input, output, filter, get_headers)
         if #line > 0 then
             local val, err = filter(line, 200, get_headers())
             if val == nil then
-                val = { error = err }
+                val = { error = err, _type = "internal_error" }
             end
             output[#output + 1] = val
         end

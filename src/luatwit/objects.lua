@@ -18,9 +18,10 @@ object_base.__index = object_base
 local _
 
 -- Creates a new type table.
-local function new_type(subtypes)
+local function new_type(subtypes, type_hint)
     local self = {
         _subtypes = subtypes,
+        _type_hint = type_hint,
     }
     self.__index = self
     _ = self
@@ -310,7 +311,7 @@ end
 
 --- Tweet object.
 -- @type tweet
-_M.tweet = new_type{ user = "user", entities = "entities", retweeted_status = "tweet" }
+_M.tweet = new_type({ user = "user", entities = "entities", retweeted_status = "tweet" }, "favorited")
 local tweet = _
 
 -- Calls an API method referencing this tweet.
@@ -427,7 +428,7 @@ end
 
 --- Direct message object.
 -- @type dm
-_M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }
+_M.dm = new_type({ recipient = "user", sender = "user", entities = "entities" }, "recipient")
 local dm = _
 
 --- Sends a reply to this DM.
@@ -577,7 +578,7 @@ _M.suggestion_category_list = new_type("suggestion_category")
 
 --- User list.
 -- @type userlist
-_M.userlist = new_type{ user = "user" }
+_M.userlist = new_type({ user = "user" }, "member_count")
 local userlist = _
 
 -- Calls an API method referencing this user list.
@@ -893,6 +894,36 @@ function rate_limit:get_for(obj)
         end
     end
 end
+
+--- Stream message: indicates that a given Tweet has been deleted.
+_M.tweet_deleted = new_type(nil, "delete")
+
+--- Stream message: indicates that geolocated data must be stripped from a range of Tweets.
+_M.scrub_geo = new_type(nil, "scrub_geo")
+
+--- Stream message: indicates that a filtered stream has matched more Tweets than its current rate limit allows to be delivered.
+_M.stream_limit = new_type(nil, "limit")
+
+--- Stream message: tweet witheld.
+_M.tweet_withheld = new_type(nil, "status_withheld")
+
+--- Stream message: user witheld.
+_M.user_withheld = new_type(nil, "user_withheld")
+
+--- Stream message: disconnect reason.
+_M.stream_disconnect = new_type(nil, "disconnect")
+
+--- Stream message: stall warning / too many follows.
+_M.stream_warning = new_type(nil, "warning")
+
+--- Stream message: List of following user ids.
+_M.friend_list = new_type({ friends = "userid_array" }, "friends")
+
+--- Stream message: List of following user ids (stringified).
+_M.friend_list_str = new_type({ friends_str = "userid_array" }, "friends_str")
+
+--- Stream message: misc events.
+_M.stream_event = new_type({ source = "user", target = "user", target_object = "_guess" }, "event")
 
 
 -- fill in the _type field
