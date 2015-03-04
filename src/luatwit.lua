@@ -23,13 +23,17 @@ _M.api = api
 local function build_request(base_url, path, args, rules, defaults)
     local request = {}
     if defaults then
-        util.map_copy(request, defaults, function(v, k)
-            if rules[k] ~= nil then return v end
-        end)
+        for k, v in pairs(defaults) do
+            if rules[k] ~= nil then
+                request[k] = v
+            end
+        end
     end
-    util.map_copy(request, args, function(v, k)
-        if k:sub(1, 1) ~= "_" then return v end
-    end)
+    for k, v in pairs(args) do
+        if k:sub(1, 1) ~= "_" then
+            request[k] = v
+        end
+    end
     path = path:gsub(":([%w_]+)", function(key)
         local val = request[key]
         assert(val ~= nil, "invalid token ':" .. key .. "' in resource URL")

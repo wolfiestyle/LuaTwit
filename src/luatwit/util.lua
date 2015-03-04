@@ -21,26 +21,6 @@ function _M.type(obj)
     end
 end
 
---- Copies key-value pairs from one table to another and applies a function to the values.
--- @param dest      Destination table.
--- @param src       Source table.
--- @param fn        Function applied to values before assigning them.
---                  It's called as `fn(value, key)` for each key in `src`,
---                  then the result is assigned to `dest[key]`, unless it's `nil`.
--- @return          The `dest` argument.
-function _M.map_copy(dest, src, fn)
-    if not fn then
-        fn = function(v) return v end
-    end
-    for k, v in pairs(src) do
-        local res = fn(v, k)
-        if res ~= nil then
-            dest[k] = res
-        end
-    end
-    return dest
-end
-
 -- Returns a string with the arguments on a set of rules.
 local function build_args_str(rules, only_req)
     local res = {}
