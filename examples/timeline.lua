@@ -29,8 +29,9 @@ for _, tweet in ipairs(tl) do
         footer[#footer + 1] = "in reply to @" .. tweet.in_reply_to_screen_name
     end
     footer[#footer + 1] = "via " .. tweet.source:match(">(.+)</a>$")
+    local text = tweet.text:gsub("&(%a+);", { lt = "<", gt = ">", amp = "&" })
 
-    print(rt .. ("@$screen_name ($name)"):gsub("$([%w_]+)", tweet.user))
-    print(tweet.text)
+    print(string.format("%s@%s (%s)", rt, tweet.user.screen_name, tweet.user.name))
+    print(text)
     print("> " .. table.concat(footer, ", ") .. "\n")
 end

@@ -21,7 +21,7 @@ local function format_tweet(tweet)
         rt = "[RT] "
         tweet = tweet.retweeted_status
     end
-    local text = tweet.text:gsub("&(%a+);", { lt = "<", gt = ">" })
+    local text = tweet.text:gsub("&(%a+);", { lt = "<", gt = ">", amp = "&" })
     return string.format("%s<%s> %s" , rt, tweet.user.screen_name, text)
 end
 
