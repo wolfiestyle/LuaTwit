@@ -61,6 +61,7 @@
   <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
   <li><a href="../examples/repl.lua.html">repl.lua</a></li>
   <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/stream.lua.html">stream.lua</a></li>
   <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
   <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
   <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
@@ -85,14 +86,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#access_token:save">access_token:save (filename)</a></td>
 	<td class="summary">Saves the content of an <a href="../modules/luatwit.objects.html#access_token">access_token</a> object into a file.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#headers:get_content_type">headers:get_content_type ()</a></td>
-	<td class="summary">Extracts the content-type info from the HTTP headers.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#headers:get_rate_limit">headers:get_rate_limit ()</a></td>
-	<td class="summary">Extracts the rate limit info from the HTTP headers.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#error:__tostring">error:__tostring ()</a></td>
@@ -204,10 +197,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#access_token">access_token</a></td>
 	<td class="summary">Access token returned by <code>luatwit.api:confirm_login</code>.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#headers">headers</a></td>
-	<td class="summary">HTTP Headers returned by the API calls.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#error">error</a></td>
@@ -364,6 +353,46 @@
 	<tr>
 	<td class="name" nowrap><a href="#rate_limit">rate_limit</a></td>
 	<td class="summary">Rate limit info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet_deleted">tweet_deleted</a></td>
+	<td class="summary">Stream message: indicates that a given Tweet has been deleted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#scrub_geo">scrub_geo</a></td>
+	<td class="summary">Stream message: indicates that geolocated data must be stripped from a range of Tweets.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream_limit">stream_limit</a></td>
+	<td class="summary">Stream message: indicates that a filtered stream has matched more Tweets than its current rate limit allows to be delivered.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet_withheld">tweet_withheld</a></td>
+	<td class="summary">Stream message: tweet witheld.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_withheld">user_withheld</a></td>
+	<td class="summary">Stream message: user witheld.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream_disconnect">stream_disconnect</a></td>
+	<td class="summary">Stream message: disconnect reason.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream_warning">stream_warning</a></td>
+	<td class="summary">Stream message: stall warning / too many follows.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#friend_list">friend_list</a></td>
+	<td class="summary">Stream message: List of following user ids.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#friend_list_str">friend_list_str</a></td>
+	<td class="summary">Stream message: List of following user ids (stringified).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream_event">stream_event</a></td>
+	<td class="summary">Stream message: misc events.</td>
 	</tr>
 </table>
 <h2><a href="#Class_user">Class user </a></h2>
@@ -587,44 +616,6 @@
     <ol>
 
         The <a href="../modules/luatwit.objects.html#access_token">access_token</a> itself.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "headers:get_content_type"></a>
-    <strong>headers:get_content_type ()</strong>
-    </dt>
-    <dd>
-    Extracts the content-type info from the HTTP headers.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The <code>Content-Type</code> value, or <code>nil</code> if not present.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "headers:get_rate_limit"></a>
-    <strong>headers:get_rate_limit ()</strong>
-    </dt>
-    <dd>
-    Extracts the rate limit info from the HTTP headers.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Table with rate limit values.
     </ol>
 
 
@@ -1205,20 +1196,6 @@
 
 </dd>
     <dt>
-    <a name = "headers"></a>
-    <strong>headers</strong>
-    </dt>
-    <dd>
-    HTTP Headers returned by the API calls.
-
-
-
-
-
-
-
-</dd>
-    <dt>
     <a name = "error"></a>
     <strong>error</strong>
     </dt>
@@ -1756,6 +1733,146 @@
     </dt>
     <dd>
     Rate limit info.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet_deleted"></a>
+    <strong>tweet_deleted</strong>
+    </dt>
+    <dd>
+    Stream message: indicates that a given Tweet has been deleted.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "scrub_geo"></a>
+    <strong>scrub_geo</strong>
+    </dt>
+    <dd>
+    Stream message: indicates that geolocated data must be stripped from a range of Tweets.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream_limit"></a>
+    <strong>stream_limit</strong>
+    </dt>
+    <dd>
+    Stream message: indicates that a filtered stream has matched more Tweets than its current rate limit allows to be delivered.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet_withheld"></a>
+    <strong>tweet_withheld</strong>
+    </dt>
+    <dd>
+    Stream message: tweet witheld.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user_withheld"></a>
+    <strong>user_withheld</strong>
+    </dt>
+    <dd>
+    Stream message: user witheld.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream_disconnect"></a>
+    <strong>stream_disconnect</strong>
+    </dt>
+    <dd>
+    Stream message: disconnect reason.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream_warning"></a>
+    <strong>stream_warning</strong>
+    </dt>
+    <dd>
+    Stream message: stall warning / too many follows.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "friend_list"></a>
+    <strong>friend_list</strong>
+    </dt>
+    <dd>
+    Stream message: List of following user ids.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "friend_list_str"></a>
+    <strong>friend_list_str</strong>
+    </dt>
+    <dd>
+    Stream message: List of following user ids (stringified).
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream_event"></a>
+    <strong>stream_event</strong>
+    </dt>
+    <dd>
+    Stream message: misc events.
 
 
 
@@ -2926,7 +3043,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-03-03 02:10:14 </i>
+<i style="float:right;">Last updated 2015-03-03 22:50:15 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
