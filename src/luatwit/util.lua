@@ -8,17 +8,13 @@ local assert, error, ipairs, pairs, setmetatable, table_concat, tonumber, tostri
 
 local _M = {}
 
---- Gets the type of the supplied object or the _type value if present.
+--- Gets the type of the supplied object.
 --
 -- @param obj       Any value.
--- @return          The type of the supplied object.
+-- @return          The `_type` field if it's a table. If not present or not a table, the Lua type.
 function _M.type(obj)
     local t_obj = type(obj)
-    if t_obj == "table" then
-        return obj._type or t_obj
-    else
-        return t_obj
-    end
+    return t_obj == "table" and obj._type or t_obj
 end
 
 -- Returns a string with the arguments on a set of rules.

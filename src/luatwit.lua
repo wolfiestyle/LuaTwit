@@ -13,6 +13,9 @@ local util = require "luatwit.util"
 
 local _M = {}
 
+-- export function util.type
+_M.type = util.type
+
 --- Class prototype that implements the API calls.
 -- Methods are created on demand from the definitions in the `self.resources` table (by default `luatwit.resources`).
 -- @type api

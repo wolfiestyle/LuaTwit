@@ -4,7 +4,6 @@
 --
 local cfg = require "_config"()
 local twitter = require "luatwit"
-local util = require "luatwit.util"
 local pretty = require "pl.pretty"
 local socket = require "socket"
 
@@ -35,7 +34,7 @@ local n = 0
 while stream:is_active() do
     -- iterate over the received items
     for data in stream:iter() do
-        local t_data = util.type(data)
+        local t_data = twitter.type(data)
         -- tweet
         if t_data == "tweet" then
             print(format_tweet(data))
@@ -45,7 +44,7 @@ while stream:is_active() do
         -- stream events (blocks, favs, follows, list operations, profile updates)
         elseif t_data == "stream_event" then
             local desc = ""
-            local t_obj = util.type(data.target_object)
+            local t_obj = twitter.type(data.target_object)
             if t_obj == "tweet" then
                 desc = format_tweet(data.target_object)
             elseif t_obj == "userlist" then
