@@ -20,7 +20,6 @@ dependencies = {
     "dkjson >= 2.5",
     "lua-curl >= 0.3.1",
     "oauth_light >= 0.1",
-    "penlight >= 1.3.1",
 }
 
 build = {

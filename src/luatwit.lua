@@ -7,7 +7,6 @@ local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable
       assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, type
 local oauth = require "oauth_light"
 local json = require "dkjson"
-local config = require "pl.config"
 local http = require "luatwit.http"
 local util = require "luatwit.util"
 
@@ -295,12 +294,12 @@ function api.new(keys, resources, objects)
     return setmetatable(self, self)
 end
 
-local oauth_key_names = { "consumer_key", "consumer_secret", "oauth_token", "oauth_token_secret" }
-
 --- @section end
 
+local oauth_key_names = { "consumer_key", "consumer_secret", "oauth_token", "oauth_token_secret" }
+
 --- Helper to load OAuth keys from text files.
--- Key files are loaded with `pl.config`.
+-- Key files are loaded as `key = value` pairs.
 -- It also accepts tables as arguments (useful when using `require`).
 --
 -- @param ...   Filenames (config files) or tables with the keys to load.
@@ -311,9 +310,7 @@ function _M.load_keys(...)
         local source = select(i, ...)
         local ts = type(source)
         if ts == "string" then
-            local cfg, err = config.read(source, { trim_quotes = true })
-            assert(cfg, err)
-            source = cfg
+            source = util.read_config(source)
         elseif ts == "nil" then
             source = {}
         elseif ts ~= "table" then

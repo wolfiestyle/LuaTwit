@@ -8,9 +8,8 @@ It implements simple parameter checking and returns metatable-typed JSON data.
 - dkjson
 - lua-curl
 - oauth_light
-- penlight
 
-Also you'll need `ldoc` if you want to build the docs.
+Also you'll need `ldoc` if you want to build the docs and `penlight` to run the examples.
 
 ## Documentation
 

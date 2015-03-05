@@ -3,8 +3,8 @@
 -- @module  luatwit.util
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, ipairs, pairs, setmetatable, table_concat, tonumber, tostring, type =
-      assert, error, ipairs, pairs, setmetatable, table.concat, tonumber, tostring, type
+local assert, error, io_lines, ipairs, pairs, setmetatable, table_concat, tonumber, tostring, type =
+      assert, error, io.lines, ipairs, pairs, setmetatable, table.concat, tonumber, tostring, type
 
 local _M = {}
 
@@ -259,6 +259,26 @@ function _M.resource_builder(method, path)
         path = path,
     }
     return setmetatable(res, resource_builder_mt)
+end
+
+--- Reads a simple `key = value` style config file.
+--
+-- @param filename  File to be read.
+-- @return          Table with the config values.
+function _M.read_config(filename)
+    local cfg = {}
+    local n = 1
+    for line in io_lines(filename) do
+        if line:sub(1, 1) ~= "#" then
+            local k, v = line:match "^%s*([^%s=]+)%s*=%s*(.*)"
+            if not k then
+                error("error parsing config at line " .. n)
+            end
+            cfg[k] = v
+        end
+        n = n + 1
+    end
+    return cfg
 end
 
 return _M
