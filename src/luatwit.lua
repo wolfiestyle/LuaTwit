@@ -101,10 +101,10 @@ end
 -- @param decl      Resource declaration (from `luatwit.resources`).
 -- @param args      Table with the method arguments.
 -- @param defaults  Default method arguments.
--- @return      A table with the decoded JSON data from the response, or `nil` on error.
---              If the option `_async` or `_callback` is set, instead it returns a `luatwit.http.future` object.
--- @return      HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
--- @return      If an API error ocurred, the HTTP headers of the request.
+-- @return          A table with the decoded JSON data from the response, or `nil` on error.
+--                  If the option `_async` or `_callback` is set, instead it returns a `luatwit.http.future` object.
+-- @return          HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
+-- @return          If an API error ocurred, the HTTP headers of the request.
 function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"

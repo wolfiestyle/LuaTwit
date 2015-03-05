@@ -533,8 +533,6 @@ _M.search_users = GET "users/search"
     }
     :type "user_list"
 
---[[ These methods always return the error "Your credentials do not allow access to this resource".
-     Not documented in official site, so possibly retired or internal use.
 --- Returns a collection of users that the specified user can "contribute" to.
 _M.get_contributees = GET "users/contributees"
     :args{
@@ -554,7 +552,6 @@ _M.get_contributors = GET "users/contributors"
         skip_status = "boolean",
     }
     :type "user_list"
-]]
 
 --- Removes the uploaded profile banner for the authenticating user.
 _M.remove_profile_banner = POST "account/remove_profile_banner"
@@ -1104,13 +1101,6 @@ _M.stream_firehose = GET "statuses/firehose"
     :type "_guess"
     :base_url "https://stream.twitter.com/1.1/%s.json"
     :stream()
-
--- Stuff seen in the rate limit info:
--- "users/derived_info" -> error: Client is not permitted to perform this action.
--- "device/token" -> { token = <random string> }
--- "help/settings" -> lots of stuff, seem to be propietary app data
--- "direct_messages/sent_and_received" -> error: Sorry, that page does not exist
--- "account/login_verification_enrollment" -> error: Client is not permitted to perform this action.
 
 
 -- fill in the name field and set the mt
