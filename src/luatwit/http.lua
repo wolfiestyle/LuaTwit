@@ -262,6 +262,14 @@ function service:update()
     end
 end
 
+--- Waits until data is received.
+--
+-- @param timeout   Time to wait, in milliseconds (default 1000).
+-- @return          Number of objects with data to be read.
+function service:wait(timeout)
+    return self.curl_multi:wait(timeout)
+end
+
 -- Non-blocking consumer
 function service:_poll_data(handle)
     local data = self.store[handle]
@@ -281,7 +289,7 @@ function service:_wait_data(handle)
         while true do
             self:update()
             if data.code ~= nil then break end
-            self.curl_multi:wait(1000)
+            self:wait()
         end
         self.store[handle] = nil
     end

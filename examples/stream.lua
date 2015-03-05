@@ -5,7 +5,6 @@
 local cfg = require "_config"()
 local twitter = require "luatwit"
 local pretty = require "pl.pretty"
-local socket = require "socket"
 
 -- initialize the twitter client
 local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
@@ -69,5 +68,6 @@ while stream:is_active() do
         stream:close()
     end
 
-    socket.sleep(0.25)
+    -- wait for data to arrive
+    client.async:wait()
 end
