@@ -174,11 +174,11 @@ function api:_parse_response(body, res_code, headers, tname)
     if body == nil then
         return nil, res_code
     end
-    -- HTTP request failed
-    if res_code ~= 200 then
+    local content_type = headers:get_content_type()
+    -- HTTP request failed, the error message is returned as json
+    if res_code ~= 200 and content_type ~= "application/json" then
         return nil, headers[1]
     end
-    local content_type = headers:get_content_type()
     if content_type == "application/json" then
         return parse_json(self, body, tname)
     elseif tname == "access_token" then -- twitter returns "text/html" as content-type for the tokens..
