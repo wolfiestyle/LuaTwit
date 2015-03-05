@@ -7,35 +7,40 @@ exec lua -i "$0" "$@"
 -- It uses pl.pretty and custom __tostring methods to display the returned data.
 --
 local cfg = require "_config"()
-pl = require "pl.import_into" ()
-pretty = pl.pretty
+pretty = require "pl.pretty"
 twitter = require "luatwit"
-objects = require "luatwit.objects"
 
 -- initialize the twitter client
-oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
 client = twitter.api.new(oauth_params)
 
 -- pretty print for resource items
-client.resources._resource_base.__tostring = pl.pretty.write
+client.resources._resource_base.__tostring = pretty.write
 
 -- pretty print for tweets
 function client.objects.tweet:__tostring()
-    return "<" .. self.user.screen_name .. "> " .. self.text
+    local rt = ""
+    if self.retweeted_status then
+        rt = "[RT] "
+        self = self.retweeted_status
+    end
+    local text = self.text:gsub("&(%a+);", { lt = "<", gt = ">", amp = "&" })
+    return string.format("%s<%s> %s" , rt, self.user.screen_name, text)
 end
 
 -- pretty print for DMs
 function client.objects.dm:__tostring()
-    return "<" .. self.sender.screen_name .. "> (to: " .. self.recipient.screen_name .. ") " .. self.text
+    return string.format("<%s> (to: %s) %s", self.sender.screen_name, self.recipient.screen_name, self.text)
 end
 
 -- pretty print for user profiles
-local user_tmpl =
-[[Name: @$screen_name ($name)
+local user_tmpl = [[
+Name: @$screen_name ($name)
 Bio: $description
 Location: $location
 Followers: $followers_count, Following: $friends_count, Listed: $listed_count
-Tweets: $statuses_count
+Tweets: $statuses_count, Favs: $favourites_count
+Member since: $created_at
 ---]]
 function client.objects.user:__tostring()
     return (user_tmpl:gsub("$([%w_]+)", self))
@@ -58,8 +63,7 @@ function table_save(tbl, filename)
 end
 
 -- add default __tostring methods to all objects
-for name, _ in pairs(objects) do
-    local obj = client.objects[name]
+for name, obj in pairs(client.objects) do
     if not obj.__tostring then
         obj.__tostring = name:match("_list$") and list_tostring or pretty.write
     end
