@@ -12,7 +12,8 @@ local util = require "luatwit.util"
 
 local _M = {}
 
--- export function util.type
+--- Gets the type of the supplied object.
+-- @see luatwit.util.type
 _M.type = util.type
 
 --- Class prototype that implements the API calls.
