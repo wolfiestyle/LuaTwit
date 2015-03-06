@@ -3,7 +3,7 @@ version = "0.3.0-1"
 
 source = {
     url = "git://github.com/darkstalker/LuaTwit.git",
-    tags = "0.3.0",
+    tag = "0.3.0",
 }
 
 description = {
