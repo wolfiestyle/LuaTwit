@@ -60,39 +60,28 @@ local function apply_types(self, node, tname)
     if tname == "_guess" then
         tname = guess_type(self, node)
     end
+    if tname == nil then return node end
     local type_decl = self.objects[tname]
-    if type_decl == nil then return node end
-    setmetatable(node, type_decl)
     local st = type_decl._subtypes
-    if st == nil then return node end
-    local type_st = type(st)
-    if type_st == "string" then
-        for _, item in pairs(node) do
-            apply_types(self, item, st)
-        end
-    elseif type_st == "table" then
-        for k, tn in pairs(st) do
-            local item = node[k]
-            if item ~= nil then
-                apply_types(self, item, tn)
+    if st ~= nil then
+        local type_st = type(st)
+        if type_st == "string" then
+            for _, item in ipairs(node) do
+                apply_types(self, item, st)
             end
-        end
-    else
-        error "subtype declaration must be string or table"
-    end
-    return node
-end
-
--- Sets the _get_client field on each object recursively.
-local function set_client_field(node, value)
-    if node._type then
-        node._get_client = value
-    end
-    for _, item in pairs(node) do
-        if type(item) == "table" then
-            set_client_field(item, value)
+        elseif type_st == "table" then
+            for k, tn in pairs(st) do
+                local item = node[k]
+                if item ~= nil then
+                    apply_types(self, item, tn)
+                end
+            end
+        else
+            error "subtype declaration must be string or table"
         end
     end
+    node._get_client = self._get_client
+    return setmetatable(node, type_decl)
 end
 
 --- Generic call to the Twitter API.
@@ -152,7 +141,6 @@ local function parse_json(self, str, tname)
     end
     if tname then
         apply_types(self, json_data, tname)
-        set_client_field(json_data, self._get_client)
     end
     return json_data
 end
@@ -280,8 +268,8 @@ function api.new(keys, resources, objects)
             sig_method = "HMAC-SHA1",
             use_auth_header = true,
         },
+        async = http.service.new(),
     }
-    self.async = http.service.new()
     self._get_client = function() return self end
 
     -- collect type hints
