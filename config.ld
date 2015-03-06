@@ -1,6 +1,6 @@
 project = "LuaTwit"
 title = "LuaTwit reference"
-description = "LuaTwit library"
+description = "LuaTwit library 0.3"
 backtick_references = true
 file = "src"
 examples = { "examples", exclude = { "examples/_config.lua" } }
