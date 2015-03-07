@@ -128,7 +128,7 @@ function api:raw_call(decl, args, defaults)
 end
 
 -- Parses a JSON string and applies type metatables.
-local function parse_json(self, str, tname)
+local function parse_json(self, str, tname, code)
     local json_data, _, err = json.decode(str, nil, nil, nil)
     if json_data == nil then
         return nil, err
@@ -136,7 +136,7 @@ local function parse_json(self, str, tname)
     if type(json_data) ~= "table" then
         return json_data
     end
-    if json_data.errors then
+    if code ~= 200 then
         tname = "error"
     end
     if tname then
@@ -168,7 +168,7 @@ function api:_parse_response(body, res_code, headers, tname)
         return nil, headers[1]
     end
     if content_type == "application/json" then
-        return parse_json(self, body, tname)
+        return parse_json(self, body, tname, res_code)
     elseif tname == "access_token" then -- twitter returns "text/html" as content-type for the tokens..
         return parse_oauth_token(self, body, tname)
     else
