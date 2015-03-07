@@ -89,9 +89,10 @@ end
 --
 -- @param decl      Resource declaration (from `luatwit.resources`).
 -- @param args      Table with the method arguments.
--- @param defaults  Default method arguments.
+-- @param defaults  Default method arguments (used internally).
 -- @return          A table with the decoded JSON data from the response, or `nil` on error.
 --                  If the option `_async` or `_callback` is set, instead it returns a `luatwit.http.future` object.
+--                  If a streaming method is called, instead it returns a `luatwit.http.stream` object.
 -- @return          HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return          If an API error ocurred, the HTTP headers of the request.
 function api:raw_call(decl, args, defaults)
@@ -186,7 +187,7 @@ end
 
 --- Sets the callback handler function.
 -- The callback handler is called after every async request that uses the `_callback` option. This function has to do the
--- necessary setup to watch the future and send the result to the callback when it's ready.
+-- necessary setup to watch the future/stream and send the result to the callback when it's ready.
 -- This way we can work with external event loops in a transparent way.
 --
 -- @param fn    Callback handler function. This is called as `fn(fut, callback)`, where `fut` is the result from an async
@@ -210,7 +211,8 @@ local http_request_args = {
 -- This method allows using the library features (like callback_handler) with regular HTTP requests.
 --
 -- @param args  Table with request arguments (method, url, body, headers, _async, _callback, _stream).
--- @return      Request response, or a `luatwit.http.future` object if the `_async` or `_callback` options were used.
+-- @return      Request response.
+-- @see luatwit.http.request, luatwit.http.service:http_request
 function api:http_request(args)
     assert(util.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
@@ -244,7 +246,7 @@ local api_new_args = {
 }
 
 --- Creates a new `api` object with the supplied keys.
--- An object created with only the consumer keys must call `api:start_login` and `api:confirm_login` to get the access token,
+-- An object created with only the consumer keys must call `api:oauth_request_token` and `api:oauth_access_token` to get the access token,
 -- otherwise it won't be able to make API calls.
 --
 -- @param keys      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
