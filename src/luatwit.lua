@@ -248,11 +248,12 @@ local api_new_args = {
 -- otherwise it won't be able to make API calls.
 --
 -- @param keys      Table with the OAuth keys (consumer_key, consumer_secret, oauth_token, oauth_token_secret).
+-- @param http_svc  HTTP service instance (default new instance of `luatwit.http.service`).
 -- @param resources Table with the API interface definition (default `luatwit.resources`).
 -- @param objects   Table with the API objects definition (default `luatwit.objects`).
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
-function api.new(keys, resources, objects)
+function api.new(keys, http_svc, resources, objects)
     assert(util.check_args(keys, api_new_args, "api.new"))
 
     local self = {
@@ -268,7 +269,7 @@ function api.new(keys, resources, objects)
             sig_method = "HMAC-SHA1",
             use_auth_header = true,
         },
-        async = http.service.new(),
+        async = http_svc or http.service.new(),
     }
     self._get_client = function() return self end
 
