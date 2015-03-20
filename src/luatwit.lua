@@ -130,7 +130,7 @@ end
 
 -- Parses a JSON string and applies type metatables.
 local function parse_json(self, str, tname, code)
-    local json_data, _, err = json.decode(str, nil, nil, nil)
+    local json_data, _, err = json.decode(str, 1, _M.null, nil)
     if json_data == nil then
         return nil, err
     end
