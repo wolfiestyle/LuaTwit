@@ -3,8 +3,8 @@
 -- @module  luatwit.http
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local ipairs, pairs, select, setmetatable, table_concat, table_remove, type =
-      ipairs, pairs, select, setmetatable, table.concat, table.remove, type
+local ipairs, pairs, pcall, select, setmetatable, table_concat, table_remove, type =
+      ipairs, pairs, pcall, select, setmetatable, table.concat, table.remove, type
 local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -391,12 +391,16 @@ end
 -- @param body      Post body. Form-encoded string (single part) or table (multipart).
 -- @param headers   Additional headers.
 -- @param filter    Function to be called on the result data.
--- @return          Response body.
+-- @return          Response body or `nil` on error.
 -- @return          Status code.
 -- @return          Response headers.
 function _M.request(method, url, body, headers, filter)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
-    local code = request:perform():getinfo(curl.INFO_RESPONSE_CODE)
+    local ok, err = pcall(request.perform, request)
+    if not ok then
+        return nil, err
+    end
+    local code = request:getinfo(curl.INFO_RESPONSE_CODE)
     request:close()
     resp_body = table_concat(resp_body)
     resp_headers = parse_headers(resp_headers)
