@@ -26,6 +26,7 @@ build = {
     type = "builtin",
     modules = {
         luatwit = "src/luatwit.lua",
+        ["luatwit.common"] = "src/luatwit/common.lua",
         ["luatwit.http"] = "src/luatwit/http.lua",
         ["luatwit.objects"] = "src/luatwit/objects.lua",
         ["luatwit.resources"] = "src/luatwit/resources.lua",
