@@ -3,18 +3,14 @@
 -- @module  luatwit
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local assert, error, io_open, ipairs, next, pairs, require, select, setmetatable, type =
-      assert, error, io.open, ipairs, next, pairs, require, select, setmetatable, type
+local assert, error, ipairs, next, pairs, require, setmetatable, type =
+      assert, error, ipairs, next, pairs, require, setmetatable, type
 local oauth = require "oauth_light"
 local json = require "dkjson"
 local http = require "luatwit.http"
-local util = require "luatwit.util"
+local common = require "luatwit.common"
 
 local _M = {}
-
---- Gets the type of the supplied object.
--- @see luatwit.util.type
-_M.type = util.type
 
 --- Class prototype that implements the API calls.
 -- Methods are created on demand from the definitions in the `self.resources` table (by default `luatwit.resources`).
@@ -98,7 +94,7 @@ end
 function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"
-    assert(util.check_args(args, decl.rules, name))
+    assert(common.check_args(args, decl.rules, name))
 
     local base_url = decl.base_url or self.resources._base_url
     local url, request = build_request(base_url, decl.path, args, decl.rules and decl.rules.optional, defaults)
@@ -214,7 +210,7 @@ local http_request_args = {
 -- @return      Request response.
 -- @see luatwit.http.request, luatwit.http.service:http_request
 function api:http_request(args)
-    assert(util.check_args(args, http_request_args, "http_request"))
+    assert(common.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
     assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
@@ -256,7 +252,7 @@ local api_new_args = {
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function api.new(keys, http_svc, resources, objects)
-    assert(util.check_args(keys, api_new_args, "api.new"))
+    assert(common.check_args(keys, api_new_args, "api.new"))
 
     local self = {
         __index = api_index,
@@ -284,57 +280,6 @@ function api.new(keys, http_svc, resources, objects)
     end
 
     return setmetatable(self, self)
-end
-
---- @section end
-
-local oauth_key_names = { "consumer_key", "consumer_secret", "oauth_token", "oauth_token_secret" }
-
---- Helper to load OAuth keys from text files.
--- Key files are loaded as `key = value` pairs.
--- It also accepts tables as arguments (useful when using `require`).
---
--- @param ...   Filenames (config files) or tables with the keys to load.
--- @return      Table with the keys found.
-function _M.load_keys(...)
-    local keys = {}
-    for i = 1, select('#', ...) do
-        local source = select(i, ...)
-        local ts = type(source)
-        if ts == "string" then
-            source = util.read_config(source)
-        elseif ts == "nil" then
-            source = {}
-        elseif ts ~= "table" then
-            error("argument #" .. i .. ": invalid type " .. ts, 2)
-        end
-        for _, k in ipairs(oauth_key_names) do
-            local v = source[k]
-            if v ~= nil then
-                keys[k] = v
-            end
-        end
-    end
-    return keys
-end
-
---- Loads a file and prepares it for a multipart request.
---
--- @param filename  File to be read.
--- @return          On success, a table with the file contents. On error `nil`.
--- @return          The error message in case of failure.
--- @see luatwit.resources.upload_media
-function _M.attach_file(filename)
-    local file, err = io_open(filename, "rb")
-    if file == nil then
-        return nil, err
-    end
-    local res = {
-        filename = filename:match "[^/]*$",
-        data = file:read "*a",
-    }
-    file:close()
-    return res
 end
 
 return _M

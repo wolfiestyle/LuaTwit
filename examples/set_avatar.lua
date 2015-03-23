@@ -4,6 +4,7 @@
 --
 local cfg = require "_config"()
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 local base64 = require "base64"
 
 -- get filename from argument
@@ -11,7 +12,7 @@ local filename = select(1, ...)
 assert(filename, "missing argument")
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- read image file

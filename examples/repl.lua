@@ -9,9 +9,10 @@ exec lua -i "$0" "$@"
 local cfg = require "_config"()
 pretty = require "pl.pretty"
 twitter = require "luatwit"
+util = require "luatwit.util"
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 client = twitter.api.new(oauth_params)
 
 -- pretty print for resource items

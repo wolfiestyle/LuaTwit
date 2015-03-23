@@ -4,10 +4,11 @@
 --
 local cfg = require "_config"(true)
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 
 -- load the app consumer keys from "~/.config/luatwit/oauth_app_keys"
 -- you need to fill in valid app keys before using this script
-local oauth_params = twitter.load_keys(cfg.app_keys)
+local oauth_params = util.load_keys(cfg.app_keys)
 local client = twitter.api.new(oauth_params)
 
 -- First auth step: obtain a temporary request token

@@ -5,6 +5,7 @@
 --
 local cfg = require "_config"()
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 local pretty = require "pl.pretty"
 local lgi = require "lgi"
 local Gtk = lgi.Gtk
@@ -13,7 +14,7 @@ local Gdk = lgi.Gdk
 local GdkPixbuf = lgi.GdkPixbuf
 
 -- load twitter keys (TODO: make a gui for the auth process)
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 client.async:set_conn_limits(12, 4)
 
@@ -99,21 +100,13 @@ function ibMessage:on_response(resp_id)
     end
 end
 
--- compares two string ids (twitter id's are too big for Lua, we use id_str)
-local function strnum_cmp(a, b)
-    if a == b then return 0 end
-    local la, lb = #a, #b
-    if la ~= lb then return la - lb end
-    return a > b and 1 or -1
-end
-
 local row_ids = {}
 
 -- setup the ListBox sort functions
 local function listbox_sort_func(ra, rb)
     local a = row_ids[ra:get_child()]
     local b = row_ids[rb:get_child()]
-    return strnum_cmp(b, a)
+    return util.id_cmp(b, a)
 end
 
 lstHome:set_sort_func(listbox_sort_func)

@@ -6,6 +6,7 @@ local cfg = require "_config"()
 local lapp = require "pl.lapp"
 local pretty = require "pl.pretty"
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 
 -- read tweet text from arguments
 local args = lapp [[
@@ -18,7 +19,7 @@ local msg = table.concat(args.text, " ")
 local img_file = args.media ~= "" and args.media or nil
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- send the tweet

@@ -4,12 +4,13 @@
 -- @module  luatwit.resources
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
+local common = require "luatwit.common"
 local util = require "luatwit.util"
 
 local _M = {}
 
-local GET = function(path) return util.resource_builder("GET", path) end
-local POST = function(path) return util.resource_builder("POST", path) end
+local GET = function(path) return common.resource_builder("GET", path) end
+local POST = function(path) return common.resource_builder("POST", path) end
 local required = function(t) return { required = true, type = t } end
 
 -- Base URL of the Twitter REST API.
@@ -26,7 +27,7 @@ local resource_base = {
         oauth_callback = "oob",
         stringify_friend_ids = true,
     },
-    __call = util.resource_call,
+    __call = common.resource_call,
 }
 resource_base.__index = resource_base
 _M._resource_base = resource_base

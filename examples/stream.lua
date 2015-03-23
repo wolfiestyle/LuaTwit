@@ -4,10 +4,11 @@
 --
 local cfg = require "_config"()
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 local pretty = require "pl.pretty"
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- open the streaming connection (must be async)
@@ -33,7 +34,7 @@ local n = 0
 while stream:is_active() do
     -- iterate over the received items
     for data in stream:iter() do
-        local t_data = twitter.type(data)
+        local t_data = util.type(data)
         -- tweet
         if t_data == "tweet" then
             print(format_tweet(data))
@@ -43,7 +44,7 @@ while stream:is_active() do
         -- stream events (blocks, favs, follows, list operations, profile updates)
         elseif t_data == "stream_event" then
             local desc = ""
-            local t_obj = twitter.type(data.target_object)
+            local t_obj = util.type(data.target_object)
             if t_obj == "tweet" then
                 desc = format_tweet(data.target_object)
             elseif t_obj == "userlist" then

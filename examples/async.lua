@@ -4,11 +4,12 @@
 --
 local cfg = require "_config"()
 local twitter = require "luatwit"
+local util = require "luatwit.util"
 local pretty = require "pl.pretty"
 local socket = require "socket"
 
 -- initialize the twitter client
-local oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
 
 -- When the option _async is set, the methods exit immeditately and

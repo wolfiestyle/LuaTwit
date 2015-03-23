@@ -5,13 +5,14 @@
 -- @license MIT/X11
 local assert, io_open, ipairs, pairs, setmetatable, table_concat, tostring, type =
       assert, io.open, ipairs, pairs, setmetatable, table.concat, tostring, type
+local common = require "luatwit.common"
 local util = require "luatwit.util"
 
 local _M = {}
 
 -- Default members for all objects.
 local object_base = {
-    _source_method = util.object_call,
+    _source_method = common.object_call,
 }
 object_base.__index = object_base
 
