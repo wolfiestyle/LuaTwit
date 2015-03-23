@@ -154,7 +154,7 @@ local function parse_oauth_token(self, body, tname)
     end
     self.oauth_config.oauth_token = token.oauth_token
     self.oauth_config.oauth_token_secret = token.oauth_token_secret
-    return apply_types(self, token, "access_token")
+    return apply_types(self, token, tname)
 end
 
 -- Parses the response body according to the content-type value.
