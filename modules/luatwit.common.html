@@ -39,11 +39,11 @@
 <h2>Modules</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><a href="../modules/luatwit.html">luatwit</a></li>
-  <li><a href="../modules/luatwit.common.html">luatwit.common</a></li>
+  <li><strong>luatwit.common</strong></li>
   <li><a href="../modules/luatwit.http.html">luatwit.http</a></li>
   <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
   <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
-  <li><strong>luatwit.util</strong></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
 </ul>
 <h2>Topics</h2>
 <ul class="$(kind=='Topics' and '' or 'nowrap'">
@@ -67,8 +67,8 @@
 
 <div id="content">
 
-<h1>Module <code>luatwit.util</code></h1>
-<p>Misc utility functions provided by the <a href="../modules/luatwit.html#">luatwit</a> library.</p>
+<h1>Module <code>luatwit.common</code></h1>
+<p>Common functions used internally by the <a href="../modules/luatwit.html#">luatwit</a> library.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -80,24 +80,20 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#type">type (obj)</a></td>
-	<td class="summary">Gets the type of the supplied object.</td>
+	<td class="name" nowrap><a href="#resource_call">resource_call (res, client, args)</a></td>
+	<td class="summary">Performs an API call with the data on a resource object.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#read_config">read_config (filename)</a></td>
-	<td class="summary">Reads a simple <code>key = value</code> style config file.</td>
+	<td class="name" nowrap><a href="#object_call">object_call (obj, args)</a></td>
+	<td class="summary">Performs an API call with the data from an object returned by other API calls.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#load_keys">load_keys (...)</a></td>
-	<td class="summary">Helper to load OAuth keys from text files.</td>
+	<td class="name" nowrap><a href="#check_args">check_args (args, rules, r_name)</a></td>
+	<td class="summary">Checks if the arguments in the specified table match the rules.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#attach_file">attach_file (filename)</a></td>
-	<td class="summary">Loads a file and prepares it for a multipart request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#id_cmp">id_cmp (a, b)</a></td>
-	<td class="summary">Compares two string ids (id_str fields).</td>
+	<td class="name" nowrap><a href="#resource_builder">resource_builder (method, path)</a></td>
+	<td class="summary">Creates a resource builder object.</td>
 	</tr>
 </table>
 
@@ -109,136 +105,124 @@
 
     <dl class="function">
     <dt>
-    <a name = "type"></a>
-    <strong>type (obj)</strong>
+    <a name = "resource_call"></a>
+    <strong>resource_call (res, client, args)</strong>
     </dt>
     <dd>
-    Gets the type of the supplied object.
+    Performs an API call with the data on a resource object.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">obj</span>
-               Any value.
+        <li><span class="parameter">res</span>
+               Resource object (from <a href="../modules/luatwit.resources.html#">luatwit.resources</a>).
+        </li>
+        <li><span class="parameter">client</span>
+            API client (<a href="../modules/luatwit.html#api">luatwit.api</a> instance).
+        </li>
+        <li><span class="parameter">args</span>
+              Table with method arguments.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        The <code>_type</code> field if it's a table. If not present or not a table, the Lua type.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "read_config"></a>
-    <strong>read_config (filename)</strong>
-    </dt>
-    <dd>
-    Reads a simple <code>key = value</code> style config file.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">filename</span>
-          File to be read.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Table with the config values.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "load_keys"></a>
-    <strong>load_keys (...)</strong>
-    </dt>
-    <dd>
-    Helper to load OAuth keys from text files.
- Key files are loaded as <code>key = value</code> pairs.
- It also accepts tables as arguments (useful when using <a href="http://www.lua.org/manual/5.1/manual.html#pdf-require">require</a>).
-
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">...</span>
-           Filenames (config files) or tables with the keys to load.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Table with the keys found.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "attach_file"></a>
-    <strong>attach_file (filename)</strong>
-    </dt>
-    <dd>
-    Loads a file and prepares it for a multipart request.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">filename</span>
-          File to be read.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        On success, a table with the file contents. On error <code>nil</code>.</li>
-        <li>
-        The error message in case of failure.</li>
+        The result of the API call.
     </ol>
 
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/luatwit.resources.html#upload_media">luatwit.resources.upload_media</a>
+         <a href="../modules/luatwit.html#api:raw_call">raw_call</a>
     </ul>
 
 
 </dd>
     <dt>
-    <a name = "id_cmp"></a>
-    <strong>id_cmp (a, b)</strong>
+    <a name = "object_call"></a>
+    <strong>object_call (obj, args)</strong>
     </dt>
     <dd>
-    Compares two string ids (id_str fields).
+    Performs an API call with the data from an object returned by other API calls.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">a</span>
-                 First id_str to compare.
+        <li><span class="parameter">obj</span>
+               Table returned by <a href="../modules/luatwit.html#api:raw_call">luatwit.api.raw_call</a>.
         </li>
-        <li><span class="parameter">b</span>
-                 Second id_str to compare.
+        <li><span class="parameter">args</span>
+              Table with method arguments.
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        0 if both are equal, 1 if <code>a &gt; b</code> or -1 if <code>a &lt; b</code>.
+        The result of the API call.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "check_args"></a>
+    <strong>check_args (args, rules, r_name)</strong>
+    </dt>
+    <dd>
+    Checks if the arguments in the specified table match the rules.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Table with arguments to be checked.
+        </li>
+        <li><span class="parameter">rules</span>
+             Rules to check against.
+        </li>
+        <li><span class="parameter">r_name</span>
+            Name of the resource that is being checked (for error messages).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        The <code>args</code> table with the values coerced to their types, or <code>nil</code> on error.</li>
+        <li>
+        The error string if <code>args</code> is invalid.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "resource_builder"></a>
+    <strong>resource_builder (method, path)</strong>
+    </dt>
+    <dd>
+    Creates a resource builder object.  It's used to construct the fields of <a href="../modules/luatwit.resources.html#">luatwit.resources</a>.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">path</span>
+              Resource path.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Resource builder object. Must call <code>:finish()</code> after the construction is done.
     </ol>
 
 
