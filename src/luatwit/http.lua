@@ -146,6 +146,7 @@ end
 
 -- Extracts the stream data by splitting \r\n separated sections.
 local function process_stream(input, output, filter, get_headers)
+    if next(input) == nil then return end
     local buffer = table_concat(input)
     local endpos = 1
     for line, pos in buffer:gmatch "(.-)\r\n()" do
