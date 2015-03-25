@@ -337,6 +337,8 @@ local function build_easy_handle(method, url, body, headers)
     local handle = curl.easy()
     :setopt_url(url)
     :setopt_accept_encoding ""
+    :setopt_low_speed_limit(1)
+    :setopt_low_speed_time(90)
     :setopt_writefunction(table_writer, resp_body)
     :setopt_headerfunction(table_writer, resp_headers)
     if method then handle:setopt_customrequest(method) end
