@@ -3,8 +3,8 @@
 -- @module  luatwit.http
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local ipairs, pairs, pcall, select, setmetatable, table_concat, table_remove, type =
-      ipairs, pairs, pcall, select, setmetatable, table.concat, table.remove, type
+local ipairs, next, pairs, pcall, select, setmetatable, table_concat, table_remove, tostring, type =
+      ipairs, next, pairs, pcall, select, setmetatable, table.concat, table.remove, tostring, type
 local curl = require "lcurl"
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -252,7 +252,7 @@ function service:update()
             local handle, ok, err = self.curl_multi:info_read()
             if handle == 0 then break end
             if not ok then
-                self.store[handle].error = err
+                self.store[handle].error = tostring(err)
             end
             self.store[handle].code = handle:getinfo(curl.INFO_RESPONSE_CODE)
             self.curl_multi:remove_handle(handle)
@@ -401,7 +401,7 @@ function _M.request(method, url, body, headers, filter)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     local ok, err = pcall(request.perform, request)
     if not ok then
-        return nil, err
+        return nil, tostring(err)
     end
     local code = request:getinfo(curl.INFO_RESPONSE_CODE)
     request:close()
