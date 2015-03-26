@@ -100,9 +100,9 @@ function api:raw_call(decl, args, defaults)
     local url, request = build_request(base_url, decl.path, args, decl.rules and decl.rules.optional, defaults)
 
     local function parse_response(body, res_code, headers)
-        local data, err = self:_parse_response(body, res_code, headers, decl.res_type)
+        local data, err, code = self:_parse_response(body, res_code, headers, decl.res_type)
         if data == nil then
-            return nil, err
+            return nil, err, code
         end
         if type(data) == "table" and data._type then
             data._source = name
@@ -162,7 +162,7 @@ function api:_parse_response(body, res_code, headers, tname)
     local content_type = headers:get_content_type()
     -- HTTP request failed, the error message is returned as json
     if res_code ~= 200 and content_type ~= "application/json" then
-        return nil, headers[1]
+        return nil, headers[1], res_code
     end
     if content_type == "application/json" then
         return parse_json(self, body, tname, res_code)
