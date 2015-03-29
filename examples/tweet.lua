@@ -25,7 +25,7 @@ local client = twitter.api.new(oauth_params)
 -- send the tweet
 local tw, err
 if img_file then
-    local media, err_ = client:upload_media{ media = assert(twitter.attach_file(img_file)) }
+    local media, err_ = client:upload_media{ media = assert(util.attach_file(img_file)) }
     assert(media, tostring(err_))
     media._request = nil  -- don't print binary data to the tty
     print("media = " .. pretty.write(media))
