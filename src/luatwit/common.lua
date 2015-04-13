@@ -252,4 +252,33 @@ function _M.resource_builder(method, path)
     return setmetatable(res, resource_builder_mt)
 end
 
+--- Base class for objects.
+-- @type object
+local object = {}
+_M.object = object
+
+--- Creates a new class that extends this object.
+--
+-- @return      New class.
+function object:extend()
+    local class = { __index = self }
+    return setmetatable(class, class)
+end
+
+--- Creates a new instance of the class.
+--
+-- @param ...   Constructor arguments, passed to `self:_init()`.
+-- @return      New instance of the class.
+function object:new(...)
+    local obj = { __index = self }
+    setmetatable(obj, obj)
+    obj:_init(...)
+    return obj
+end
+
+-- This will be called when the derived class has no constructor.
+function object._init()
+    -- empty
+end
+
 return _M
