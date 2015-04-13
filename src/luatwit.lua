@@ -267,7 +267,7 @@ function api.new(keys, http_svc, resources, objects)
             sig_method = "HMAC-SHA1",
             use_auth_header = true,
         },
-        async = http_svc or http.service.new(),
+        async = http_svc or http.service:new(),
     }
     self._get_client = function() return self end
 
