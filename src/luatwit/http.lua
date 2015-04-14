@@ -217,9 +217,10 @@ end
 local service = common.object:extend()
 _M.service = service
 
---- Creates a new async HTTP client. (called by `:new()`)
+--- Creates a new async HTTP client.
 --
 -- @return          New instance of the async client.
+-- @constructor
 function service:_init()
     self.pending = 0
     self.store = {}
