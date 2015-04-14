@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Dependencies">Dependencies </a></li>
+<li><a href="#Documentation">Documentation </a></li>
+<li><a href="#Installation">Installation </a></li>
+<li><a href="#Usage">Usage </a></li>
+</ul>
+
+
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>README</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.common.html">luatwit.common</a></li>
+  <li><a href="../modules/luatwit.http.html">luatwit.http</a></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/stream.lua.html">stream.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+
+<h1>LuaTwit</h1>
+
+<p>Lua library for accessing the Twitter REST and Streaming API v1.1.
+It implements simple parameter checking and returns metatable-typed JSON data.</p>
+
+<p><a name="Dependencies"></a></p>
+<h2>Dependencies</h2>
+
+<ul>
+    <li>dkjson</li>
+    <li>lua-curl</li>
+    <li>oauth_light</li>
+</ul>
+
+<p>Also you'll need <code>ldoc</code> if you want to build the docs and <code>penlight</code> to run the examples.</p>
+
+<p><a name="Documentation"></a></p>
+<h2>Documentation</h2>
+
+<p>Available online <a href="http://darkstalker.github.io/LuaTwit/">here</a>.</p>
+
+<p><a name="Installation"></a></p>
+<h2>Installation</h2>
+
+<p>Using LuaRocks:</p>
+
+
+<pre>
+luarocks install luatwit
+</pre>
+
+<p><a name="Usage"></a></p>
+<h2>Usage</h2>
+
+<p>First, you need a set of app keys. You can get them from <a href="https://apps.twitter.com/">here</a>.</p>
+
+
+<pre>
+<span class="keyword">local</span> luatwit = <span class="global">require</span> <span class="string">"luatwit"</span>
+
+<span class="comment">-- Fill in your app keys here
+</span><span class="keyword">local</span> keys = {
+    consumer_key = <span class="string">"&lt;key&gt;"</span>,
+    consumer_secret = <span class="string">"&lt;secret&gt;"</span>,
+    oauth_token = <span class="string">"&lt;token&gt;"</span>,
+    oauth_token_secret= <span class="string">"&lt;token_secret&gt;"</span>,
+}
+</pre>
+
+<p>The twitter client is created by the method <code>luatwit.api.new</code>:</p>
+
+
+<pre>
+<span class="keyword">local</span> client = luatwit.api.new(keys)
+</pre>
+
+<p>Use this object to do API calls. The argument names are checked against the definitions in <a href="../modules/luatwit.resources.html#">luatwit.resources</a>:</p>
+
+
+<pre>
+<span class="keyword">local</span> result = client:get_home_timeline{ count = <span class="number">1</span> }
+</pre>
+
+<p>The JSON data is returned in a table:</p>
+
+
+<pre>
+<span class="global">print</span>(result[<span class="number">1</span>].user.screen_name, result[<span class="number">1</span>].text)
+</pre>
+
+<p>The returned data has a metatable (from <a href="../modules/luatwit.objects.html#">luatwit.objects</a>) that describes the object type:</p>
+
+
+<pre>
+<span class="global">print</span>(result._type)         <span class="comment">-- "tweet_list"
+</span><span class="global">print</span>(result[<span class="number">1</span>]._type)      <span class="comment">-- "tweet"
+</span><span class="global">print</span>(result[<span class="number">1</span>].user._type) <span class="comment">-- "user"
+</span>
+</pre>
+
+<p>The type metatables also provide convenience methods:</p>
+
+
+<pre>
+result[<span class="number">1</span>]:set_favorite():retweet()
+result[<span class="number">1</span>]:reply{ status = <span class="string">"answer!"</span>, _mention = <span class="keyword">true</span> }
+</pre>
+
+<p>The methods can be called in async mode, and they'll return a future object that can be read with <code>:peek()</code> and <code>:wait()</code>:</p>
+
+
+<pre>
+<span class="keyword">local</span> res_f = client:get_user{ user_id = <span class="number">783214</span>, _async = <span class="keyword">true</span> }
+<span class="global">print</span>(res_f._type)          <span class="comment">-- "future"
+</span><span class="global">print</span>(res_f:wait().screen_name)
+</pre>
+
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:34 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

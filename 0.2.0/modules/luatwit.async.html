@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Class_future">Class future </a></li>
+<li><a href="#Class_service">Class service </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><strong>luatwit.async</strong></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>luatwit.async</code></h1>
+<p>Implements a service for performing asyncronous HTTP requests.</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>License</strong>: MIT/X11</li>
+        <li><strong>Author</strong>: darkstalker <https://github.com/darkstalker></li>
+    </ul>
+
+
+<h2><a href="#Class_future">Class future </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#future:peek">future:peek ()</a></td>
+	<td class="summary">Checks (non-blocking) and returns the value of the future if it's ready.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#future:wait">future:wait ()</a></td>
+	<td class="summary">Waits (blocks) until the value of the future is ready.</td>
+	</tr>
+</table>
+<h2><a href="#Class_service">Class service </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#service.new">service.new ()</a></td>
+	<td class="summary">Creates a new async http client.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:set_conn_limits">service:set_conn_limits (total_conn, host_conn)</a></td>
+	<td class="summary">Sets the connection limits.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:data_available">service:data_available ()</a></td>
+	<td class="summary">Checks if there is data pending to be received.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:http_request">service:http_request (request, filter)</a></td>
+	<td class="summary">Performs an asynchronous HTTP request.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Class_future"></a>Class future </h2>
+
+        Future object.
+ It contains the result of an asynchronous API call.
+    <dl class="function">
+    <dt>
+    <a name = "future:peek"></a>
+    <strong>future:peek ()</strong>
+    </dt>
+    <dd>
+    Checks (non-blocking) and returns the value of the future if it's ready.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        <code>true</code> if the value is ready, otherwise <code>false</code>.</li>
+        <li>
+        List of return values from the API call.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "future:wait"></a>
+    <strong>future:wait ()</strong>
+    </dt>
+    <dd>
+    Waits (blocks) until the value of the future is ready.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        List of return values from the API call.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_service"></a>Class service </h2>
+
+        HTTP service object.
+ Executes HTTP requests on background (with <code>curl.multi</code>).
+    <dl class="function">
+    <dt>
+    <a name = "service.new"></a>
+    <strong>service.new ()</strong>
+    </dt>
+    <dd>
+    Creates a new async http client.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New instance of the async client.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:set_conn_limits"></a>
+    <strong>service:set_conn_limits (total_conn, host_conn)</strong>
+    </dt>
+    <dd>
+    Sets the connection limits.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">total_conn</span>
+            Maximum number of total connections (default unlimited).
+        </li>
+        <li><span class="parameter">host_conn</span>
+             Maximum number of connections per host (default unlimited).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:data_available"></a>
+    <strong>service:data_available ()</strong>
+    </dt>
+    <dd>
+    Checks if there is data pending to be received.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        If there is data available, the current number of unfinished requests. Otherwise <code>nil</code>.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:http_request"></a>
+    <strong>service:http_request (request, filter)</strong>
+    </dt>
+    <dd>
+    Performs an asynchronous HTTP request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">request</span>
+           Request objected created by <code>curl.easy</code>.
+        </li>
+        <li><span class="parameter">filter</span>
+            Function to be called on the result data.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <a href="../modules/luatwit.async.html#future">future</a> object with the result.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:34 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

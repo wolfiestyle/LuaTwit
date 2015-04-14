@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><strong>followers.lua</strong></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/stream.lua.html">stream.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.http.html">luatwit.http</a></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>followers.lua</h2>
+<pre>
+#!/usr/bin/env lua
+<span class="comment">--
+</span><span class="comment">-- Lists the logged user's followers and finds new follows/unfollows.
+</span><span class="comment">--
+</span><span class="keyword">local</span> cfg = <span class="global">require</span> <span class="string">"_config"</span>()
+<span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
+<span class="keyword">local</span> pl_file = <span class="global">require</span> <span class="string">"pl.file"</span>
+<span class="keyword">local</span> tablex = <span class="global">require</span> <span class="string">"pl.tablex"</span>
+
+<span class="comment">-- initialize the twitter client
+</span><span class="keyword">local</span> oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+<span class="keyword">local</span> client = twitter.api.new(oauth_params)
+
+<span class="comment">-- get logged user info
+</span><span class="keyword">local</span> me, err = client:verify_credentials()
+<span class="global">assert</span>(me, <span class="global">tostring</span>(err))
+<span class="global">print</span>(<span class="string">"getting followers for: "</span> .. me.screen_name)
+
+<span class="comment">-- get the followers cursor
+</span><span class="keyword">local</span> fw_cur, err = client:get_followers{ user_id = me.id_str, count = <span class="number">100</span>, skip_status = <span class="keyword">true</span> }
+<span class="global">assert</span>(fw_cur, <span class="global">tostring</span>(err))
+
+<span class="keyword">local</span> followers = {}
+
+<span class="comment">-- iterates the cursor
+</span><span class="keyword">local</span> pos = <span class="number">0</span>
+<span class="keyword">repeat</span>
+    <span class="keyword">for</span> i, user <span class="keyword">in</span> <span class="global">ipairs</span>(fw_cur.users) <span class="keyword">do</span>
+        followers[user.id_str] = user.screen_name
+        <span class="global">print</span>(pos + i .. <span class="string">": "</span> .. user.screen_name .. <span class="string">" ("</span> .. user.name .. <span class="string">")"</span>)
+    <span class="keyword">end</span>
+    pos = pos + #fw_cur.users
+    <span class="comment">-- requests the next page
+</span>    fw_cur, err = fw_cur:<span class="global">next</span>()
+    <span class="global">assert</span>(fw_cur ~= <span class="keyword">nil</span>, <span class="global">tostring</span>(err))
+<span class="keyword">until</span> <span class="keyword">not</span> fw_cur
+
+<span class="comment">-- load saved follower list
+</span><span class="keyword">local</span> followers_file = cfg.config_dir .. <span class="string">"followers"</span>
+<span class="keyword">local</span> file = pl_file.read(followers_file)
+
+<span class="comment">-- detect follower changes
+</span><span class="keyword">if</span> file <span class="keyword">then</span>
+    <span class="keyword">local</span> old_followers = {}
+
+    <span class="global">print</span> <span class="string">"\n-- unfollows detected since last run:"</span>
+    <span class="keyword">for</span> id, name <span class="keyword">in</span> file:gmatch <span class="string">"(%d+)%s*=%s*([%w_]+)"</span> <span class="keyword">do</span>
+        old_followers[id] = name
+        <span class="keyword">if</span> <span class="keyword">not</span> followers[id] <span class="keyword">then</span>
+            <span class="global">print</span>(name)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="global">print</span> <span class="string">"\n-- new followers since last run:"</span>
+    <span class="keyword">for</span> id, name <span class="keyword">in</span> <span class="global">pairs</span>(followers) <span class="keyword">do</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> old_followers[id] <span class="keyword">then</span>
+            <span class="global">print</span>(name)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- save the followers file
+</span><span class="global">assert</span>(pl_file.write(followers_file, <span class="global">table</span>.concat(tablex.pairmap(<span class="keyword">function</span>(k, v) <span class="keyword">return</span> k..<span class="string">" = "</span>..v <span class="keyword">end</span>, followers), <span class="string">"\n"</span>) .. <span class="string">"\n"</span>))</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:34 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

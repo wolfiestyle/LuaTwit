@@ -1,0 +1,508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Class_future">Class future </a></li>
+<li><a href="#Class_stream">Class stream </a></li>
+<li><a href="#Class_service">Class service </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.common.html">luatwit.common</a></li>
+  <li><strong>luatwit.http</strong></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/stream.lua.html">stream.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>luatwit.http</code></h1>
+<p>Implements a service for performing HTTP requests.</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>License</strong>: MIT/X11</li>
+        <li><strong>Author</strong>: darkstalker <https://github.com/darkstalker></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#request">request (method, url, body, headers, filter)</a></td>
+	<td class="summary">Performs an HTTP request.</td>
+	</tr>
+</table>
+<h2><a href="#Class_future">Class future </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#future:peek">future:peek (no_upd)</a></td>
+	<td class="summary">Checks (non-blocking) and returns the value of the future if it's ready.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#future:wait">future:wait ()</a></td>
+	<td class="summary">Waits (blocks) until the value of the future is ready.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#future:cancel">future:cancel ()</a></td>
+	<td class="summary">Cancels the HTTP request associated with this object.</td>
+	</tr>
+</table>
+<h2><a href="#Class_stream">Class stream </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#stream:is_active">stream:is_active (no_upd)</a></td>
+	<td class="summary">Checks if the stream connection is open.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream:next">stream:next (no_upd)</a></td>
+	<td class="summary">Returns the next object in the stream queue.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream:iter">stream:iter ()</a></td>
+	<td class="summary">Convenience function for iterating the stream in a for loop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream:close">stream:close ()</a></td>
+	<td class="summary">Closes the stream connection.</td>
+	</tr>
+</table>
+<h2><a href="#Class_service">Class service </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#service.new">service.new ()</a></td>
+	<td class="summary">Creates a new async HTTP client.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:set_conn_limits">service:set_conn_limits (total_conn, host_conn)</a></td>
+	<td class="summary">Sets the connection limits.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:update">service:update ()</a></td>
+	<td class="summary">Performs data transfers and checks for finished requests.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:wait">service:wait (timeout)</a></td>
+	<td class="summary">Waits until data is received.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#service:http_request">service:http_request (method, url, body, headers, filter, is_stream)</a></td>
+	<td class="summary">Performs an asynchronous HTTP request.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "request"></a>
+    <strong>request (method, url, body, headers, filter)</strong>
+    </dt>
+    <dd>
+    Performs an HTTP request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">url</span>
+               Request URL.
+        </li>
+        <li><span class="parameter">body</span>
+              Post body. Form-encoded string (single part) or table (multipart).
+        </li>
+        <li><span class="parameter">headers</span>
+           Additional headers.
+        </li>
+        <li><span class="parameter">filter</span>
+            Function to be called on the result data.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        Response body or <code>nil</code> on error.</li>
+        <li>
+        Status code.</li>
+        <li>
+        Response headers.</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_future"></a>Class future </h2>
+
+        Future object.
+ It contains the result of an asynchronous HTTP request.
+    <dl class="function">
+    <dt>
+    <a name = "future:peek"></a>
+    <strong>future:peek (no_upd)</strong>
+    </dt>
+    <dd>
+    Checks (non-blocking) and returns the value of the future if it's ready.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">no_upd</span>
+         Don't ask the service for new data, just return the current stored value (default <code>false</code>).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        <code>true</code> if the value is ready, otherwise <code>false</code>.</li>
+        <li>
+        List of return values from the HTTP request.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "future:wait"></a>
+    <strong>future:wait ()</strong>
+    </dt>
+    <dd>
+    Waits (blocks) until the value of the future is ready.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        List of return values from the HTTP request.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "future:cancel"></a>
+    <strong>future:cancel ()</strong>
+    </dt>
+    <dd>
+    Cancels the HTTP request associated with this object.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>nil</code> if successfully cancelled, or the result values if called after the request finished.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Class_stream"></a>Class stream </h2>
+
+        Stream object.
+ It represents an open connection that continuously receives data.
+    <dl class="function">
+    <dt>
+    <a name = "stream:is_active"></a>
+    <strong>stream:is_active (no_upd)</strong>
+    </dt>
+    <dd>
+    Checks if the stream connection is open.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">no_upd</span>
+            Don't ask the service for new data, just use the current stored state (default <code>false</code>).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <code>true</code> if the connection is open, or <code>false</code> and the response if it's closed.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream:next"></a>
+    <strong>stream:next (no_upd)</strong>
+    </dt>
+    <dd>
+    Returns the next object in the stream queue.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">no_upd</span>
+            Don't ask the service for new data, just use the current stored state (default <code>false</code>).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A stream object, or <code>nil</code> if there is no more data available.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream:iter"></a>
+    <strong>stream:iter ()</strong>
+    </dt>
+    <dd>
+    Convenience function for iterating the stream in a for loop.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Stream iterator.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream:close"></a>
+    <strong>stream:close ()</strong>
+    </dt>
+    <dd>
+    Closes the stream connection.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        HTTP request result.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/luatwit.http.html#future:cancel">future:cancel</a>
+    </ul>
+
+
+</dd>
+</dl>
+    <h2><a name="Class_service"></a>Class service </h2>
+
+        HTTP service object.
+ Executes HTTP requests on background (with <code>curl.multi</code>).
+    <dl class="function">
+    <dt>
+    <a name = "service.new"></a>
+    <strong>service.new ()</strong>
+    </dt>
+    <dd>
+    Creates a new async HTTP client.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        New instance of the async client.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:set_conn_limits"></a>
+    <strong>service:set_conn_limits (total_conn, host_conn)</strong>
+    </dt>
+    <dd>
+    Sets the connection limits.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">total_conn</span>
+            Maximum number of total connections (default unlimited).
+        </li>
+        <li><span class="parameter">host_conn</span>
+             Maximum number of connections per host (default unlimited).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:update"></a>
+    <strong>service:update ()</strong>
+    </dt>
+    <dd>
+    Performs data transfers and checks for finished requests.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        If there was data available, the current number of unfinished requests. Otherwise <code>nil</code>.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:wait"></a>
+    <strong>service:wait (timeout)</strong>
+    </dt>
+    <dd>
+    Waits until data is received.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timeout</span>
+           Time to wait, in milliseconds (default 1000).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Number of objects with data to be read.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "service:http_request"></a>
+    <strong>service:http_request (method, url, body, headers, filter, is_stream)</strong>
+    </dt>
+    <dd>
+    Performs an asynchronous HTTP request.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">url</span>
+               Request URL.
+        </li>
+        <li><span class="parameter">body</span>
+              Post body. Form-encoded string (single part) or table (multipart).
+        </li>
+        <li><span class="parameter">headers</span>
+           Additional headers.
+        </li>
+        <li><span class="parameter">filter</span>
+            Function to be called on the result data.
+        </li>
+        <li><span class="parameter">is_stream</span>
+         Indicates if it's a streaming connection or not.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        <a href="../modules/luatwit.http.html#future">future</a> object with the result.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:34 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

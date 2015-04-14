@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><strong>repl.lua</strong></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.async.html">luatwit.async</a></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>repl.lua</h2>
+<pre>
+#!/bin/sh
+_=<span class="string">[[
+exec lua -i "$0" "$@"
+]]</span>
+<span class="comment">--
+</span><span class="comment">-- Interactive Lua session with a Twitter client logged in.
+</span><span class="comment">-- It uses pl.pretty and custom __tostring methods to display the returned data.
+</span><span class="comment">--
+</span><span class="keyword">local</span> cfg = <span class="global">require</span> <span class="string">"_config"</span>()
+pl = <span class="global">require</span> <span class="string">"pl.import_into"</span> ()
+pretty = pl.pretty
+twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
+objects = <span class="global">require</span> <span class="string">"luatwit.objects"</span>
+
+<span class="comment">-- initialize the twitter client
+</span>oauth_params = twitter.load_keys(cfg.app_keys, cfg.user_keys)
+client = twitter.api.new(oauth_params)
+
+<span class="comment">-- pretty print for resource items
+</span>client.resources._resource_base.__tostring = pl.pretty.write
+
+<span class="comment">-- pretty print for tweets
+</span><span class="keyword">function</span> client.objects.tweet:__tostring()
+    <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.user.screen_name .. <span class="string">"&gt; "</span> .. self.text
+<span class="keyword">end</span>
+
+<span class="comment">-- pretty print for DMs
+</span><span class="keyword">function</span> client.objects.dm:__tostring()
+    <span class="keyword">return</span> <span class="string">"&lt;"</span> .. self.sender.screen_name .. <span class="string">"&gt; (to: "</span> .. self.recipient.screen_name .. <span class="string">") "</span> .. self.text
+<span class="keyword">end</span>
+
+<span class="comment">-- pretty print for user profiles
+</span><span class="keyword">local</span> user_tmpl =
+<span class="string">[[Name: @$screen_name ($name)
+Bio: $description
+Location: $location
+Followers: $followers_count, Following: $friends_count, Listed: $listed_count
+Tweets: $statuses_count
+---]]</span>
+<span class="keyword">function</span> client.objects.user:__tostring()
+    <span class="keyword">return</span> (user_tmpl:gsub(<span class="string">"$([%w_]+)"</span>, self))
+<span class="keyword">end</span>
+
+<span class="comment">-- used to display object lists
+</span><span class="keyword">local</span> <span class="keyword">function</span> list_tostring(self)
+    <span class="keyword">local</span> res = {}
+    <span class="keyword">for</span> i, item <span class="keyword">in</span> <span class="global">ipairs</span>(self) <span class="keyword">do</span>
+        res[#res + <span class="number">1</span>] = i .. <span class="string">": "</span> .. <span class="global">tostring</span>(item)
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="global">table</span>.concat(res, <span class="string">"\n"</span>) .. <span class="string">"\n"</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- writes the contents of a table to a file
+</span><span class="keyword">function</span> table_save(tbl, filename)
+    filename = filename <span class="keyword">or</span> <span class="string">"tw.out"</span>
+    pretty.dump(tbl, filename)
+    <span class="keyword">return</span> tbl
+<span class="keyword">end</span>
+
+<span class="comment">-- add default __tostring methods to all objects
+</span><span class="keyword">for</span> name, _ <span class="keyword">in</span> <span class="global">pairs</span>(objects) <span class="keyword">do</span>
+    <span class="keyword">local</span> obj = client.objects[name]
+    <span class="keyword">if</span> <span class="keyword">not</span> obj.__tostring <span class="keyword">then</span>
+        obj.__tostring = name:match(<span class="string">"_list$"</span>) <span class="keyword">and</span> list_tostring <span class="keyword">or</span> pretty.write
+    <span class="keyword">end</span>
+    obj.save = obj.save <span class="keyword">or</span> table_save
+<span class="keyword">end</span>
+
+<span class="comment">-- avoid headers spam
+</span>client.objects.headers.__tostring = <span class="keyword">nil</span>
+
+<span class="comment">-- lists the keys of a table and the type of its values
+</span><span class="keyword">function</span> keys(obj)
+    <span class="keyword">if</span> <span class="global">type</span>(obj) ~= <span class="string">"table"</span> <span class="keyword">then</span>
+        <span class="global">print</span>(<span class="global">tostring</span>(obj) .. <span class="string">" = "</span> .. <span class="global">type</span>(obj))
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="global">pairs</span>(obj) <span class="keyword">do</span>
+        <span class="global">print</span>(<span class="global">tostring</span>(k) .. <span class="string">" = "</span> .. <span class="global">type</span>(v))
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- finds a resource item with the specified api path
+</span><span class="keyword">function</span> get_resource(path)
+    <span class="keyword">for</span> name, decl <span class="keyword">in</span> <span class="global">pairs</span>(client.resources) <span class="keyword">do</span>
+        <span class="keyword">if</span> decl.path == path <span class="keyword">then</span>
+            <span class="keyword">return</span> decl
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:33 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
