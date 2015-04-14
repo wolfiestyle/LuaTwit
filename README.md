@@ -13,7 +13,7 @@ Also you'll need `ldoc` if you want to build the docs and `penlight` to run the 
 
 ## Documentation
 
-Available online [here](http://darkstalker.github.io/LuaTwit/).
+Available online [here](http://darkstalker.github.io/LuaTwit/master).
 
 ## Installation
 
