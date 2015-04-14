@@ -16,7 +16,7 @@ local GdkPixbuf = lgi.GdkPixbuf
 -- load twitter keys (TODO: make a gui for the auth process)
 local oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 local client = twitter.api.new(oauth_params)
-client.async:set_conn_limits(12, 4)
+client.http:set_conn_limits(12, 4)
 
 -- create the main window
 local window = Gtk.Window{
@@ -440,7 +440,7 @@ local requests = {}
 
 -- checks if any of the requests are done and dispatches the callbacks
 local function update_requests()
-    client.async:update()
+    client.http:update()
     local n = #requests
     while n > 0 do
         local fut, callback = unpack(requests[n])

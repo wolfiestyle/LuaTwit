@@ -370,7 +370,7 @@ end
 -- @param filter    Function to be called on the result data.
 -- @param is_stream Indicates if it's a streaming connection or not.
 -- @return          `future` object with the result.
-function service:http_request(method, url, body, headers, filter, is_stream)
+function service:async_request(method, url, body, headers, filter, is_stream)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     self.store[request] = { body = resp_body, headers = resp_headers }
     self.pending = self.pending + 1
@@ -382,8 +382,6 @@ function service:http_request(method, url, body, headers, filter, is_stream)
     end
 end
 
---- @section end
-
 --- Performs an HTTP request.
 --
 -- @param method    HTTP method.
@@ -394,7 +392,7 @@ end
 -- @return          Response body or `nil` on error.
 -- @return          Status code.
 -- @return          Response headers.
-function _M.request(method, url, body, headers, filter)
+function service:request(method, url, body, headers, filter)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     local ok, err = pcall(request.perform, request)
     if not ok then

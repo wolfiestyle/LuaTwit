@@ -7,7 +7,6 @@ local assert, error, ipairs, next, pairs, require, setmetatable, type =
       assert, error, ipairs, next, pairs, require, setmetatable, type
 local oauth = require "oauth_light"
 local json = require "dkjson"
-local http = require "luatwit.http"
 local common = require "luatwit.common"
 
 local _M = {}
@@ -208,20 +207,20 @@ local http_request_args = {
 --
 -- @param args  Table with request arguments (method, url, body, headers, _async, _callback, _stream).
 -- @return      Request response.
--- @see luatwit.http.request, luatwit.http.service:http_request
+-- @see luatwit.http.service:request, luatwit.http.service:async_request
 function api:http_request(args)
     assert(common.check_args(args, http_request_args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
     assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
     if args._async or args._callback then
-        local fut = self.async:http_request(args.method, args.url, args.body, args.headers, args._filter, args._stream)
+        local fut = self.http:async_request(args.method, args.url, args.body, args.headers, args._filter, args._stream)
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
-        return http.request(args.method, args.url, args.body, args.headers, args._filter)
+        return self.http:request(args.method, args.url, args.body, args.headers, args._filter)
     end
 end
 
@@ -267,7 +266,7 @@ function api.new(keys, http_svc, resources, objects)
             sig_method = "HMAC-SHA1",
             use_auth_header = true,
         },
-        async = http_svc or http.service:new(),
+        http = http_svc or require("luatwit.http").service:new(),
     }
     self._get_client = function() return self end
 

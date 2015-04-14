@@ -70,5 +70,5 @@ while stream:is_active() do
     end
 
     -- wait for data to arrive
-    client.async:wait()
+    client.http:wait()
 end
