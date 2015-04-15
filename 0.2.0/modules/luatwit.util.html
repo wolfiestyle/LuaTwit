@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.async.html">luatwit.async</a></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><strong>luatwit.util</strong></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><a href="../examples/gtk_client.lua.html">gtk_client.lua</a></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>luatwit.util</code></h1>
+<p>Misc utility functions used by the <a href="../modules/luatwit.html#">luatwit</a> library.</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>License</strong>: MIT/X11</li>
+        <li><strong>Author</strong>: darkstalker <https://github.com/darkstalker></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#type">type (obj)</a></td>
+	<td class="summary">Gets the type of the supplied object or the _type value if present.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#map_copy">map_copy (dest, src, fn)</a></td>
+	<td class="summary">Copies key-value pairs from one table to another and applies a function to the values.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#check_args">check_args (args, rules, r_name)</a></td>
+	<td class="summary">Checks if the arguments in the specified table match the rules.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#resource_call">resource_call (res, client, args)</a></td>
+	<td class="summary">Performs an API call with the data on a resource object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#object_call">object_call (obj, args)</a></td>
+	<td class="summary">Performs an API call with the data from an object returned by other API calls.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#resource_builder">resource_builder (method, path)</a></td>
+	<td class="summary">Creates a resource builder object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#join_pairs">join_pairs (tbl, sep)</a></td>
+	<td class="summary">Creates a list from a table by joining key-value pairs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#parse_headers">parse_headers (list)</a></td>
+	<td class="summary">Extracts key-value pairs from a HTTP headers list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#table_writer">table_writer (tbl, data)</a></td>
+	<td class="summary">Appends data to a table.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "type"></a>
+    <strong>type (obj)</strong>
+    </dt>
+    <dd>
+    Gets the type of the supplied object or the _type value if present.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">obj</span>
+               Any value.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The type of the supplied object.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "map_copy"></a>
+    <strong>map_copy (dest, src, fn)</strong>
+    </dt>
+    <dd>
+    Copies key-value pairs from one table to another and applies a function to the values.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dest</span>
+              Destination table.
+        </li>
+        <li><span class="parameter">src</span>
+               Source table.
+        </li>
+        <li><span class="parameter">fn</span>
+                Function applied to values before assigning them.
+                  It's called as <code>fn(value, key)</code> for each key in <code>src</code>,
+                  then the result is assigned to <code>dest[key]</code>, unless it's <code>nil</code>.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The <code>dest</code> argument.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "check_args"></a>
+    <strong>check_args (args, rules, r_name)</strong>
+    </dt>
+    <dd>
+    Checks if the arguments in the specified table match the rules.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">args</span>
+              Table with arguments to be checked.
+        </li>
+        <li><span class="parameter">rules</span>
+             Rules to check against.
+        </li>
+        <li><span class="parameter">r_name</span>
+            Name of the resource that is being checked (for error messages).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        The <code>args</code> table with the values coerced to their types, or <code>nil</code> on error.</li>
+        <li>
+        The error string if <code>args</code> is invalid.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "resource_call"></a>
+    <strong>resource_call (res, client, args)</strong>
+    </dt>
+    <dd>
+    Performs an API call with the data on a resource object.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">res</span>
+               Resource object (from <a href="../modules/luatwit.resources.html#">luatwit.resources</a>).
+        </li>
+        <li><span class="parameter">client</span>
+            API client (<a href="../modules/luatwit.html#api">luatwit.api</a> instance).
+        </li>
+        <li><span class="parameter">args</span>
+              Table with method arguments.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The result of the API call.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/luatwit.html#api:raw_call">raw_call</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "object_call"></a>
+    <strong>object_call (obj, args)</strong>
+    </dt>
+    <dd>
+    Performs an API call with the data from an object returned by other API calls.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">obj</span>
+               Table returned by <a href="../modules/luatwit.html#api:raw_call">luatwit.api.raw_call</a>.
+        </li>
+        <li><span class="parameter">args</span>
+              Table with method arguments.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The result of the API call.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "resource_builder"></a>
+    <strong>resource_builder (method, path)</strong>
+    </dt>
+    <dd>
+    Creates a resource builder object.  It's used to construct the fields of <a href="../modules/luatwit.resources.html#">luatwit.resources</a>.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            HTTP method.
+        </li>
+        <li><span class="parameter">path</span>
+              Resource path.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Resource builder object. Must call <code>:finish()</code> after the construction is done.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "join_pairs"></a>
+    <strong>join_pairs (tbl, sep)</strong>
+    </dt>
+    <dd>
+    Creates a list from a table by joining key-value pairs.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+               Source table.
+        </li>
+        <li><span class="parameter">sep</span>
+               Separator used to join the keys and values.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        List table.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "parse_headers"></a>
+    <strong>parse_headers (list)</strong>
+    </dt>
+    <dd>
+    Extracts key-value pairs from a HTTP headers list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">list</span>
+              List table with the header strings.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Headers table.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "table_writer"></a>
+    <strong>table_writer (tbl, data)</strong>
+    </dt>
+    <dd>
+    Appends data to a table.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+               Destination table.
+        </li>
+        <li><span class="parameter">data</span>
+              Data to append.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-04-15 00:14:34 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
