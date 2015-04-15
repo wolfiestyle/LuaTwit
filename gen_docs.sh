@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -eu
 STATUS=$(git status --porcelain)
 DOC_TMP=$(mktemp -d)
 
@@ -16,13 +16,14 @@ if [ -n "$STATUS" ]; then
   exit 1
 else
   CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  for tag in "master" $(git tag); do
+  TAGS="master $(git tag)"
+  for tag in $TAGS; do
     generate_docs "$tag"
   done
   git checkout "gh-pages"
-  rm -rf *
+  rm -rf examples modules topics index.html ldoc.css $TAGS
   mv "$DOC_TMP"/* .
-  git add .
+  git add $TAGS
   git commit
   git checkout "$CUR_BRANCH"
 fi
