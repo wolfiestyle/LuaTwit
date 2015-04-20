@@ -46,6 +46,8 @@ end
 
 local type_handlers = {}
 
+local rule_mt   -- (defined below)
+
 -- Builds a rule table from it's declaration in resources.
 local function build_rules(args_decl)
     local req_list, opt_list = {}, {}
@@ -68,7 +70,7 @@ local function build_rules(args_decl)
         local list = required and req_list or opt_list
         list[name] = handler
     end
-    return { required = req_list, optional = opt_list }
+    return setmetatable({ required = req_list, optional = opt_list }, rule_mt)
 end
 
 -- type "any": accept anything
@@ -165,12 +167,12 @@ end
 
 --- Checks if the arguments in the specified table match the rules.
 --
--- @param args      Table with arguments to be checked.
 -- @param rules     Rules to check against.
+-- @param args      Table with arguments to be checked.
 -- @param r_name    Name of the resource that is being checked (for error messages).
 -- @return          The `args` table with the values coerced to their types, or `nil` on error.
 -- @return          The error string if `args` is invalid.
-function _M.check_args(args, rules, r_name)
+function _M.check_args(rules, args, r_name)
     r_name = r_name or "error"
     if type(args) ~= "table" then
         return nil, r_name .. ": arguments must be passed in a table"
@@ -203,6 +205,11 @@ function _M.check_args(args, rules, r_name)
     end
     return args
 end
+
+-- Allows calling check_args as method.rules()
+rule_mt = {
+    __call = _M.check_args,
+}
 
 local resource_builder_mt = {
     _type = "resource_builder",

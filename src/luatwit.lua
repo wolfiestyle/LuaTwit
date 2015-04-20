@@ -93,7 +93,7 @@ end
 function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"
-    assert(common.check_args(args, decl.rules, name))
+    assert(decl.rules(args, name))
 
     local base_url = decl.base_url or self.resources._base_url
     local url, request = build_request(base_url, decl.path, args, decl.rules and decl.rules.optional, defaults)
@@ -209,7 +209,7 @@ local http_request_args = {
 -- @return      Request response.
 -- @see luatwit.http.service:request, luatwit.http.service:async_request
 function api:http_request(args)
-    assert(common.check_args(args, http_request_args, "http_request"))
+    assert(common.check_args(http_request_args, args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
     assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
@@ -251,7 +251,7 @@ local api_new_args = {
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function api.new(keys, http_svc, resources, objects)
-    assert(common.check_args(keys, api_new_args, "api.new"))
+    assert(common.check_args(api_new_args, keys, "api.new"))
 
     local self = {
         __index = api_index,
