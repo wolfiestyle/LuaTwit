@@ -48,8 +48,11 @@ local type_handlers = {}
 
 local rule_mt   -- (defined below)
 
--- Builds a rule table from it's declaration in resources.
-local function build_rules(args_decl)
+--- Builds a rule checker from a rule declaration table.
+--
+-- @param args_decl     Table with argument rules.
+-- @return              A callable rule table.
+function _M.build_rules(args_decl)
     local req_list, opt_list = {}, {}
     for name, decl in pairs(args_decl) do
         assert(type(name) == "string", "argument name must be a string")
@@ -217,7 +220,7 @@ local resource_builder_mt = {
 resource_builder_mt.__index = resource_builder_mt
 
 function resource_builder_mt:args(args_decl)
-    self.rules = build_rules(args_decl)
+    self.rules = _M.build_rules(args_decl)
     return self
 end
 
