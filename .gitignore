@@ -11,6 +11,6 @@
 a.out
 gmon.out
 luac.out
-doc/
-out/
+doc
+out
 tools/api_desc
