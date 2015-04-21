@@ -191,15 +191,11 @@ function api:set_callback_handler(fn)
     self.callback_handler = fn
 end
 
-local http_request_args = {
-    required = {
-        url = "string",
-    },
-    optional = {
-        method = "string",
-        body = "any",   -- string or table
-        headers = "table",
-    },
+local http_request_args = common.build_rules{
+    url = { type = "string", required = true },
+    method = "string",
+    body = "any",   -- string or table
+    headers = "table",
 }
 
 --- Performs an HTTP request.
@@ -209,7 +205,7 @@ local http_request_args = {
 -- @return      Request response.
 -- @see luatwit.http.service:request, luatwit.http.service:async_request
 function api:http_request(args)
-    assert(common.check_args(http_request_args, args, "http_request"))
+    assert(http_request_args(args, "http_request"))
     assert(not args._callback or self.callback_handler, "need callback handler")
     assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
@@ -229,15 +225,11 @@ local function api_index(self, key)
     return api[key] or self.resources[key]
 end
 
-local api_new_args = {
-    required = {
-        consumer_key = "string",
-        consumer_secret = "string",
-    },
-    optional = {
-        oauth_token = "string",
-        oauth_token_secret = "string",
-    },
+local api_new_args = common.build_rules{
+    consumer_key = { type = "string", required = true },
+    consumer_secret = { type = "string", required = true },
+    oauth_token = "string",
+    oauth_token_secret = "string",
 }
 
 --- Creates a new `api` object with the supplied keys.
@@ -251,7 +243,7 @@ local api_new_args = {
 -- @return          New instance of the `api` class.
 -- @see luatwit.objects.access_token
 function api.new(keys, http_svc, resources, objects)
-    assert(common.check_args(api_new_args, keys, "api.new"))
+    assert(api_new_args(keys, "api.new"))
 
     local self = {
         __index = api_index,
