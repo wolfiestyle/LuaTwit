@@ -14,6 +14,9 @@ local unpackn = function(t) return table_unpack(t, 1, t.n) end
 
 local _M = {}
 
+-- HTTP user agent string
+_M.user_agent = "LuaTwit/0.3.1 libcurl/" .. curl.version_info().version
+
 -- HTTP Headers returned by the requests.
 local headers_mt = {}
 headers_mt.__index = headers_mt
@@ -338,6 +341,7 @@ local function build_easy_handle(method, url, body, headers)
     :setopt_accept_encoding ""
     :setopt_low_speed_limit(1)
     :setopt_low_speed_time(90)
+    :setopt_useragent(_M.user_agent)
     :setopt_writefunction(table_writer, resp_body)
     :setopt_headerfunction(table_writer, resp_headers)
     if method then handle:setopt_customrequest(method) end
