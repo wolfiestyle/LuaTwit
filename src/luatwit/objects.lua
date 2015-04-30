@@ -283,8 +283,8 @@ local user_list = _
 -- @return          An `userid_array` object.
 function user_list:get_ids()
     local ids = {}
-    for _, user in ipairs(self) do
-        ids[#ids + 1] = user.id_str
+    for _, usr in ipairs(self) do
+        ids[#ids + 1] = usr.id_str
     end
     ids._get_client = self._get_client
     return setmetatable(ids, _M.userid_array)
