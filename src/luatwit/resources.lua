@@ -246,6 +246,7 @@ _M.get_received_dms = GET "direct_messages"
         count = "integer",
         include_entities = "boolean",
         skip_status = "boolean",
+        full_text = "boolean",
     }
     :type "dm_list"
 
@@ -257,6 +258,7 @@ _M.get_sent_dms = GET "direct_messages/sent"
         count = "integer",
         page = "integer",
         include_entities = "boolean",
+        full_text = "boolean",
     }
     :type "dm_list"
 
@@ -264,6 +266,7 @@ _M.get_sent_dms = GET "direct_messages/sent"
 _M.get_dm = GET "direct_messages/show"
     :args{
         id = required "integer",
+        full_text = "boolean",
     }
     :type "dm"
 
