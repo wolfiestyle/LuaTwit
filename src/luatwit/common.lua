@@ -8,6 +8,9 @@ local assert, error, ipairs, pairs, setmetatable, table_concat, tonumber, tostri
 
 local _M = {}
 
+--- Set to `true` if 64 bit integer support was detected (Lua 5.3)
+_M.has_64bit_int = math.type and math.type(tonumber "0x7FFFFFFFFFFFFFFF") == "integer"
+
 --- Performs an API call with the data on a resource object.
 --
 -- @param res       Resource object (from `luatwit.resources`).
@@ -302,6 +305,31 @@ end
 function object:bind(fn)
     return function(...)
         return fn(self, ...)
+    end
+end
+
+-- if we're on Lua 5.3, then it's safe to use `id` instead of `id_str`
+if _M.has_64bit_int then
+    function _M.obj_cmp(a, b)
+        return a.id - b.id
+    end
+    function _M.obj_lt(a, b)
+        return a.id < b.id
+    end
+    function _M.obj_eq(a, b)
+        return a.id == b.id
+    end
+else
+    local util = require "luatwit.util"
+    local id_cmp, id_lt = util.id_cmp, util.id_lt
+    function _M.obj_cmp(a, b)
+        return id_cmp(a.id_str, b.id_str)
+    end
+    function _M.obj_lt(a, b)
+        return id_lt(a.id_str, b.id_str)
+    end
+    function _M.obj_eq(a, b)
+        return a.id_str == b.id_str
     end
 end
 

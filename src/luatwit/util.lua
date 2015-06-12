@@ -98,4 +98,16 @@ function _M.id_cmp(a, b)
     return a > b and 1 or -1
 end
 
+--- Operator `<` for string ids (id_str fields).
+--
+-- @param a         First id_str to compare.
+-- @param b         Second id_str to compare.
+-- @return          `true` if a < b, otherwise `false`.
+function _M.id_lt(a, b)
+    if a == b then return false end
+    local dl = #a - #b
+    if dl ~= 0 then return dl < 0 end
+    return a < b
+end
+
 return _M

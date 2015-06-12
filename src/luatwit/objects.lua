@@ -74,6 +74,9 @@ end
 _M.user = new_type{ status = "tweet", entities = "entities" }
 local user = _
 
+--- Defines object equality by comparing the `id` or `id_str` fields.
+user.__eq = common.obj_eq
+
 -- Calls an API method referencing this user.
 local function user_method(self, fn, args)
     args = args or {}
@@ -315,6 +318,13 @@ end
 _M.tweet = new_type({ user = "user", entities = "entities", retweeted_status = "tweet" }, "favorited")
 local tweet = _
 
+--- Compares two objects. See `luatwit.util.id_cmp`.
+tweet.__sub = common.obj_cmp
+--- Defines the `<` operator by comparing the `id` or `id_str` fields.
+tweet.__lt = common.obj_lt
+--- Defines object equality by comparing the `id` or `id_str` fields.
+tweet.__eq = common.obj_eq
+
 -- Calls an API method referencing this tweet.
 local function tweet_method(self, fn, args)
     args = args or {}
@@ -431,6 +441,13 @@ end
 -- @type dm
 _M.dm = new_type({ recipient = "user", sender = "user", entities = "entities" }, "recipient")
 local dm = _
+
+--- Compares two objects. See `luatwit.util.id_cmp`.
+dm.__sub = common.obj_cmp
+--- Defines the `<` operator by comparing the `id` or `id_str` fields.
+dm.__lt = common.obj_lt
+--- Defines object equality by comparing the `id` or `id_str` fields.
+dm.__eq = common.obj_eq
 
 --- Sends a reply to this DM.
 --

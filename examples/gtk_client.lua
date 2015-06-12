@@ -45,9 +45,9 @@ local window = Gtk.Window{
 }
 
 -- builds a tweet row widget
-local function build_tweet_item(header, text, footer)
+local function build_tweet_item(id, header, text, footer)
     local w = Gtk.Box{
-        id = "main",
+        id = id,
         spacing = 10,
         Gtk.Image{ id = "icon", width = 48, yalign = 0, ypad = 3 },
         Gtk.EventBox{
@@ -100,13 +100,13 @@ function ibMessage:on_response(resp_id)
     end
 end
 
-local row_ids = {}
+local seen_tweets = {}
 
 -- setup the ListBox sort functions
 local function listbox_sort_func(ra, rb)
-    local a = row_ids[ra:get_child()]
-    local b = row_ids[rb:get_child()]
-    return util.id_cmp(b, a)
+    local a = seen_tweets[ra:get_child().id]
+    local b = seen_tweets[rb:get_child().id]
+    return b - a
 end
 
 lstHome:set_sort_func(listbox_sort_func)
@@ -232,15 +232,13 @@ local function ui_request_avatar(item, user)
     }
 end
 
-local seen_tweets = {}
-
 local build_tweet_menu
 
 -- displays the popup menu for a tweet
 local function event_tweet_clicked(self, ev)
     if ev:triggers_context_menu() then
         local item = self:get_parent()   -- content -> main
-        local tweet = seen_tweets[row_ids[item]]
+        local tweet = seen_tweets[item.id]
         local menu = build_tweet_menu(tweet, item)
         menu:popup(nil, nil, nil, nil, ev.button, ev.time)
     end
@@ -257,8 +255,8 @@ local function ui_append_tweet(list, tweet)
     end
     if not added_to_list[list][id_str] then
         added_to_list[list][id_str] = true
-        local item = build_tweet_item(parse_tweet(tweet))
-        row_ids[item] = id_str
+        local item = build_tweet_item(id_str, parse_tweet(tweet))
+        tweet._row = item
         item.child.content.on_button_press_event = event_tweet_clicked
         local user = tweet.retweeted_status and tweet.retweeted_status.user or tweet.user
         item.child.icon:set_tooltip_markup(user_tooltip(user))
@@ -270,11 +268,11 @@ end
 -- removes a tweet from the specified ListBox
 local function ui_remove_tweet(list, tweet)
     local id_str = tweet.id_str
-    for item, id in pairs(row_ids) do
+    for id, tw in pairs(seen_tweets) do
         if id == id_str then
             if added_to_list[list][id] then
-                item:get_parent():destroy() -- delete the ListBoxRow
-                row_ids[item] = nil
+                tw._row:get_parent():destroy() -- delete the ListBoxRow
+                tw._row = nil
                 added_to_list[list][id] = nil
                 return true
             end
