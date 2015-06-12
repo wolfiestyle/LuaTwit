@@ -23,7 +23,7 @@ _M._authorize_url = "https://api.twitter.com/oauth/authorize"
 local resource_base = {
     _type = "resource",
     default_args = {
-        stringify_ids = true,
+        stringify_ids = not common.has_64bit_int or nil,
         oauth_callback = "oob",
         stringify_friend_ids = true,
     },
