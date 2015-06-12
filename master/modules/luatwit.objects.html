@@ -399,6 +399,10 @@
 <h2><a href="#Class_user">Class user </a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#user.__eq">user.__eq</a></td>
+	<td class="summary">Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#user:get_tweets">user:get_tweets (args)</a></td>
 	<td class="summary">Gets a list of tweets posted by this user.</td>
 	</tr>
@@ -490,6 +494,18 @@
 <h2><a href="#Class_tweet">Class tweet </a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#tweet.__sub">tweet.__sub</a></td>
+	<td class="summary">Compares two objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet.__lt">tweet.__lt</a></td>
+	<td class="summary">Defines the <code>&lt;</code> operator by comparing the <code>id</code> or <code>id_str</code> fields.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tweet.__eq">tweet.__eq</a></td>
+	<td class="summary">Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#tweet:reply">tweet:reply (args)</a></td>
 	<td class="summary">Sends a tweet as a reply to this tweet.</td>
 	</tr>
@@ -528,6 +544,18 @@
 </table>
 <h2><a href="#Class_dm">Class dm </a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#dm.__sub">dm.__sub</a></td>
+	<td class="summary">Compares two objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dm.__lt">dm.__lt</a></td>
+	<td class="summary">Defines the <code>&lt;</code> operator by comparing the <code>id</code> or <code>id_str</code> fields.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dm.__eq">dm.__eq</a></td>
+	<td class="summary">Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#dm:reply">dm:reply (args)</a></td>
 	<td class="summary">Sends a reply to this DM.</td>
@@ -593,7 +621,7 @@
 <br/>
 
 
-    <h2><a name="Functions"></a>Functions</h2>
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
     <dt>
@@ -1205,7 +1233,7 @@
 
 </dd>
 </dl>
-    <h2><a name="Fields"></a>Fields</h2>
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
 
     <dl class="function">
     <dt>
@@ -1960,10 +1988,27 @@
 
 </dd>
 </dl>
-    <h2><a name="Class_user"></a>Class user </h2>
+    <h2 class="section-header has-description"><a name="Class_user"></a>Class user </h2>
 
-        User object.
+          <div class="section-description">
+          User object.
+          </div>
     <dl class="function">
+    <dt>
+    <a name = "user.__eq"></a>
+    <strong>user.__eq</strong>
+    </dt>
+    <dd>
+    Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.
+
+    </ul>
+
+
+
+
+
+
+</dd>
     <dt>
     <a name = "user:get_tweets"></a>
     <strong>user:get_tweets (args)</strong>
@@ -2540,10 +2585,57 @@
 
 </dd>
 </dl>
-    <h2><a name="Class_tweet"></a>Class tweet </h2>
+    <h2 class="section-header has-description"><a name="Class_tweet"></a>Class tweet </h2>
 
-        Tweet object.
+          <div class="section-description">
+          Tweet object.
+          </div>
     <dl class="function">
+    <dt>
+    <a name = "tweet.__sub"></a>
+    <strong>tweet.__sub</strong>
+    </dt>
+    <dd>
+    Compares two objects.  See <a href="../modules/luatwit.util.html#id_cmp">luatwit.util.id_cmp</a>.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet.__lt"></a>
+    <strong>tweet.__lt</strong>
+    </dt>
+    <dd>
+    Defines the <code>&lt;</code> operator by comparing the <code>id</code> or <code>id_str</code> fields.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tweet.__eq"></a>
+    <strong>tweet.__eq</strong>
+    </dt>
+    <dd>
+    Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.
+
+    </ul>
+
+
+
+
+
+
+</dd>
     <dt>
     <a name = "tweet:reply"></a>
     <strong>tweet:reply (args)</strong>
@@ -2781,10 +2873,57 @@
 
 </dd>
 </dl>
-    <h2><a name="Class_dm"></a>Class dm </h2>
+    <h2 class="section-header has-description"><a name="Class_dm"></a>Class dm </h2>
 
-        Direct message object.
+          <div class="section-description">
+          Direct message object.
+          </div>
     <dl class="function">
+    <dt>
+    <a name = "dm.__sub"></a>
+    <strong>dm.__sub</strong>
+    </dt>
+    <dd>
+    Compares two objects.  See <a href="../modules/luatwit.util.html#id_cmp">luatwit.util.id_cmp</a>.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dm.__lt"></a>
+    <strong>dm.__lt</strong>
+    </dt>
+    <dd>
+    Defines the <code>&lt;</code> operator by comparing the <code>id</code> or <code>id_str</code> fields.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dm.__eq"></a>
+    <strong>dm.__eq</strong>
+    </dt>
+    <dd>
+    Defines object equality by comparing the <code>id</code> or <code>id_str</code> fields.
+
+    </ul>
+
+
+
+
+
+
+</dd>
     <dt>
     <a name = "dm:reply"></a>
     <strong>dm:reply (args)</strong>
@@ -2838,9 +2977,11 @@
 
 </dd>
 </dl>
-    <h2><a name="Class_userlist"></a>Class userlist </h2>
+    <h2 class="section-header has-description"><a name="Class_userlist"></a>Class userlist </h2>
 
-        User list.
+          <div class="section-description">
+          User list.
+          </div>
     <dl class="function">
     <dt>
     <a name = "userlist:get_tweets"></a>
@@ -3166,7 +3307,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-30 16:43:05 </i>
+<i style="float:right;">Last updated 2015-06-11 22:58:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

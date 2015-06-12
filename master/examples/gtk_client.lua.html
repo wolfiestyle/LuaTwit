@@ -112,9 +112,9 @@ client.http:set_conn_limits(<span class="number">12</span>, <span class="number"
 }
 
 <span class="comment">-- builds a tweet row widget
-</span><span class="keyword">local</span> <span class="keyword">function</span> build_tweet_item(header, text, footer)
+</span><span class="keyword">local</span> <span class="keyword">function</span> build_tweet_item(id, header, text, footer)
     <span class="keyword">local</span> w = Gtk.Box{
-        id = <span class="string">"main"</span>,
+        id = id,
         spacing = <span class="number">10</span>,
         Gtk.Image{ id = <span class="string">"icon"</span>, width = <span class="number">48</span>, yalign = <span class="number">0</span>, ypad = <span class="number">3</span> },
         Gtk.EventBox{
@@ -167,13 +167,13 @@ ibMessage:get_content_area():add(lblInfoText)
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-<span class="keyword">local</span> row_ids = {}
+<span class="keyword">local</span> seen_tweets = {}
 
 <span class="comment">-- setup the ListBox sort functions
 </span><span class="keyword">local</span> <span class="keyword">function</span> listbox_sort_func(ra, rb)
-    <span class="keyword">local</span> a = row_ids[ra:get_child()]
-    <span class="keyword">local</span> b = row_ids[rb:get_child()]
-    <span class="keyword">return</span> util.id_cmp(b, a)
+    <span class="keyword">local</span> a = seen_tweets[ra:get_child().id]
+    <span class="keyword">local</span> b = seen_tweets[rb:get_child().id]
+    <span class="keyword">return</span> b - a
 <span class="keyword">end</span>
 
 lstHome:set_sort_func(listbox_sort_func)
@@ -299,15 +299,13 @@ lstFavs:set_sort_func(listbox_sort_func)
     }
 <span class="keyword">end</span>
 
-<span class="keyword">local</span> seen_tweets = {}
-
 <span class="keyword">local</span> build_tweet_menu
 
 <span class="comment">-- displays the popup menu for a tweet
 </span><span class="keyword">local</span> <span class="keyword">function</span> event_tweet_clicked(self, ev)
     <span class="keyword">if</span> ev:triggers_context_menu() <span class="keyword">then</span>
         <span class="keyword">local</span> item = self:get_parent()   <span class="comment">-- content -&gt; main
-</span>        <span class="keyword">local</span> tweet = seen_tweets[row_ids[item]]
+</span>        <span class="keyword">local</span> tweet = seen_tweets[item.id]
         <span class="keyword">local</span> menu = build_tweet_menu(tweet, item)
         menu:popup(<span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, ev.button, ev.time)
     <span class="keyword">end</span>
@@ -324,8 +322,8 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="keyword">end</span>
     <span class="keyword">if</span> <span class="keyword">not</span> added_to_list[list][id_str] <span class="keyword">then</span>
         added_to_list[list][id_str] = <span class="keyword">true</span>
-        <span class="keyword">local</span> item = build_tweet_item(parse_tweet(tweet))
-        row_ids[item] = id_str
+        <span class="keyword">local</span> item = build_tweet_item(id_str, parse_tweet(tweet))
+        tweet._row = item
         item.child.content.on_button_press_event = event_tweet_clicked
         <span class="keyword">local</span> user = tweet.retweeted_status <span class="keyword">and</span> tweet.retweeted_status.user <span class="keyword">or</span> tweet.user
         item.child.icon:set_tooltip_markup(user_tooltip(user))
@@ -337,11 +335,11 @@ lstFavs:set_sort_func(listbox_sort_func)
 <span class="comment">-- removes a tweet from the specified ListBox
 </span><span class="keyword">local</span> <span class="keyword">function</span> ui_remove_tweet(list, tweet)
     <span class="keyword">local</span> id_str = tweet.id_str
-    <span class="keyword">for</span> item, id <span class="keyword">in</span> <span class="global">pairs</span>(row_ids) <span class="keyword">do</span>
+    <span class="keyword">for</span> id, tw <span class="keyword">in</span> <span class="global">pairs</span>(seen_tweets) <span class="keyword">do</span>
         <span class="keyword">if</span> id == id_str <span class="keyword">then</span>
             <span class="keyword">if</span> added_to_list[list][id] <span class="keyword">then</span>
-                item:get_parent():destroy() <span class="comment">-- delete the ListBoxRow
-</span>                row_ids[item] = <span class="keyword">nil</span>
+                tw._row:get_parent():destroy() <span class="comment">-- delete the ListBoxRow
+</span>                tw._row = <span class="keyword">nil</span>
                 added_to_list[list][id] = <span class="keyword">nil</span>
                 <span class="keyword">return</span> <span class="keyword">true</span>
             <span class="keyword">end</span>
@@ -555,7 +553,7 @@ Gtk.main()</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-04-30 16:43:05 </i>
+<i style="float:right;">Last updated 2015-06-11 22:58:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
