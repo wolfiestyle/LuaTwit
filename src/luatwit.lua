@@ -93,10 +93,11 @@ end
 function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"
-    assert(decl.rules(args, name))
+    local rules = decl.rules
+    if rules then assert(rules(args, name)) end
 
     local base_url = decl.base_url or self.resources._base_url
-    local url, request = build_request(base_url, decl.path, args, decl.rules and decl.rules.optional, defaults)
+    local url, request = build_request(base_url, decl.path, args, rules and rules.optional, defaults)
 
     local function parse_response(body, res_code, headers)
         local data, err, code = self:_parse_response(body, res_code, headers, decl.res_type)
