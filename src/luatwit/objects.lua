@@ -59,7 +59,8 @@ local error = _
 --
 -- @return          Error string.
 function error:__tostring()
-    return self.errors[1].message
+    local errors = self.errors
+    return errors and errors[1].message or self.error
 end
 
 --- Returns the numeric error code.
