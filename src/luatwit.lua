@@ -133,7 +133,7 @@ local function parse_json(self, str, tname, code)
     if type(json_data) ~= "table" then
         return json_data
     end
-    if code ~= 200 then
+    if code < 200 or code >= 300 then
         tname = "error"
     end
     if tname then
@@ -161,7 +161,7 @@ function api:_parse_response(body, res_code, headers, tname)
     end
     local content_type = headers:get_content_type()
     -- HTTP request failed, the error message is returned as json
-    if res_code ~= 200 and content_type ~= "application/json" then
+    if (res_code < 200 or res_code >= 300) and content_type ~= "application/json" then
         return nil, headers[1], res_code
     end
     if content_type == "application/json" then
