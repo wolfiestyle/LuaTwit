@@ -79,30 +79,74 @@
 </span><span class="keyword">local</span> args = lapp <span class="string">[[
 Sends a tweet.
     -m,--media (default "")     Image file to be included with the tweet
+    -c,--chunked (default "")   Upload file as chunked with specified mimetype
     &lt;text...&gt;  (string)         Tweet text
 ]]</span>
 
 <span class="keyword">local</span> msg = <span class="global">table</span>.concat(args.text, <span class="string">" "</span>)
-<span class="keyword">local</span> img_file = args.media ~= <span class="string">""</span> <span class="keyword">and</span> args.media <span class="keyword">or</span> <span class="keyword">nil</span>
+
+<span class="keyword">local</span> <span class="global">assert</span> = _VERSION &gt;= <span class="string">"Lua 5.3"</span> <span class="keyword">and</span> <span class="global">assert</span> <span class="keyword">or</span> <span class="keyword">function</span>(val, ...)
+    <span class="keyword">if</span> val <span class="keyword">then</span> <span class="keyword">return</span> val, ... <span class="keyword">end</span>
+    error(<span class="global">tostring</span>(<span class="global">select</span>(<span class="number">1</span>, ...)))
+<span class="keyword">end</span>
 
 <span class="comment">-- initialize the twitter client
 </span><span class="keyword">local</span> oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
 <span class="keyword">local</span> client = twitter.api.new(oauth_params)
 
+<span class="comment">-- upload the file
+</span><span class="keyword">local</span> media
+<span class="keyword">if</span> args.media ~= <span class="string">""</span> <span class="keyword">then</span>
+    <span class="keyword">if</span> args.chunked ~= <span class="string">""</span> <span class="keyword">then</span>
+        <span class="comment">-- chunked upload
+</span>        <span class="global">print</span>(<span class="string">"reading file: "</span> .. args.media)
+        <span class="keyword">local</span> file = <span class="global">io</span>.open(args.media, <span class="string">"rb"</span>)
+        <span class="keyword">local</span> chunks, total = {}, <span class="number">0</span>
+        <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+            <span class="keyword">local</span> buf = file:read(<span class="number">524288</span>)
+            <span class="keyword">if</span> buf == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">break</span> <span class="keyword">end</span>
+            total = total + #buf
+            chunks[#chunks + <span class="number">1</span>] = buf
+        <span class="keyword">end</span>
+        file:close()
+        <span class="global">print</span>(<span class="string">"upload INIT"</span>)
+        <span class="keyword">local</span> handle = <span class="global">assert</span>(client:upload_media_chunked{
+            command = <span class="string">"INIT"</span>,
+            media_type = args.chunked,
+            total_bytes = total,
+        })
+        pretty.dump(handle)
+        <span class="keyword">for</span> i, data <span class="keyword">in</span> <span class="global">ipairs</span>(chunks) <span class="keyword">do</span>
+            <span class="global">print</span>((<span class="string">"upload APPEND %d/%d"</span>):format(i, #chunks))
+            <span class="global">assert</span>(client:upload_media_chunked{
+                command = <span class="string">"APPEND"</span>,
+                media_id = handle.media_id_string,
+                segment_index = i-<span class="number">1</span>,
+                media = { filename = <span class="string">"media"</span>, data = data },
+            })
+        <span class="keyword">end</span>
+        <span class="global">print</span>(<span class="string">"upload FINALIZE"</span>)
+        media = <span class="global">assert</span>(client:upload_media_chunked{ command = <span class="string">"FINALIZE"</span>, media_id = handle.media_id_string })
+    <span class="keyword">else</span>
+        <span class="comment">-- regular upload
+</span>        <span class="global">print</span>(<span class="string">"uploading file: "</span> .. args.media)
+        <span class="keyword">local</span> img = <span class="global">assert</span>(util.attach_file(args.media))
+        media = <span class="global">assert</span>(client:upload_media{ media = img })
+        media._request = <span class="keyword">nil</span>  <span class="comment">-- don't print binary data to the tty
+</span>    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
 <span class="comment">-- send the tweet
 </span><span class="keyword">local</span> tw, err
-<span class="keyword">if</span> img_file <span class="keyword">then</span>
-    <span class="keyword">local</span> media, err_ = client:upload_media{ media = <span class="global">assert</span>(util.attach_file(img_file)) }
-    <span class="global">assert</span>(media, <span class="global">tostring</span>(err_))
-    media._request = <span class="keyword">nil</span>  <span class="comment">-- don't print binary data to the tty
-</span>    <span class="global">print</span>(<span class="string">"media = "</span> .. pretty.write(media))
+<span class="keyword">if</span> media <span class="keyword">then</span>
+    <span class="global">print</span>(<span class="string">"media = "</span> .. pretty.write(media))
     tw, err = media:tweet{ status = msg }
 <span class="keyword">else</span>
     tw, err = client:tweet{ status = msg }
 <span class="keyword">end</span>
 
 <span class="comment">-- the second return value contains the error if something went wrong, or http headers on success
-</span><span class="global">assert</span>(tw, <span class="global">tostring</span>(err))
+</span><span class="global">assert</span>(tw, err)
 
 <span class="comment">-- the result is json data in a Lua table
 </span><span class="global">print</span>(<span class="string">"user: @"</span> .. tw.user.screen_name .. <span class="string">" ("</span> .. tw.user.name .. <span class="string">")"</span>)
@@ -114,7 +158,7 @@ Sends a tweet.
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-06-11 22:58:33 </i>
+<i style="float:right;">Last updated 2015-08-17 03:00:52 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
