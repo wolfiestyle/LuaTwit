@@ -15,7 +15,7 @@ local unpackn = function(t) return table_unpack(t, 1, t.n) end
 local _M = {}
 
 -- HTTP user agent string
-_M.user_agent = "LuaTwit/0.3.2 libcurl/" .. curl.version_info().version
+_M.user_agent = "LuaTwit/0.3.3 libcurl/" .. curl.version_info().version
 
 -- HTTP Headers returned by the requests.
 local headers_mt = {}
