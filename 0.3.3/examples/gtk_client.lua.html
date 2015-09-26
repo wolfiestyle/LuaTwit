@@ -1,0 +1,560 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaTwit reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>LuaTwit</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../examples/async.lua.html">async.lua</a></li>
+  <li><a href="../examples/authorize.lua.html">authorize.lua</a></li>
+  <li><a href="../examples/followers.lua.html">followers.lua</a></li>
+  <li><strong>gtk_client.lua</strong></li>
+  <li><a href="../examples/repl.lua.html">repl.lua</a></li>
+  <li><a href="../examples/set_avatar.lua.html">set_avatar.lua</a></li>
+  <li><a href="../examples/stream.lua.html">stream.lua</a></li>
+  <li><a href="../examples/timeline.lua.html">timeline.lua</a></li>
+  <li><a href="../examples/tweet.lua.html">tweet.lua</a></li>
+  <li><a href="../examples/user_info.lua.html">user_info.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/luatwit.html">luatwit</a></li>
+  <li><a href="../modules/luatwit.common.html">luatwit.common</a></li>
+  <li><a href="../modules/luatwit.http.html">luatwit.http</a></li>
+  <li><a href="../modules/luatwit.objects.html">luatwit.objects</a></li>
+  <li><a href="../modules/luatwit.resources.html">luatwit.resources</a></li>
+  <li><a href="../modules/luatwit.util.html">luatwit.util</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../topics/README.md.html">README</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>gtk_client.lua</h2>
+<pre>
+#!/usr/bin/env lua
+<span class="comment">--
+</span><span class="comment">-- Simple GUI client built with GTK.
+</span><span class="comment">-- It uses the 'lgi' library (Gtk 3) for building the UI.
+</span><span class="comment">--
+</span><span class="keyword">local</span> cfg = <span class="global">require</span> <span class="string">"_config"</span>()
+<span class="keyword">local</span> twitter = <span class="global">require</span> <span class="string">"luatwit"</span>
+<span class="keyword">local</span> util = <span class="global">require</span> <span class="string">"luatwit.util"</span>
+<span class="keyword">local</span> pretty = <span class="global">require</span> <span class="string">"pl.pretty"</span>
+<span class="keyword">local</span> lgi = <span class="global">require</span> <span class="string">"lgi"</span>
+<span class="keyword">local</span> Gtk = lgi.Gtk
+<span class="keyword">local</span> GLib = lgi.GLib
+<span class="keyword">local</span> Gdk = lgi.Gdk
+<span class="keyword">local</span> GdkPixbuf = lgi.GdkPixbuf
+
+<span class="comment">-- load twitter keys (TODO: make a gui for the auth process)
+</span><span class="keyword">local</span> oauth_params = util.load_keys(cfg.app_keys, cfg.user_keys)
+<span class="keyword">local</span> client = twitter.api.new(oauth_params)
+client.http:set_conn_limits(<span class="number">12</span>, <span class="number">4</span>)
+
+<span class="comment">-- create the main window
+</span><span class="keyword">local</span> window = Gtk.Window{
+    title = <span class="string">"LuaTwit demo"</span>,
+    default_width = <span class="number">420</span>,
+    default_height = <span class="number">600</span>,
+    on_destroy = Gtk.main_quit,
+    Gtk.Box{
+        orientation = Gtk.Orientation.VERTICAL,
+        spacing = <span class="number">3</span>,
+        Gtk.Notebook{
+            id = <span class="string">"nbkPages"</span>,
+            vexpand = <span class="keyword">true</span>,
+            { Gtk.ScrolledWindow{ Gtk.ListBox{ id = <span class="string">"lstHome"</span>, selection_mode = <span class="string">"NONE"</span> } }, tab_label = <span class="string">"Home"</span> },
+            { Gtk.ScrolledWindow{ Gtk.ListBox{ id = <span class="string">"lstMentions"</span>, selection_mode = <span class="string">"NONE"</span> } }, tab_label = <span class="string">"Mentions"</span> },
+            { Gtk.ScrolledWindow{ Gtk.ListBox{ id = <span class="string">"lstFavs"</span>, selection_mode = <span class="string">"NONE"</span> } }, tab_label = <span class="string">"Favs"</span> },
+        },
+        Gtk.InfoBar{ id = <span class="string">"ibMessage"</span>, show_close_button = <span class="keyword">true</span>, no_show_all = <span class="keyword">true</span> },
+        Gtk.Box{
+            spacing = <span class="number">3</span>,
+            Gtk.Label{ id = <span class="string">"lblChars"</span>, label = <span class="string">"0"</span>, width_chars = <span class="number">3</span> },
+            Gtk.Entry{ id = <span class="string">"txtTweet"</span>, placeholder_text = <span class="string">"Send a tweet"</span>, max_length = <span class="number">140</span>, hexpand = <span class="keyword">true</span> },
+            Gtk.Button{ id = <span class="string">"cmdTweet"</span>, label = <span class="string">"Tweet"</span> },
+        },
+    },
+}
+
+<span class="comment">-- builds a tweet row widget
+</span><span class="keyword">local</span> <span class="keyword">function</span> build_tweet_item(id, header, text, footer)
+    <span class="keyword">local</span> w = Gtk.Box{
+        id = id,
+        spacing = <span class="number">10</span>,
+        Gtk.Image{ id = <span class="string">"icon"</span>, width = <span class="number">48</span>, yalign = <span class="number">0</span>, ypad = <span class="number">3</span> },
+        Gtk.EventBox{
+            id = <span class="string">"content"</span>,
+            Gtk.Box{
+                orientation = Gtk.Orientation.VERTICAL,
+                hexpand = <span class="keyword">true</span>,
+                spacing = <span class="number">5</span>,
+                Gtk.Label{ label = header, use_markup = <span class="keyword">true</span>, xalign = <span class="number">0</span>, ellipsize = <span class="string">"END"</span> },
+                Gtk.Label{ label = text, use_markup = <span class="keyword">true</span>, xalign = <span class="number">0</span>, vexpand = <span class="keyword">true</span>, wrap = <span class="keyword">true</span>, wrap_mode = <span class="string">"WORD_CHAR"</span> },
+                Gtk.Label{ label = footer, use_markup = <span class="keyword">true</span>, xalign = <span class="number">0</span>, wrap = <span class="keyword">true</span>, wrap_mode = <span class="string">"WORD_CHAR"</span> },
+            },
+        },
+    }
+    w:show_all()
+    <span class="keyword">return</span> w
+<span class="keyword">end</span>
+
+<span class="comment">-- obtain the widget handles from their id's
+</span><span class="keyword">local</span> _ = window.child
+<span class="keyword">local</span> nbkPages,   lstHome,   lstMentions,   lstFavs,   ibMessage,   lblChars,   txtTweet,   cmdTweet =
+    _.nbkPages, _.lstHome, _.lstMentions, _.lstFavs, _.ibMessage, _.lblChars, _.txtTweet, _.cmdTweet
+
+<span class="comment">-- setup the update button
+</span><span class="keyword">local</span> cmdUpdate = Gtk.Button.new_from_icon_name(<span class="string">"view-refresh"</span>, Gtk.IconSize.SMALL_TOOLBAR)
+cmdUpdate:show()
+nbkPages:set_action_widget(cmdUpdate, Gtk.PackType.END)
+
+<span class="comment">-- setup the info bar
+</span><span class="keyword">local</span> lblInfoText = Gtk.Label()
+lblInfoText:show()
+ibMessage:get_content_area():add(lblInfoText)
+
+<span class="keyword">local</span> <span class="keyword">function</span> ui_hide_info()
+    ibMessage:hide()
+<span class="keyword">end</span>
+
+<span class="comment">-- displays a message in the info bar
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_show_info(msg, is_error)
+    lblInfoText:set_label(msg)
+    ibMessage:set_message_type(is_error <span class="keyword">and</span> Gtk.MessageType.ERROR <span class="keyword">or</span> Gtk.MessageType.INFO)
+    ibMessage:show()
+    GLib.timeout_add(GLib.PRIORITY_DEFAULT, <span class="number">3000</span>, ui_hide_info)
+<span class="keyword">end</span>
+
+<span class="comment">-- handle the infobar builtin close button
+</span><span class="keyword">function</span> ibMessage:on_response(resp_id)
+    <span class="keyword">if</span> resp_id == Gtk.ResponseType.CLOSE <span class="keyword">then</span>
+        ui_hide_info()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> seen_tweets = {}
+
+<span class="comment">-- setup the ListBox sort functions
+</span><span class="keyword">local</span> <span class="keyword">function</span> listbox_sort_func(ra, rb)
+    <span class="keyword">local</span> a = seen_tweets[ra:get_child().id]
+    <span class="keyword">local</span> b = seen_tweets[rb:get_child().id]
+    <span class="keyword">return</span> b - a
+<span class="keyword">end</span>
+
+lstHome:set_sort_func(listbox_sort_func)
+lstMentions:set_sort_func(listbox_sort_func)
+lstFavs:set_sort_func(listbox_sort_func)
+
+<span class="keyword">local</span> <span class="keyword">function</span> escape_amp(text)
+    <span class="keyword">return</span> text:gsub(<span class="string">"&amp;"</span>, <span class="string">"&amp;amp;"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- pango processes HTML entities before anything else, so must escape all the &amp;'s, even in the URL
+</span><span class="keyword">local</span> <span class="keyword">function</span> pango_link(text, url)
+    <span class="keyword">return</span> (<span class="string">'&lt;a href="%s"&gt;%s&lt;/a&gt;'</span>):format(escape_amp(url), escape_amp(text))
+<span class="keyword">end</span>
+
+<span class="comment">-- replaces t.co url's with links from entities
+</span><span class="keyword">local</span> <span class="keyword">function</span> parse_entities(tweet, with_links)
+    <span class="keyword">local</span> urls = {}
+    <span class="keyword">local</span> fmt = with_links <span class="keyword">and</span> pango_link <span class="keyword">or</span> <span class="keyword">function</span>(x) <span class="keyword">return</span> x <span class="keyword">end</span>
+    <span class="keyword">for</span> _, item <span class="keyword">in</span> <span class="global">ipairs</span>(tweet.entities.urls) <span class="keyword">do</span>
+        <span class="keyword">local</span> key = item.url:match <span class="string">"https?://t%.co/(%w+)"</span>
+        urls[key] = fmt(item.display_url, item.expanded_url)
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> tweet.entities.media <span class="keyword">then</span>
+        <span class="keyword">for</span> _, item <span class="keyword">in</span> <span class="global">ipairs</span>(tweet.entities.media) <span class="keyword">do</span>
+            <span class="keyword">local</span> key = item.url:match <span class="string">"https?://t%.co/(%w+)"</span>
+            urls[key] = fmt(item.display_url, item.expanded_url)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> tweet.text:gsub(<span class="string">"https?://t%.co/(%w+)"</span>, urls)
+<span class="keyword">end</span>
+
+<span class="comment">-- extracts and formats the relevant information from a tweet
+</span><span class="keyword">local</span> <span class="keyword">function</span> parse_tweet(tweet, text_only)
+    <span class="keyword">local</span> header, footer = {}, {}
+    <span class="keyword">if</span> tweet.retweeted_status <span class="keyword">then</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> text_only <span class="keyword">then</span>
+            header[<span class="number">1</span>] = <span class="string">"🔃"</span> <span class="comment">-- symbol for retweets
+</span>            <span class="keyword">local</span> f = <span class="string">"retweeted by @"</span> .. tweet.user.screen_name
+            <span class="keyword">if</span> tweet.retweet_count &gt; <span class="number">1</span> <span class="keyword">then</span>
+                f = f .. <span class="string">" and "</span> .. tweet.retweet_count .. <span class="string">" others"</span>
+            <span class="keyword">end</span>
+            footer[<span class="number">1</span>] = f
+        <span class="keyword">end</span>
+        tweet = tweet.retweeted_status
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> text_only <span class="keyword">then</span>
+        <span class="keyword">return</span> <span class="string">"&lt;"</span> .. tweet.user.screen_name .. <span class="string">"&gt; "</span> .. parse_entities(tweet)
+    <span class="keyword">end</span>
+    header[#header + <span class="number">1</span>] = <span class="string">"&lt;b&gt;"</span> .. tweet.user.screen_name .. <span class="string">"&lt;/b&gt;"</span>
+    <span class="keyword">if</span> tweet.user.protected <span class="keyword">then</span>
+        header[#header + <span class="number">1</span>] = <span class="string">"🔒"</span> <span class="comment">-- symbol for locked accounts
+</span>    <span class="keyword">end</span>
+    header[#header + <span class="number">1</span>] = <span class="string">'&lt;span color="gray"&gt;'</span> .. escape_amp(tweet.user.name) .. <span class="string">'&lt;/span&gt;'</span>
+    <span class="keyword">if</span> tweet.in_reply_to_screen_name <span class="keyword">then</span>
+        footer[#footer + <span class="number">1</span>] = <span class="string">"in reply to @"</span> .. tweet.in_reply_to_screen_name
+    <span class="keyword">end</span>
+    footer[#footer + <span class="number">1</span>] = <span class="string">"via "</span> .. tweet.source:gsub(<span class="string">'rel=".*"'</span>, <span class="string">''</span>) <span class="comment">-- it's a valid link, but pango chokes with the extra attribute
+</span>    <span class="keyword">return</span> <span class="global">table</span>.concat(header, <span class="string">" "</span>),   <span class="comment">-- header
+</span>           parse_entities(tweet, <span class="keyword">true</span>), <span class="comment">-- text
+</span>           <span class="string">'&lt;small&gt;&lt;span color="gray"&gt;'</span> .. <span class="global">table</span>.concat(footer, <span class="string">", "</span>) .. <span class="string">'&lt;/span&gt;&lt;/small&gt;'</span>  <span class="comment">-- footer
+</span><span class="keyword">end</span>
+
+<span class="comment">-- generates the tooltip markup for an user
+</span><span class="keyword">local</span> <span class="keyword">function</span> user_tooltip(user)
+    <span class="keyword">local</span> fmt = <span class="string">[[
+&lt;big&gt;&lt;b&gt;$screen_name&lt;/b&gt;&lt;/big&gt;
+&lt;small&gt;$statuses_count Tweets&lt;/small&gt;
+
+&lt;b&gt;Name:&lt;/b&gt; $name
+&lt;b&gt;Location:&lt;/b&gt; $location
+&lt;b&gt;Bio:&lt;/b&gt; $description
+&lt;b&gt;Followers:&lt;/b&gt; $followers_count &lt;b&gt;Following:&lt;/b&gt; $friends_count &lt;b&gt;Listed:&lt;/b&gt; $listed_count]]</span>
+    <span class="keyword">return</span> escape_amp(fmt:gsub(<span class="string">"$([%w_]+)"</span>, user))
+<span class="keyword">end</span>
+
+<span class="comment">-- create a Pixbuf from image data
+</span><span class="keyword">local</span> <span class="keyword">function</span> pixbuf_from_image_data(data)
+    <span class="keyword">local</span> loader = GdkPixbuf.PixbufLoader()
+    loader:write(data)
+    loader:close()
+    <span class="keyword">return</span> loader:get_pixbuf()
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> avatar_store = {}
+<span class="keyword">local</span> avatar_pending = {}
+
+<span class="comment">-- requests user avatars
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_request_avatar(item, user)
+    <span class="keyword">local</span> url = user.profile_image_url
+    <span class="keyword">local</span> image = avatar_store[url]
+    <span class="keyword">if</span> image <span class="keyword">then</span>
+        item.child.icon:set_from_pixbuf(image)
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+    item.child.icon:set_from_icon_name(<span class="string">"image-loading"</span>, Gtk.IconSize.DIALOG)
+    <span class="comment">-- request already sent
+</span>    <span class="keyword">if</span> image == <span class="keyword">false</span> <span class="keyword">then</span>
+        <span class="keyword">local</span> pending = avatar_pending[url]
+        pending[#pending + <span class="number">1</span>] = item
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+    <span class="comment">-- first request
+</span>    avatar_store[url] = <span class="keyword">false</span>
+    avatar_pending[url] = { item }
+    client:http_request{
+        url = url,
+        _callback = <span class="keyword">function</span>(data, code)
+            <span class="keyword">if</span> code == <span class="number">200</span> <span class="keyword">then</span>
+                <span class="keyword">local</span> pb = pixbuf_from_image_data(data)
+                avatar_store[url] = pb
+                <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
+                    w.child.icon:set_from_pixbuf(pb)
+                <span class="keyword">end</span>
+            <span class="keyword">else</span>
+                avatar_store[url] = <span class="keyword">nil</span>
+                <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
+                    w.child.icon:set_from_icon_name(<span class="string">"image-missing"</span>, Gtk.IconSize.DIALOG)
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            avatar_pending[url] = <span class="keyword">nil</span>
+        <span class="keyword">end</span>
+    }
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> build_tweet_menu
+
+<span class="comment">-- displays the popup menu for a tweet
+</span><span class="keyword">local</span> <span class="keyword">function</span> event_tweet_clicked(self, ev)
+    <span class="keyword">if</span> ev:triggers_context_menu() <span class="keyword">then</span>
+        <span class="keyword">local</span> item = self:get_parent()   <span class="comment">-- content -&gt; main
+</span>        <span class="keyword">local</span> tweet = seen_tweets[item.id]
+        <span class="keyword">local</span> menu = build_tweet_menu(tweet, item)
+        menu:popup(<span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, ev.button, ev.time)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> added_to_list = {}
+
+<span class="comment">-- adds a tweet to the specified ListBox
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_append_tweet(list, tweet)
+    <span class="keyword">local</span> id_str = tweet.id_str
+    seen_tweets[id_str] = tweet
+    <span class="keyword">if</span> <span class="keyword">not</span> added_to_list[list] <span class="keyword">then</span>
+        added_to_list[list] = {}
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> added_to_list[list][id_str] <span class="keyword">then</span>
+        added_to_list[list][id_str] = <span class="keyword">true</span>
+        <span class="keyword">local</span> item = build_tweet_item(id_str, parse_tweet(tweet))
+        tweet._row = item
+        item.child.content.on_button_press_event = event_tweet_clicked
+        <span class="keyword">local</span> user = tweet.retweeted_status <span class="keyword">and</span> tweet.retweeted_status.user <span class="keyword">or</span> tweet.user
+        item.child.icon:set_tooltip_markup(user_tooltip(user))
+        ui_request_avatar(item, user)
+        list:add(item)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- removes a tweet from the specified ListBox
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_remove_tweet(list, tweet)
+    <span class="keyword">local</span> id_str = tweet.id_str
+    <span class="keyword">for</span> id, tw <span class="keyword">in</span> <span class="global">pairs</span>(seen_tweets) <span class="keyword">do</span>
+        <span class="keyword">if</span> id == id_str <span class="keyword">then</span>
+            <span class="keyword">if</span> added_to_list[list][id] <span class="keyword">then</span>
+                tw._row:get_parent():destroy() <span class="comment">-- delete the ListBoxRow
+</span>                tw._row = <span class="keyword">nil</span>
+                added_to_list[list][id] = <span class="keyword">nil</span>
+                <span class="keyword">return</span> <span class="keyword">true</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> replying_tweet
+
+<span class="comment">-- enables reply mode
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_set_reply_to(tweet)
+    replying_tweet = tweet
+    cmdTweet:set_label(<span class="string">"Reply"</span>)
+    txtTweet:set_text(<span class="string">"@"</span> .. tweet.user.screen_name .. <span class="string">" "</span>)
+    txtTweet:grab_focus()
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> copy_to_clipboard(text)
+    <span class="keyword">local</span> clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    clipboard:set_text(text, -<span class="number">1</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- builds the tweet popup menu
+</span><span class="keyword">function</span> build_tweet_menu(tweet, item)
+    <span class="keyword">local</span> menu = Gtk.Menu{
+        Gtk.MenuItem{ id = <span class="string">"reply"</span>, label = <span class="string">"Reply"</span> },
+        Gtk.MenuItem{ id = <span class="string">"fav"</span>, label = tweet.favorited <span class="keyword">and</span> <span class="string">"Un-favorite"</span> <span class="keyword">or</span> <span class="string">"Favorite"</span> },
+        Gtk.MenuItem{ id = <span class="string">"rt"</span>, label = <span class="string">"Retweet"</span> },
+        Gtk.SeparatorMenuItem(),
+        Gtk.MenuItem{ id = <span class="string">"copy"</span>, label = <span class="string">"Copy text"</span> },
+        Gtk.MenuItem{ id = <span class="string">"dump"</span>, label = <span class="string">"Copy raw data"</span> },
+    }
+
+    <span class="keyword">function</span> menu.child.reply:on_activate()
+        ui_set_reply_to(tweet)
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> menu.child.fav:on_activate()
+        <span class="keyword">if</span> tweet.favorited <span class="keyword">then</span>
+            tweet:unset_favorite{
+                _callback = <span class="keyword">function</span>(tw)
+                    ui_show_info(<span class="string">"Successfully removed from favorites"</span>)
+                    ui_remove_tweet(lstFavs, tweet)
+                    seen_tweets[tw.id_str] = tw
+                <span class="keyword">end</span>
+            }
+        <span class="keyword">else</span>
+            tweet:set_favorite{
+                _callback = <span class="keyword">function</span>(tw)
+                    ui_show_info(<span class="string">"Successfully added to favorites"</span>)
+                    ui_append_tweet(lstFavs, tw)
+                <span class="keyword">end</span>
+            }
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> menu.child.rt:on_activate()
+        tweet:retweet{
+            _callback = <span class="keyword">function</span>(tw)
+                ui_show_info(<span class="string">"Successfully retweeted "</span> .. tw.user.screen_name)
+            <span class="keyword">end</span>
+        }
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> menu.child.copy:on_activate()
+        copy_to_clipboard(parse_tweet(tweet, <span class="keyword">true</span>))
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> menu.child.dump:on_activate()
+        copy_to_clipboard(pretty.write(tweet))
+    <span class="keyword">end</span>
+
+    menu:show_all()
+    <span class="keyword">return</span> menu
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> ui_reset_entry()
+    txtTweet:set_text <span class="string">""</span>
+    lblChars:set_text <span class="string">"0"</span>
+    cmdTweet:set_label <span class="string">"Tweet"</span>
+    replying_tweet = <span class="keyword">nil</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- event for handling the Enter key
+</span><span class="keyword">function</span> txtTweet:on_activate()
+    <span class="keyword">local</span> text = self:get_text()
+    <span class="keyword">if</span> replying_tweet <span class="keyword">then</span>
+        replying_tweet:reply{
+            status = text,
+            _callback = <span class="keyword">function</span>(tweet)
+                ui_reset_entry()
+                ui_show_info(<span class="string">"Replied to "</span> .. tweet.in_reply_to_screen_name)
+                ui_append_tweet(lstHome, tweet)
+            <span class="keyword">end</span>
+        }
+        <span class="keyword">return</span>
+    <span class="keyword">end</span>
+    client:tweet{
+        status = text,
+        _callback = <span class="keyword">function</span>(tweet)
+            ui_reset_entry()
+            ui_show_info(<span class="string">"Tweet sent"</span>)
+            ui_append_tweet(lstHome, tweet)
+        <span class="keyword">end</span>
+    }
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> cmdTweet:on_clicked()
+    txtTweet:activate()
+<span class="keyword">end</span>
+
+<span class="comment">-- clear entry when pressing Esc
+</span><span class="keyword">function</span> txtTweet:on_key_press_event(ev)
+    <span class="keyword">if</span> ev.keyval == <span class="number">0xff1b</span> <span class="keyword">then</span>
+        ui_reset_entry()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- event for displaying the char count
+</span><span class="keyword">function</span> txtTweet:on_key_release_event(ev)
+    lblChars:set_text(self:get_text_length())
+<span class="keyword">end</span>
+
+<span class="comment">-- adds the content of a tweet list to the specified ListBox
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_append_tweet_list(list, tl)
+    <span class="keyword">for</span> i, tweet <span class="keyword">in</span> <span class="global">ipairs</span>(tl) <span class="keyword">do</span>
+        ui_append_tweet(list, tweet)
+        <span class="comment">-- process some events to prevent UI freeze
+</span>        <span class="keyword">if</span> i % <span class="number">5</span> == <span class="number">0</span> <span class="keyword">then</span>
+            <span class="keyword">while</span> Gtk.events_pending() <span class="keyword">do</span>
+                Gtk.main_iteration()
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- defines how to fill in the pages
+</span><span class="keyword">local</span> pages = {
+    { method = <span class="string">"get_home_timeline"</span>, list = lstHome },
+    { method = <span class="string">"get_mentions"</span>,      list = lstMentions },
+    { method = <span class="string">"get_favorites"</span>,     list = lstFavs },
+}
+
+<span class="comment">-- updates the timeline on the specified page
+</span><span class="keyword">local</span> <span class="keyword">function</span> ui_update_page(id)
+    <span class="keyword">local</span> page = pages[id]
+    <span class="keyword">local</span> args = {
+        count = <span class="number">50</span>,
+        since_id = page.last_id,
+        _callback = <span class="keyword">function</span>(tl)
+            <span class="keyword">if</span> #tl == <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+            page.last_id = tl[<span class="number">1</span>].id_str <span class="comment">-- assuming the first tweet is the newest one
+</span>            ui_append_tweet_list(page.list, tl)
+        <span class="keyword">end</span>
+    }
+    client[page.method](client, args)
+<span class="keyword">end</span>
+
+<span class="comment">-- event for manually updating the timelines
+</span><span class="keyword">function</span> cmdUpdate:on_clicked()
+    <span class="keyword">local</span> page = nbkPages:get_current_page()
+    ui_update_page(page + <span class="number">1</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- pending requests will be stored here
+</span><span class="keyword">local</span> requests = {}
+
+<span class="comment">-- checks if any of the requests are done and dispatches the callbacks
+</span><span class="keyword">local</span> <span class="keyword">function</span> update_requests()
+    client.http:update()
+    <span class="keyword">local</span> n = #requests
+    <span class="keyword">while</span> n &gt; <span class="number">0</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> fut, callback = <span class="global">unpack</span>(requests[n])
+        <span class="keyword">local</span> ready, res, hdr = fut:peek(<span class="keyword">true</span>)
+        <span class="keyword">if</span> ready <span class="keyword">then</span>
+            <span class="global">table</span>.remove(requests, n)
+            <span class="keyword">if</span> res == <span class="keyword">nil</span> <span class="keyword">then</span>  <span class="comment">-- error
+</span>                ui_show_info(<span class="global">tostring</span>(hdr), <span class="keyword">true</span>)
+            <span class="keyword">else</span>
+                callback(res, hdr)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        n = n - <span class="number">1</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> #requests &gt; <span class="number">0</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- setups a callback handler for interacting with the Gtk event loop
+</span>client:set_callback_handler(<span class="keyword">function</span>(fut, cb)
+    <span class="keyword">local</span> n = #requests
+    requests[n + <span class="number">1</span>] = { fut, cb }
+    <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">then</span>
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, <span class="number">200</span>, update_requests)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)
+
+<span class="comment">-- auto update every 1.5 minutes (10 req per 15 mins)
+</span>GLib.timeout_add(GLib.PRIORITY_DEFAULT, <span class="number">1000</span> * <span class="number">60</span> * <span class="number">1.5</span>, <span class="keyword">function</span>()
+    ui_update_page(<span class="number">1</span>)
+    ui_update_page(<span class="number">2</span>)
+    <span class="keyword">return</span> <span class="keyword">true</span>
+<span class="keyword">end</span>)
+
+<span class="comment">-- fill in the timelines
+</span>ui_update_page(<span class="number">1</span>)
+ui_update_page(<span class="number">2</span>)
+ui_update_page(<span class="number">3</span>)
+
+<span class="comment">-- enter the main loop
+</span>window:show_all()
+Gtk.main()</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-09-26 19:05:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
