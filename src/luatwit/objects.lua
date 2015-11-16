@@ -440,7 +440,7 @@ end
 
 --- Direct message object.
 -- @type dm
-_M.dm = new_type({ recipient = "user", sender = "user", entities = "entities" }, "recipient")
+_M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }
 local dm = _
 
 --- Compares two objects. See `luatwit.util.id_cmp`.
@@ -943,6 +943,9 @@ _M.friend_list_str = new_type({ friends_str = "userid_array" }, "friends_str")
 
 --- Stream message: misc events.
 _M.stream_event = new_type({ source = "user", target = "user", target_object = "_guess" }, "event")
+
+--- Stream message: DM.
+_M.stream_dm = new_type({ direct_message = "dm" }, "direct_message")
 
 
 -- fill in the _type field
