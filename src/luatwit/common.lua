@@ -175,17 +175,18 @@ end
 --
 -- @param rules     Rules to check against.
 -- @param args      Table with arguments to be checked.
+-- @param defaults  Default values from a previous request (used only for required args).
 -- @param r_name    Name of the resource that is being checked (for error messages).
 -- @return          The `args` table with the values coerced to their types, or `nil` on error.
 -- @return          The error string if `args` is invalid.
-function _M.check_args(rules, args, r_name)
+function _M.check_args(rules, args, defaults, r_name)
     r_name = r_name or "error"
     if type(args) ~= "table" then
         return nil, r_name .. ": arguments must be passed in a table"
     end
     if not rules then return args end
     for name, _ in pairs(rules.required) do
-        if args[name] == nil then
+        if args[name] == nil and (not defaults or defaults[name] == nil) then
             return nil, r_name .. ": missing required argument '" .. name .. "' in " .. build_args_str(rules, true)
         end
     end

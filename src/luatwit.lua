@@ -20,9 +20,10 @@ _M.api = api
 -- Builds the request url and arguments for the OAuth call.
 local function build_request(base_url, path, args, rules, defaults)
     local request = {}
-    if defaults then
+    if defaults and rules then
+        local opt, req = rules.optional, rules.required
         for k, v in pairs(defaults) do
-            if rules[k] ~= nil then
+            if opt[k] ~= nil or req[k] ~= nil then
                 request[k] = v
             end
         end
@@ -94,10 +95,10 @@ function api:raw_call(decl, args, defaults)
     args = args or {}
     local name = decl.name or "raw_call"
     local rules = decl.rules
-    if rules then assert(rules(args, name)) end
+    if rules then assert(rules(args, defaults, name)) end
 
     local base_url = decl.base_url or self.resources._base_url
-    local url, request = build_request(base_url, decl.path, args, rules and rules.optional, defaults)
+    local url, request = build_request(base_url, decl.path, args, rules, defaults)
 
     local function parse_response(body, res_code, headers)
         local data, err, code = self:_parse_response(body, res_code, headers, decl.res_type)
