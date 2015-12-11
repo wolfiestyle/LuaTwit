@@ -33,6 +33,30 @@ function _M.object_call(obj, args)
     return client:raw_call(res, args, obj._request)
 end
 
+--- Loads the previous page of an user cursored request.
+--
+-- @param self      Object that contains the cursor data.
+-- @param args      Extra arguments for the `_source_method` call.
+-- @return          Request result, or `false` if the current page is the first.
+function _M.cursor_prev(self, args)
+    if self.previous_cursor == 0 then return false end
+    args = args or {}
+    args.cursor = self.previous_cursor_str
+    return self:_source_method(args)
+end
+
+--- Loads the next page of an user cursored request.
+--
+-- @param self      Object that contains the cursor data.
+-- @param args      Extra arguments for the `_source_method` call.
+-- @return          Request result, or `false` if the current page is the last.
+function _M.cursor_next(self, args)
+    if self.next_cursor == 0 then return false end
+    args = args or {}
+    args.cursor = self.next_cursor_str
+    return self:_source_method(args)
+end
+
 -- Returns a string with the arguments on a set of rules.
 local function build_args_str(rules, only_req)
     local res = {}

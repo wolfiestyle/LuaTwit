@@ -299,20 +299,10 @@ _M.user_cursor = new_type{ users = "user_list" }
 local user_cursor = _
 
 --- Loads the next page of an user cursored request.
---
--- @return          Next `user_cursor` page, or `false` if the current page is the last.
-function user_cursor:next()
-    if self.next_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.next_cursor_str }
-end
+user_cursor.next = common.cursor_next
 
 --- Loads the previous page of an user cursored request.
---
--- @return          Previous `user_cursor` page, or `false` if the current page is the first.
-function user_cursor:prev()
-    if self.previous_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.previous_cursor_str }
-end
+user_cursor.prev = common.cursor_prev
 
 --- Tweet object.
 -- @type tweet
@@ -515,20 +505,10 @@ _M.userid_cursor = new_type{ ids = "userid_array" }
 local userid_cursor = _
 
 --- Loads the next page of an user id cursored request.
---
--- @return          Next `userid_cursor` page, or `false` if the current page is the last.
-function userid_cursor:next()
-    if self.next_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.next_cursor_str }
-end
+userid_cursor.next = common.cursor_next
 
 --- Loads the previous page of an user id cursored request.
---
--- @return          Previous `userid_cursor` page, or `false` if the current page is the first.
-function userid_cursor:prev()
-    if self.previous_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.previous_cursor_str }
-end
+userid_cursor.prev = common.cursor_prev
 
 --- Follow relation between the authenticated user and another one.
 _M.friendship = new_type()
@@ -744,20 +724,10 @@ _M.userlist_cursor = new_type{ lists = "userlist_list" }
 local userlist_cursor = _
 
 --- Loads the next page of an user list cursored request.
---
--- @return          Next `userlist_cursor` page, or `false` if the current page is the last.
-function userlist_cursor:next()
-    if self.next_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.next_cursor_str }
-end
+userlist_cursor.next = common.cursor_next
 
 --- Loads the previous page of an user list cursored request.
---
--- @return          Previous `userlist_cursor` page, or `false` if the current page is the first.
-function userlist_cursor:prev()
-    if self.previous_cursor == 0 then return false end
-    return self:_source_method{ cursor = self.previous_cursor_str }
-end
+userlist_cursor.prev = common.cursor_prev
 
 --- Saved search object.
 _M.saved_search = new_type()
