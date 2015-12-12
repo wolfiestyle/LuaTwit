@@ -101,14 +101,6 @@
 	<td class="summary">Constructs an <a href="../modules/luatwit.objects.html#userid_array">userid_array</a> from this object.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#user_cursor:next">user_cursor:next ()</a></td>
-	<td class="summary">Loads the next page of an user cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#user_cursor:prev">user_cursor:prev ()</a></td>
-	<td class="summary">Loads the previous page of an user cursored request.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#media:tweet">media:tweet (args)</a></td>
 	<td class="summary">Sends a tweet using this uploaded media.</td>
 	</tr>
@@ -125,14 +117,6 @@
 	<td class="summary">Returns the ids in this object as a string.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#userid_cursor:next">userid_cursor:next ()</a></td>
-	<td class="summary">Loads the next page of an user id cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userid_cursor:prev">userid_cursor:prev ()</a></td>
-	<td class="summary">Loads the previous page of an user id cursored request.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#friendship:get_user">friendship:get_user (args)</a></td>
 	<td class="summary">Gets the user profile referenced by this object.</td>
 	</tr>
@@ -147,14 +131,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#suggestion_category:get_users">suggestion_category:get_users ()</a></td>
 	<td class="summary">Gets the user list of this suggestion category.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_cursor:next">userlist_cursor:next ()</a></td>
-	<td class="summary">Loads the next page of an user list cursored request.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#userlist_cursor:prev">userlist_cursor:prev ()</a></td>
-	<td class="summary">Loads the previous page of an user list cursored request.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#saved_search:do_search">saved_search:do_search (args)</a></td>
@@ -212,6 +188,14 @@
 	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#user">user</a> objects.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#user_cursor.next">user_cursor.next</a></td>
+	<td class="summary">Loads the next page of an user cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#user_cursor.prev">user_cursor.prev</a></td>
+	<td class="summary">Loads the previous page of an user cursored request.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#tweet_list">tweet_list</a></td>
 	<td class="summary">List of <a href="../modules/luatwit.objects.html#tweet">tweet</a> objects.</td>
 	</tr>
@@ -242,6 +226,14 @@
 	<tr>
 	<td class="name" nowrap><a href="#userid_cursor">userid_cursor</a></td>
 	<td class="summary">Cursor of user ids.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor.next">userid_cursor.next</a></td>
+	<td class="summary">Loads the next page of an user id cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userid_cursor.prev">userid_cursor.prev</a></td>
+	<td class="summary">Loads the previous page of an user id cursored request.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#friendship">friendship</a></td>
@@ -282,6 +274,14 @@
 	<tr>
 	<td class="name" nowrap><a href="#userlist_cursor">userlist_cursor</a></td>
 	<td class="summary">Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor.next">userlist_cursor.next</a></td>
+	<td class="summary">Loads the next page of an user list cursored request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#userlist_cursor.prev">userlist_cursor.prev</a></td>
+	<td class="summary">Loads the previous page of an user list cursored request.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#saved_search">saved_search</a></td>
@@ -394,6 +394,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#stream_event">stream_event</a></td>
 	<td class="summary">Stream message: misc events.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stream_dm">stream_dm</a></td>
+	<td class="summary">Stream message: DM.</td>
 	</tr>
 </table>
 <h2><a href="#Class_user">Class user </a></h2>
@@ -713,46 +717,6 @@
 
 </dd>
     <dt>
-    <a name = "user_cursor:next"></a>
-    <strong>user_cursor:next ()</strong>
-    </dt>
-    <dd>
-    Loads the next page of an user cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Next <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> page, or <code>false</code> if the current page is the last.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "user_cursor:prev"></a>
-    <strong>user_cursor:prev ()</strong>
-    </dt>
-    <dd>
-    Loads the previous page of an user cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Previous <a href="../modules/luatwit.objects.html#user_cursor">user_cursor</a> page, or <code>false</code> if the current page is the first.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "media:tweet"></a>
     <strong>media:tweet (args)</strong>
     </dt>
@@ -838,46 +802,6 @@
     <ol>
 
         A comma-separated list with the ids in this object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userid_cursor:next"></a>
-    <strong>userid_cursor:next ()</strong>
-    </dt>
-    <dd>
-    Loads the next page of an user id cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Next <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> page, or <code>false</code> if the current page is the last.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userid_cursor:prev"></a>
-    <strong>userid_cursor:prev ()</strong>
-    </dt>
-    <dd>
-    Loads the previous page of an user id cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Previous <a href="../modules/luatwit.objects.html#userid_cursor">userid_cursor</a> page, or <code>false</code> if the current page is the first.
     </ol>
 
 
@@ -976,46 +900,6 @@
     <ol>
 
         An <a href="../modules/luatwit.objects.html#user_list">user_list</a> object.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist_cursor:next"></a>
-    <strong>userlist_cursor:next ()</strong>
-    </dt>
-    <dd>
-    Loads the next page of an user list cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Next <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> page, or <code>false</code> if the current page is the last.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "userlist_cursor:prev"></a>
-    <strong>userlist_cursor:prev ()</strong>
-    </dt>
-    <dd>
-    Loads the previous page of an user list cursored request.
-
-    </ul>
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Previous <a href="../modules/luatwit.objects.html#userlist_cursor">userlist_cursor</a> page, or <code>false</code> if the current page is the first.
     </ol>
 
 
@@ -1298,6 +1182,36 @@
 
 </dd>
     <dt>
+    <a name = "user_cursor.next"></a>
+    <strong>user_cursor.next</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user cursored request.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "user_cursor.prev"></a>
+    <strong>user_cursor.prev</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user cursored request.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "tweet_list"></a>
     <strong>tweet_list</strong>
     </dt>
@@ -1408,6 +1322,36 @@
     </dt>
     <dd>
     Cursor of user ids.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userid_cursor.next"></a>
+    <strong>userid_cursor.next</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user id cursored request.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userid_cursor.prev"></a>
+    <strong>userid_cursor.prev</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user id cursored request.
 
     </ul>
 
@@ -1558,6 +1502,36 @@
     </dt>
     <dd>
     Cursor of <a href="../modules/luatwit.objects.html#userlist">userlist</a> objects.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist_cursor.next"></a>
+    <strong>userlist_cursor.next</strong>
+    </dt>
+    <dd>
+    Loads the next page of an user list cursored request.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "userlist_cursor.prev"></a>
+    <strong>userlist_cursor.prev</strong>
+    </dt>
+    <dd>
+    Loads the previous page of an user list cursored request.
 
     </ul>
 
@@ -1978,6 +1952,21 @@
     </dt>
     <dd>
     Stream message: misc events.
+
+    </ul>
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stream_dm"></a>
+    <strong>stream_dm</strong>
+    </dt>
+    <dd>
+    Stream message: DM.
 
     </ul>
 
@@ -3307,7 +3296,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-09-26 19:05:24 </i>
+<i style="float:right;">Last updated 2015-12-11 23:25:27 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
