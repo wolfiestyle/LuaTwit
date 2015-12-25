@@ -211,14 +211,23 @@ function api:http_request(args)
     assert(not args._callback or self.callback_handler, "need callback handler")
     assert(not args._stream or args._async or args._callback, "streaming requires async interface")
 
+    local filter = args._filter
     if args._async or args._callback then
-        local fut = self.http:async_request(args.method, args.url, args.body, args.headers, args._filter, args._stream)
+        local fut = self.http:async_request(args.method, args.url, args.body, args.headers, args._stream)
+        if filter then
+            fut.pipe:add(filter)
+        end
         if args._callback then
             return fut, self.callback_handler(fut, args._callback)
         end
         return fut
     else
-        return self.http:request(args.method, args.url, args.body, args.headers, args._filter)
+        local resp_body, code, resp_headers = self.http:request(args.method, args.url, args.body, args.headers)
+        if filter then
+            return filter(resp_body, code, resp_headers)
+        else
+            return resp_body, code, resp_headers
+        end
     end
 end
 

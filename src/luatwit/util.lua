@@ -3,8 +3,8 @@
 -- @module  luatwit.util
 -- @author  darkstalker <https://github.com/darkstalker>
 -- @license MIT/X11
-local error, io_lines, io_open, ipairs, select, type =
-      error, io.lines, io.open, ipairs, select, type
+local error, io_lines, io_open, ipairs, select, setmetatable, type =
+      error, io.lines, io.open, ipairs, select, setmetatable, type
 
 local _M = {}
 
@@ -108,6 +108,41 @@ function _M.id_lt(a, b)
     local dl = #a - #b
     if dl ~= 0 then return dl < 0 end
     return a < b
+end
+
+-- identity function
+local function ident(...) return ... end
+
+--- A pipeline of functions.
+-- It composes all functions added to it, forming a call chain.
+-- @type pipe
+local pipe = {}
+pipe.__index = pipe
+_M.pipe = pipe
+
+--- Creates a new pipe
+--
+-- @return          New pipe object.
+function pipe.new()
+    return setmetatable({ chain = ident }, pipe)
+end
+
+--- Appends a new function to the pipe.
+--
+-- @param f         Function to be composed with the current chain.
+-- @return          The current pipe object with an updated chain.
+function pipe:add(f)
+    local g = self.chain
+    self.chain = function(...) return f(g(...)) end
+    return self
+end
+
+--- Calls the function chain stored in the pipe.
+--
+-- @param ...       Arguments for the first function in the chain.
+-- @return          The result of the last function.
+function pipe:__call(...)
+    return self.chain(...)
 end
 
 return _M

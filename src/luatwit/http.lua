@@ -7,6 +7,7 @@ local ipairs, next, pairs, pcall, select, setmetatable, table_concat, table_remo
       ipairs, next, pairs, pcall, select, setmetatable, table.concat, table.remove, tostring, type
 local curl = require "lcurl"
 local common = require "luatwit.common"
+local pipe = require "luatwit.util".pipe
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
 local table_unpack = table.unpack or unpack
@@ -52,8 +53,8 @@ end
 local future = { _type = "future" }
 future.__index = future
 
-function future.new(handle, svc, filter)
-    local self = { handle = handle, svc = svc, filter = filter }
+function future.new(handle, svc)
+    local self = { handle = handle, svc = svc, pipe = pipe.new() }
     return setmetatable(self, future)
 end
 
@@ -73,11 +74,7 @@ local function future_get(self, method)
         local svc = self.svc
         local data = svc[method](svc, self.handle)
         if data ~= nil then
-            if self.filter then
-                value = table_pack(self.filter(unpack_response(data)))
-            else
-                value = table_pack(unpack_response(data))
-            end
+            value = table_pack(self.pipe(unpack_response(data)))
             self.value = value
             self.handle = nil
         end
@@ -120,17 +117,13 @@ end
 local stream = { _type = "stream" }
 stream.__index = stream
 
-local function no_filter(line)
-    return line
-end
-
-function stream.new(handle, svc, in_buffer, filter)
+function stream.new(handle, svc, in_buffer)
     local self = {
         handle = handle,
         svc = svc,
         in_buffer = in_buffer,
         out_buffer = {},
-        filter = filter or no_filter,
+        pipe = pipe.new(),
     }
 
     function self.get_headers()
@@ -149,13 +142,13 @@ function stream.new(handle, svc, in_buffer, filter)
 end
 
 -- Extracts the stream data by splitting \r\n separated sections.
-local function process_stream(input, output, filter, get_headers)
+local function process_stream(input, output, run_pipe, get_headers)
     if next(input) == nil then return end
     local buffer = table_concat(input)
     local endpos = 1
     for line, pos in buffer:gmatch "(.-)\r\n()" do
         if #line > 0 then
-            local val, err = filter(line, 200, get_headers())
+            local val, err = run_pipe(line, 200, get_headers())
             if val == nil then
                 val = { error = err, _type = "internal_error" }
             end
@@ -192,7 +185,7 @@ end
 function stream:next(no_upd)
     if not no_upd then
         self.svc:update()
-        process_stream(self.in_buffer, self.out_buffer, self.filter, self.get_headers)
+        process_stream(self.in_buffer, self.out_buffer, self.pipe, self.get_headers)
     end
     return table_remove(self.out_buffer, 1)
 end
@@ -372,18 +365,17 @@ end
 -- @param url       Request URL.
 -- @param body      Post body. Form-encoded string (single part) or table (multipart).
 -- @param headers   Additional headers.
--- @param filter    Function to be called on the result data.
 -- @param is_stream Indicates if it's a streaming connection or not.
 -- @return          `future` object with the result.
-function service:async_request(method, url, body, headers, filter, is_stream)
+function service:async_request(method, url, body, headers, is_stream)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     self.store[request] = { body = resp_body, headers = resp_headers }
     self.pending = self.pending + 1
     self.curl_multi:add_handle(request):perform()
     if is_stream then
-        return stream.new(request, self, resp_body, filter)
+        return stream.new(request, self, resp_body)
     else
-        return future.new(request, self, filter)
+        return future.new(request, self)
     end
 end
 
@@ -393,11 +385,10 @@ end
 -- @param url       Request URL.
 -- @param body      Post body. Form-encoded string (single part) or table (multipart).
 -- @param headers   Additional headers.
--- @param filter    Function to be called on the result data.
 -- @return          Response body or `nil` on error.
 -- @return          Status code.
 -- @return          Response headers.
-function service:request(method, url, body, headers, filter)
+function service:request(method, url, body, headers)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     local ok, err = pcall(request.perform, request)
     if not ok then
@@ -408,11 +399,7 @@ function service:request(method, url, body, headers, filter)
     resp_body = table_concat(resp_body)
     resp_headers = parse_headers(resp_headers)
 
-    if filter then
-        return filter(resp_body, code, resp_headers)
-    else
-        return resp_body, code, resp_headers
-    end
+    return resp_body, code, resp_headers
 end
 
 return _M
