@@ -290,49 +290,6 @@ function _M.resource_builder(method, path)
     return setmetatable(res, resource_builder_mt)
 end
 
---- Base class for objects.
--- @type object
-local object = {}
-object._class = object
-_M.object = object
-
---- Creates a new class that extends this object.
---
--- @return      New class.
-function object:extend()
-    local deriv = { __index = self._class }
-    deriv._class = deriv
-    return setmetatable(deriv, deriv)
-end
-
---- Creates a new instance of the class.
---
--- @param ...   Constructor arguments, passed to `self:_init()`.
--- @return      New instance of the class, or `nil` on error.
-function object:new(...)
-    local obj = { __index = self._class }
-    local err = setmetatable(obj, obj):_init(...)
-    if err ~= nil then
-        return nil, err
-    end
-    return obj
-end
-
--- This will be called when the derived class has no constructor.
-function object._init()
-    -- empty
-end
-
---- Binds a function to this object
---
--- @param fn    Function to be bound.
--- @return      New function that will call `fn(self, ...)`
-function object:bind(fn)
-    return function(...)
-        return fn(self, ...)
-    end
-end
-
 -- if we're on Lua 5.3, then it's safe to use `id` instead of `id_str`
 if _M.has_64bit_int then
     function _M.obj_cmp(a, b)

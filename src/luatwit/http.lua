@@ -6,7 +6,6 @@
 local ipairs, next, pairs, pcall, select, setmetatable, table_concat, table_remove, tostring, type =
       ipairs, next, pairs, pcall, select, setmetatable, table.concat, table.remove, tostring, type
 local curl = require "lcurl"
-local common = require "luatwit.common"
 local pipe = require "luatwit.util".pipe
 
 local table_pack = table.pack or function(...) return { n = select("#", ...), ... } end
@@ -210,17 +209,19 @@ end
 --- HTTP service object.
 -- Executes HTTP requests on background (with `curl.multi`).
 -- @type service
-local service = common.object:extend()
+local service = {}
+service.__index = service
 _M.service = service
 
 --- Creates a new async HTTP client.
 --
 -- @return          New instance of the async client.
--- @constructor
-function service:_init()
+function service.new()
+    local self = {}
     self.pending = 0
     self.store = {}
     self.curl_multi = curl.multi()
+    return setmetatable(self, service)
 end
 
 --- Sets the connection limits.

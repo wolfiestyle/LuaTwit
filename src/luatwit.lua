@@ -269,7 +269,7 @@ function api.new(keys, http_svc, resources, objects)
             sig_method = "HMAC-SHA1",
             use_auth_header = true,
         },
-        http = http_svc or require("luatwit.http").service:new(),
+        http = http_svc or require("luatwit.http").service.new(),
     }
     self._get_client = function() return self end
 
