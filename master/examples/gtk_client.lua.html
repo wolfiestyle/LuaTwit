@@ -116,7 +116,7 @@ client.http:set_conn_limits(<span class="number">12</span>, <span class="number"
     <span class="keyword">local</span> w = Gtk.Box{
         id = id,
         spacing = <span class="number">10</span>,
-        Gtk.Image{ id = <span class="string">"icon"</span>, width = <span class="number">48</span>, yalign = <span class="number">0</span>, ypad = <span class="number">3</span> },
+        Gtk.Image{ id = <span class="string">"icon"</span>, width = <span class="number">48</span>, valign = <span class="string">"START"</span>, margin_top = <span class="number">3</span> },
         Gtk.EventBox{
             id = <span class="string">"content"</span>,
             Gtk.Box{
@@ -161,7 +161,7 @@ ibMessage:get_content_area():add(lblInfoText)
 <span class="keyword">end</span>
 
 <span class="comment">-- handle the infobar builtin close button
-</span><span class="keyword">function</span> ibMessage:on_response(resp_id)
+</span><span class="keyword">function</span> ibMessage.on_response(_, resp_id)
     <span class="keyword">if</span> resp_id == Gtk.ResponseType.CLOSE <span class="keyword">then</span>
         ui_hide_info()
     <span class="keyword">end</span>
@@ -279,24 +279,23 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="comment">-- first request
 </span>    avatar_store[url] = <span class="keyword">false</span>
     avatar_pending[url] = { item }
-    client:http_request{
-        url = url,
-        _callback = <span class="keyword">function</span>(data, code)
-            <span class="keyword">if</span> code == <span class="number">200</span> <span class="keyword">then</span>
-                <span class="keyword">local</span> pb = pixbuf_from_image_data(data)
-                avatar_store[url] = pb
-                <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
-                    w.child.icon:set_from_pixbuf(pb)
-                <span class="keyword">end</span>
-            <span class="keyword">else</span>
-                avatar_store[url] = <span class="keyword">nil</span>
-                <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
-                    w.child.icon:set_from_icon_name(<span class="string">"image-missing"</span>, Gtk.IconSize.DIALOG)
-                <span class="keyword">end</span>
+    client:http_request{ url = url, _async = <span class="keyword">true</span> }:map(<span class="keyword">function</span>(data, code)
+        <span class="keyword">if</span> data == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, code <span class="keyword">end</span>
+        <span class="keyword">if</span> code == <span class="number">200</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> pb = pixbuf_from_image_data(data)
+            avatar_store[url] = pb
+            <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
+                w.child.icon:set_from_pixbuf(pb)
             <span class="keyword">end</span>
-            avatar_pending[url] = <span class="keyword">nil</span>
+        <span class="keyword">else</span>
+            avatar_store[url] = <span class="keyword">nil</span>
+            <span class="keyword">for</span> _, w <span class="keyword">in</span> <span class="global">ipairs</span>(avatar_pending[url]) <span class="keyword">do</span>
+                w.child.icon:set_from_icon_name(<span class="string">"image-missing"</span>, Gtk.IconSize.DIALOG)
+            <span class="keyword">end</span>
         <span class="keyword">end</span>
-    }
+        avatar_pending[url] = <span class="keyword">nil</span>
+        <span class="keyword">return</span> <span class="keyword">true</span>
+    <span class="keyword">end</span>)
 <span class="keyword">end</span>
 
 <span class="keyword">local</span> build_tweet_menu
@@ -306,7 +305,7 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="keyword">if</span> ev:triggers_context_menu() <span class="keyword">then</span>
         <span class="keyword">local</span> item = self:get_parent()   <span class="comment">-- content -&gt; main
 </span>        <span class="keyword">local</span> tweet = seen_tweets[item.id]
-        <span class="keyword">local</span> menu = build_tweet_menu(tweet, item)
+        <span class="keyword">local</span> menu = build_tweet_menu(tweet)
         menu:popup(<span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, <span class="keyword">nil</span>, ev.button, ev.time)
     <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -363,7 +362,7 @@ lstFavs:set_sort_func(listbox_sort_func)
 <span class="keyword">end</span>
 
 <span class="comment">-- builds the tweet popup menu
-</span><span class="keyword">function</span> build_tweet_menu(tweet, item)
+</span><span class="keyword">function</span> build_tweet_menu(tweet)
     <span class="keyword">local</span> menu = Gtk.Menu{
         Gtk.MenuItem{ id = <span class="string">"reply"</span>, label = <span class="string">"Reply"</span> },
         Gtk.MenuItem{ id = <span class="string">"fav"</span>, label = tweet.favorited <span class="keyword">and</span> <span class="string">"Un-favorite"</span> <span class="keyword">or</span> <span class="string">"Favorite"</span> },
@@ -373,38 +372,38 @@ lstFavs:set_sort_func(listbox_sort_func)
         Gtk.MenuItem{ id = <span class="string">"dump"</span>, label = <span class="string">"Copy raw data"</span> },
     }
 
-    <span class="keyword">function</span> menu.child.reply:on_activate()
+    <span class="keyword">function</span> menu.child.reply.on_activate()
         ui_set_reply_to(tweet)
     <span class="keyword">end</span>
-    <span class="keyword">function</span> menu.child.fav:on_activate()
+    <span class="keyword">function</span> menu.child.fav.on_activate()
         <span class="keyword">if</span> tweet.favorited <span class="keyword">then</span>
-            tweet:unset_favorite{
-                _callback = <span class="keyword">function</span>(tw)
-                    ui_show_info(<span class="string">"Successfully removed from favorites"</span>)
-                    ui_remove_tweet(lstFavs, tweet)
-                    seen_tweets[tw.id_str] = tw
-                <span class="keyword">end</span>
-            }
+            tweet:unset_favorite{ _async = <span class="keyword">true</span> }:map(<span class="keyword">function</span>(tw, err)
+                <span class="keyword">if</span> tw == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+                ui_show_info(<span class="string">"Successfully removed from favorites"</span>)
+                ui_remove_tweet(lstFavs, tweet)
+                seen_tweets[tw.id_str] = tw
+                <span class="keyword">return</span> <span class="keyword">true</span>
+            <span class="keyword">end</span>)
         <span class="keyword">else</span>
-            tweet:set_favorite{
-                _callback = <span class="keyword">function</span>(tw)
-                    ui_show_info(<span class="string">"Successfully added to favorites"</span>)
-                    ui_append_tweet(lstFavs, tw)
-                <span class="keyword">end</span>
-            }
+            tweet:set_favorite{ _async = <span class="keyword">true</span> }:map(<span class="keyword">function</span>(tw, err)
+                <span class="keyword">if</span> tw == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+                ui_show_info(<span class="string">"Successfully added to favorites"</span>)
+                ui_append_tweet(lstFavs, tw)
+                <span class="keyword">return</span> <span class="keyword">true</span>
+            <span class="keyword">end</span>)
         <span class="keyword">end</span>
     <span class="keyword">end</span>
-    <span class="keyword">function</span> menu.child.rt:on_activate()
-        tweet:retweet{
-            _callback = <span class="keyword">function</span>(tw)
-                ui_show_info(<span class="string">"Successfully retweeted "</span> .. tw.user.screen_name)
-            <span class="keyword">end</span>
-        }
+    <span class="keyword">function</span> menu.child.rt.on_activate()
+        tweet:retweet{ _async = <span class="keyword">true</span> }:map(<span class="keyword">function</span>(tw, err)
+            <span class="keyword">if</span> tw == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+            ui_show_info(<span class="string">"Successfully retweeted "</span> .. tw.user.screen_name)
+            <span class="keyword">return</span> <span class="keyword">true</span>
+        <span class="keyword">end</span>)
     <span class="keyword">end</span>
-    <span class="keyword">function</span> menu.child.copy:on_activate()
+    <span class="keyword">function</span> menu.child.copy.on_activate()
         copy_to_clipboard(parse_tweet(tweet, <span class="keyword">true</span>))
     <span class="keyword">end</span>
-    <span class="keyword">function</span> menu.child.dump:on_activate()
+    <span class="keyword">function</span> menu.child.dump.on_activate()
         copy_to_clipboard(pretty.write(tweet))
     <span class="keyword">end</span>
 
@@ -425,37 +424,43 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="keyword">if</span> replying_tweet <span class="keyword">then</span>
         replying_tweet:reply{
             status = text,
-            _callback = <span class="keyword">function</span>(tweet)
-                ui_reset_entry()
-                ui_show_info(<span class="string">"Replied to "</span> .. tweet.in_reply_to_screen_name)
-                ui_append_tweet(lstHome, tweet)
-            <span class="keyword">end</span>
+            _async = <span class="keyword">true</span>,
         }
+        :map(<span class="keyword">function</span>(tweet, err)
+            <span class="keyword">if</span> tweet == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+            ui_reset_entry()
+            ui_show_info(<span class="string">"Replied to "</span> .. tweet.in_reply_to_screen_name)
+            ui_append_tweet(lstHome, tweet)
+            <span class="keyword">return</span> <span class="keyword">true</span>
+        <span class="keyword">end</span>)
         <span class="keyword">return</span>
     <span class="keyword">end</span>
     client:tweet{
         status = text,
-        _callback = <span class="keyword">function</span>(tweet)
-            ui_reset_entry()
-            ui_show_info(<span class="string">"Tweet sent"</span>)
-            ui_append_tweet(lstHome, tweet)
-        <span class="keyword">end</span>
+        _async = <span class="keyword">true</span>,
     }
+    :map(<span class="keyword">function</span>(tweet, err)
+        <span class="keyword">if</span> tweet == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+        ui_reset_entry()
+        ui_show_info(<span class="string">"Tweet sent"</span>)
+        ui_append_tweet(lstHome, tweet)
+        <span class="keyword">return</span> <span class="keyword">true</span>
+    <span class="keyword">end</span>)
 <span class="keyword">end</span>
 
-<span class="keyword">function</span> cmdTweet:on_clicked()
+<span class="keyword">function</span> cmdTweet.on_clicked()
     txtTweet:activate()
 <span class="keyword">end</span>
 
 <span class="comment">-- clear entry when pressing Esc
-</span><span class="keyword">function</span> txtTweet:on_key_press_event(ev)
+</span><span class="keyword">function</span> txtTweet.on_key_press_event(_, ev)
     <span class="keyword">if</span> ev.keyval == <span class="number">0xff1b</span> <span class="keyword">then</span>
         ui_reset_entry()
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
 <span class="comment">-- event for displaying the char count
-</span><span class="keyword">function</span> txtTweet:on_key_release_event(ev)
+</span><span class="keyword">function</span> txtTweet:on_key_release_event()
     lblChars:set_text(self:get_text_length())
 <span class="keyword">end</span>
 
@@ -485,17 +490,19 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="keyword">local</span> args = {
         count = <span class="number">50</span>,
         since_id = page.last_id,
-        _callback = <span class="keyword">function</span>(tl)
-            <span class="keyword">if</span> #tl == <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-            page.last_id = tl[<span class="number">1</span>].id_str <span class="comment">-- assuming the first tweet is the newest one
-</span>            ui_append_tweet_list(page.list, tl)
-        <span class="keyword">end</span>
+        _async = <span class="keyword">true</span>,
     }
-    client[page.method](client, args)
+    client[page.method](client, args):map(<span class="keyword">function</span>(tl, err)
+        <span class="keyword">if</span> tl == <span class="keyword">nil</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">nil</span>, err <span class="keyword">end</span>
+        <span class="keyword">if</span> #tl == <span class="number">0</span> <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">true</span> <span class="keyword">end</span>
+        page.last_id = tl[<span class="number">1</span>].id_str <span class="comment">-- assuming the first tweet is the newest one
+</span>        ui_append_tweet_list(page.list, tl)
+        <span class="keyword">return</span> <span class="keyword">true</span>
+    <span class="keyword">end</span>)
 <span class="keyword">end</span>
 
 <span class="comment">-- event for manually updating the timelines
-</span><span class="keyword">function</span> cmdUpdate:on_clicked()
+</span><span class="keyword">function</span> cmdUpdate.on_clicked()
     <span class="keyword">local</span> page = nbkPages:get_current_page()
     ui_update_page(page + <span class="number">1</span>)
 <span class="keyword">end</span>
@@ -508,14 +515,12 @@ lstFavs:set_sort_func(listbox_sort_func)
     client.http:update()
     <span class="keyword">local</span> n = #requests
     <span class="keyword">while</span> n &gt; <span class="number">0</span> <span class="keyword">do</span>
-        <span class="keyword">local</span> fut, callback = <span class="global">unpack</span>(requests[n])
-        <span class="keyword">local</span> ready, res, hdr = fut:peek(<span class="keyword">true</span>)
+        <span class="keyword">local</span> fut = requests[n]
+        <span class="keyword">local</span> ready, ok, err = fut:peek(<span class="keyword">true</span>)
         <span class="keyword">if</span> ready <span class="keyword">then</span>
             <span class="global">table</span>.remove(requests, n)
-            <span class="keyword">if</span> res == <span class="keyword">nil</span> <span class="keyword">then</span>  <span class="comment">-- error
-</span>                ui_show_info(<span class="global">tostring</span>(hdr), <span class="keyword">true</span>)
-            <span class="keyword">else</span>
-                callback(res, hdr)
+            <span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span>
+                ui_show_info(<span class="global">tostring</span>(err), <span class="keyword">true</span>)
             <span class="keyword">end</span>
         <span class="keyword">end</span>
         n = n - <span class="number">1</span>
@@ -523,10 +528,10 @@ lstFavs:set_sort_func(listbox_sort_func)
     <span class="keyword">return</span> #requests &gt; <span class="number">0</span>
 <span class="keyword">end</span>
 
-<span class="comment">-- setups a callback handler for interacting with the Gtk event loop
-</span>client:set_callback_handler(<span class="keyword">function</span>(fut, cb)
+<span class="comment">-- setups an async handler for interacting with the Gtk event loop
+</span>client:set_async_handler(<span class="keyword">function</span>(fut)
     <span class="keyword">local</span> n = #requests
-    requests[n + <span class="number">1</span>] = { fut, cb }
+    requests[n + <span class="number">1</span>] = fut
     <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">then</span>
         GLib.timeout_add(GLib.PRIORITY_DEFAULT, <span class="number">200</span>, update_requests)
     <span class="keyword">end</span>
@@ -553,7 +558,7 @@ Gtk.main()</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2015-12-28 01:40:31 </i>
+<i style="float:right;">Last updated 2016-01-15 01:35:59 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
