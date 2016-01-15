@@ -49,7 +49,7 @@ local function build_tweet_item(id, header, text, footer)
     local w = Gtk.Box{
         id = id,
         spacing = 10,
-        Gtk.Image{ id = "icon", width = 48, yalign = 0, ypad = 3 },
+        Gtk.Image{ id = "icon", width = 48, valign = "START", margin_top = 3 },
         Gtk.EventBox{
             id = "content",
             Gtk.Box{
@@ -94,7 +94,7 @@ local function ui_show_info(msg, is_error)
 end
 
 -- handle the infobar builtin close button
-function ibMessage:on_response(resp_id)
+function ibMessage.on_response(_, resp_id)
     if resp_id == Gtk.ResponseType.CLOSE then
         ui_hide_info()
     end
@@ -212,24 +212,23 @@ local function ui_request_avatar(item, user)
     -- first request
     avatar_store[url] = false
     avatar_pending[url] = { item }
-    client:http_request{
-        url = url,
-        _callback = function(data, code)
-            if code == 200 then
-                local pb = pixbuf_from_image_data(data)
-                avatar_store[url] = pb
-                for _, w in ipairs(avatar_pending[url]) do
-                    w.child.icon:set_from_pixbuf(pb)
-                end
-            else
-                avatar_store[url] = nil
-                for _, w in ipairs(avatar_pending[url]) do
-                    w.child.icon:set_from_icon_name("image-missing", Gtk.IconSize.DIALOG)
-                end
+    client:http_request{ url = url, _async = true }:map(function(data, code)
+        if data == nil then return nil, code end
+        if code == 200 then
+            local pb = pixbuf_from_image_data(data)
+            avatar_store[url] = pb
+            for _, w in ipairs(avatar_pending[url]) do
+                w.child.icon:set_from_pixbuf(pb)
             end
-            avatar_pending[url] = nil
+        else
+            avatar_store[url] = nil
+            for _, w in ipairs(avatar_pending[url]) do
+                w.child.icon:set_from_icon_name("image-missing", Gtk.IconSize.DIALOG)
+            end
         end
-    }
+        avatar_pending[url] = nil
+        return true
+    end)
 end
 
 local build_tweet_menu
@@ -239,7 +238,7 @@ local function event_tweet_clicked(self, ev)
     if ev:triggers_context_menu() then
         local item = self:get_parent()   -- content -> main
         local tweet = seen_tweets[item.id]
-        local menu = build_tweet_menu(tweet, item)
+        local menu = build_tweet_menu(tweet)
         menu:popup(nil, nil, nil, nil, ev.button, ev.time)
     end
 end
@@ -296,7 +295,7 @@ local function copy_to_clipboard(text)
 end
 
 -- builds the tweet popup menu
-function build_tweet_menu(tweet, item)
+function build_tweet_menu(tweet)
     local menu = Gtk.Menu{
         Gtk.MenuItem{ id = "reply", label = "Reply" },
         Gtk.MenuItem{ id = "fav", label = tweet.favorited and "Un-favorite" or "Favorite" },
@@ -306,38 +305,38 @@ function build_tweet_menu(tweet, item)
         Gtk.MenuItem{ id = "dump", label = "Copy raw data" },
     }
 
-    function menu.child.reply:on_activate()
+    function menu.child.reply.on_activate()
         ui_set_reply_to(tweet)
     end
-    function menu.child.fav:on_activate()
+    function menu.child.fav.on_activate()
         if tweet.favorited then
-            tweet:unset_favorite{
-                _callback = function(tw)
-                    ui_show_info("Successfully removed from favorites")
-                    ui_remove_tweet(lstFavs, tweet)
-                    seen_tweets[tw.id_str] = tw
-                end
-            }
+            tweet:unset_favorite{ _async = true }:map(function(tw, err)
+                if tw == nil then return nil, err end
+                ui_show_info("Successfully removed from favorites")
+                ui_remove_tweet(lstFavs, tweet)
+                seen_tweets[tw.id_str] = tw
+                return true
+            end)
         else
-            tweet:set_favorite{
-                _callback = function(tw)
-                    ui_show_info("Successfully added to favorites")
-                    ui_append_tweet(lstFavs, tw)
-                end
-            }
+            tweet:set_favorite{ _async = true }:map(function(tw, err)
+                if tw == nil then return nil, err end
+                ui_show_info("Successfully added to favorites")
+                ui_append_tweet(lstFavs, tw)
+                return true
+            end)
         end
     end
-    function menu.child.rt:on_activate()
-        tweet:retweet{
-            _callback = function(tw)
-                ui_show_info("Successfully retweeted " .. tw.user.screen_name)
-            end
-        }
+    function menu.child.rt.on_activate()
+        tweet:retweet{ _async = true }:map(function(tw, err)
+            if tw == nil then return nil, err end
+            ui_show_info("Successfully retweeted " .. tw.user.screen_name)
+            return true
+        end)
     end
-    function menu.child.copy:on_activate()
+    function menu.child.copy.on_activate()
         copy_to_clipboard(parse_tweet(tweet, true))
     end
-    function menu.child.dump:on_activate()
+    function menu.child.dump.on_activate()
         copy_to_clipboard(pretty.write(tweet))
     end
 
@@ -358,37 +357,43 @@ function txtTweet:on_activate()
     if replying_tweet then
         replying_tweet:reply{
             status = text,
-            _callback = function(tweet)
-                ui_reset_entry()
-                ui_show_info("Replied to " .. tweet.in_reply_to_screen_name)
-                ui_append_tweet(lstHome, tweet)
-            end
+            _async = true,
         }
+        :map(function(tweet, err)
+            if tweet == nil then return nil, err end
+            ui_reset_entry()
+            ui_show_info("Replied to " .. tweet.in_reply_to_screen_name)
+            ui_append_tweet(lstHome, tweet)
+            return true
+        end)
         return
     end
     client:tweet{
         status = text,
-        _callback = function(tweet)
-            ui_reset_entry()
-            ui_show_info("Tweet sent")
-            ui_append_tweet(lstHome, tweet)
-        end
+        _async = true,
     }
+    :map(function(tweet, err)
+        if tweet == nil then return nil, err end
+        ui_reset_entry()
+        ui_show_info("Tweet sent")
+        ui_append_tweet(lstHome, tweet)
+        return true
+    end)
 end
 
-function cmdTweet:on_clicked()
+function cmdTweet.on_clicked()
     txtTweet:activate()
 end
 
 -- clear entry when pressing Esc
-function txtTweet:on_key_press_event(ev)
+function txtTweet.on_key_press_event(_, ev)
     if ev.keyval == 0xff1b then
         ui_reset_entry()
     end
 end
 
 -- event for displaying the char count
-function txtTweet:on_key_release_event(ev)
+function txtTweet:on_key_release_event()
     lblChars:set_text(self:get_text_length())
 end
 
@@ -418,17 +423,19 @@ local function ui_update_page(id)
     local args = {
         count = 50,
         since_id = page.last_id,
-        _callback = function(tl)
-            if #tl == 0 then return end
-            page.last_id = tl[1].id_str -- assuming the first tweet is the newest one
-            ui_append_tweet_list(page.list, tl)
-        end
+        _async = true,
     }
-    client[page.method](client, args)
+    client[page.method](client, args):map(function(tl, err)
+        if tl == nil then return nil, err end
+        if #tl == 0 then return true end
+        page.last_id = tl[1].id_str -- assuming the first tweet is the newest one
+        ui_append_tweet_list(page.list, tl)
+        return true
+    end)
 end
 
 -- event for manually updating the timelines
-function cmdUpdate:on_clicked()
+function cmdUpdate.on_clicked()
     local page = nbkPages:get_current_page()
     ui_update_page(page + 1)
 end
@@ -441,14 +448,12 @@ local function update_requests()
     client.http:update()
     local n = #requests
     while n > 0 do
-        local fut, callback = unpack(requests[n])
-        local ready, res, hdr = fut:peek(true)
+        local fut = requests[n]
+        local ready, ok, err = fut:peek(true)
         if ready then
             table.remove(requests, n)
-            if res == nil then  -- error
-                ui_show_info(tostring(hdr), true)
-            else
-                callback(res, hdr)
+            if not ok then
+                ui_show_info(tostring(err), true)
             end
         end
         n = n - 1
@@ -456,10 +461,10 @@ local function update_requests()
     return #requests > 0
 end
 
--- setups a callback handler for interacting with the Gtk event loop
-client:set_callback_handler(function(fut, cb)
+-- setups an async handler for interacting with the Gtk event loop
+client:set_async_handler(function(fut)
     local n = #requests
-    requests[n + 1] = { fut, cb }
+    requests[n + 1] = fut
     if n == 0 then
         GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, update_requests)
     end

@@ -80,6 +80,29 @@ local function apply_types(self, node, tname)
     return setmetatable(node, type_decl)
 end
 
+-- Wrapper around the details of the HTTP implementation
+local function http_request(self, method, url, body, headers, async, stream, filter)
+    assert(not stream or async, "streaming requires async interface")
+
+    if async then
+        local fut = self.http:async_request(method, url, body, headers, stream)
+        if filter then
+            fut.pipe:add(filter)
+        end
+        if self.async_handler then
+            self.async_handler(fut)
+        end
+        return fut
+    else
+        local resp_body, code, resp_headers = self.http.request(method, url, body, headers)
+        if filter then
+            return filter(resp_body, code, resp_headers)
+        else
+            return resp_body, code, resp_headers
+        end
+    end
+end
+
 --- Generic call to the Twitter API.
 -- This is the backend method that performs all the API calls.
 --
@@ -87,7 +110,7 @@ end
 -- @param args      Table with the method arguments.
 -- @param defaults  Default method arguments (used internally).
 -- @return          A table with the decoded JSON data from the response, or `nil` on error.
---                  If the option `_async` or `_callback` is set, instead it returns a `luatwit.http.future` object.
+--                  If the option `_async` is set, instead it returns a `luatwit.http.future` object.
 --                  If a streaming method is called, instead it returns a `luatwit.http.stream` object.
 -- @return          HTTP headers. On error, instead it will be a string or a `luatwit.objects.error` describing the error.
 -- @return          If an API error ocurred, the HTTP headers of the request.
@@ -99,6 +122,8 @@ function api:raw_call(decl, args, defaults)
 
     local base_url = decl.base_url or self.resources._base_url
     local url, request = build_request(base_url, decl.path, args, rules, defaults)
+
+    local req_url, req_body, req_headers = oauth.build_request(decl.method, url, request, self.oauth_config, decl.multipart)
 
     local function parse_response(body, res_code, headers)
         local data, err, code = self:_parse_response(body, res_code, headers, decl.res_type)
@@ -117,12 +142,7 @@ function api:raw_call(decl, args, defaults)
         return data, headers
     end
 
-    local req_url, req_body, req_headers = oauth.build_request(decl.method, url, request, self.oauth_config, decl.multipart)
-
-    return self:http_request{
-        method = decl.method, url = req_url, body = req_body, headers = req_headers,
-        _async = args._async, _callback = args._callback, _stream = decl.stream, _filter = parse_response,
-    }
+    return http_request(self, decl.method, req_url, req_body, req_headers, args._async, decl.stream, parse_response)
 end
 
 -- Parses a JSON string and applies type metatables.
@@ -182,15 +202,15 @@ function api:oauth_authorize_url()
     return self.resources._authorize_url .. "?oauth_token=" .. oauth.url_encode(self.oauth_config.oauth_token)
 end
 
---- Sets the callback handler function.
--- The callback handler is called after every async request that uses the `_callback` option. This function has to do the
--- necessary setup to watch the future/stream and send the result to the callback when it's ready.
+--- Sets the async handler function.
+-- The async handler is called for every request that uses the `_async` option. This function has to do the
+-- necessary setup to periodically update the future/stream and consume the result when it's ready.
 -- This way we can work with external event loops in a transparent way.
 --
--- @param fn    Callback handler function. This is called as `fn(fut, callback)`, where `fut` is the result from an async
---              API call and `callback` is the value passed in the request's `_callback` argument.
-function api:set_callback_handler(fn)
-    self.callback_handler = fn
+-- @param fn    Async handler function. This is called as `fn(fut)`, where `fut` is the result from an async
+--              API call.
+function api:set_async_handler(fn)
+    self.async_handler = fn
 end
 
 local http_request_args = common.build_rules{
@@ -201,34 +221,14 @@ local http_request_args = common.build_rules{
 }
 
 --- Performs an HTTP request.
--- This method allows using the library features (like callback_handler) with regular HTTP requests.
+-- This method allows using the library features (like async_handler) with regular HTTP requests.
 --
--- @param args  Table with request arguments (method, url, body, headers, _async, _callback, _stream).
+-- @param args  Table with request arguments (method, url, body, headers, _async, _stream).
 -- @return      Request response.
--- @see luatwit.http.service:request, luatwit.http.service:async_request
+-- @see luatwit.http.service
 function api:http_request(args)
     assert(http_request_args(args, "http_request"))
-    assert(not args._callback or self.callback_handler, "need callback handler")
-    assert(not args._stream or args._async or args._callback, "streaming requires async interface")
-
-    local filter = args._filter
-    if args._async or args._callback then
-        local fut = self.http:async_request(args.method, args.url, args.body, args.headers, args._stream)
-        if filter then
-            fut.pipe:add(filter)
-        end
-        if args._callback then
-            return fut, self.callback_handler(fut, args._callback)
-        end
-        return fut
-    else
-        local resp_body, code, resp_headers = self.http:request(args.method, args.url, args.body, args.headers)
-        if filter then
-            return filter(resp_body, code, resp_headers)
-        else
-            return resp_body, code, resp_headers
-        end
-    end
+    return http_request(self, args.method, args.url, args.body, args.headers, args._async)
 end
 
 -- inherit from `api` and `resources`

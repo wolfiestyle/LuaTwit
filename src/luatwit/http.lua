@@ -108,6 +108,16 @@ function future:cancel()
     return unpackn(future_get(self, "_cancel"))
 end
 
+--- Appends a function to the output processing of this object.
+--
+-- @param f     Function that will be added to the output pipe.
+-- @return      Self with the updated chain.
+-- @see luatwit.util.pipe
+function future:map(f)
+    self.pipe:add(f)
+    return self
+end
+
 --- @section end
 
 --- Stream object.
@@ -202,6 +212,16 @@ end
 -- @see future:cancel
 function stream:close()
     return unpackn(future_get(self, "_cancel"))
+end
+
+--- Appends a function to the output processing of this object.
+--
+-- @param f     Function that will be added to the output pipe.
+-- @return      Self with the updated chain.
+-- @see luatwit.util.pipe
+function stream:map(f)
+    self.pipe:add(f)
+    return self
 end
 
 --- @section end
@@ -389,7 +409,7 @@ end
 -- @return          Response body or `nil` on error.
 -- @return          Status code.
 -- @return          Response headers.
-function service:request(method, url, body, headers)
+function service.request(method, url, body, headers)
     local request, resp_body, resp_headers = build_easy_handle(method, url, body, headers)
     local ok, err = pcall(request.perform, request)
     if not ok then
