@@ -428,6 +428,9 @@ function media:tweet(args)
     return self._get_client():tweet(args)
 end
 
+--- Progress status of a media upload.
+_M.media_upload_status = new_type()
+
 --- Direct message object.
 -- @type dm
 _M.dm = new_type{ recipient = "user", sender = "user", entities = "entities" }

@@ -13,6 +13,7 @@ local args = lapp [[
 Sends a tweet.
     -m,--media (default "")     Image file to be included with the tweet
     -c,--chunked (default "")   Upload file as chunked with specified mimetype
+    -a,--alt (default "")       Set image alt text
     <text...>  (string)         Tweet text
 ]]
 
@@ -66,6 +67,11 @@ if args.media ~= "" then
         local img = assert(util.attach_file(args.media))
         media = assert(client:upload_media{ media = img })
         media._request = nil  -- don't print binary data to the tty
+    end
+
+    if args.alt ~= "" then
+        print "setting alt text"
+        assert(client:set_media_metadata{ media_id = media.media_id_string, alt_text = { text = args.alt } })
     end
 end
 

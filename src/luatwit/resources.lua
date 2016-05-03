@@ -123,6 +123,7 @@ _M.get_tweet = GET "statuses/show/:id"
         trim_user = "boolean",
         include_my_retweet = "boolean",
         include_entities = "boolean",
+        include_ext_alt_text = "boolean",
     }
     :type "tweet"
 
@@ -225,6 +226,7 @@ _M.upload_media_chunked = POST "media/upload"
         command = required "string",
         total_bytes = "integer",
         media_type = "string",
+        media_category = "string",
         additional_owners = "integer_list",
         media_id = "integer",
         media_data = "base64",
@@ -234,6 +236,27 @@ _M.upload_media_chunked = POST "media/upload"
     :type "media"
     :base_url "https://upload.twitter.com/1.1/%s.json"
     :multipart()
+
+--- This endpoint can be used to provide additional information about the uploaded media_id.
+_M.set_media_metadata = POST "media/metadata/create"
+    :args{
+        media_id = required "integer",
+        alt_text = "table",
+    }
+    :base_url "https://upload.twitter.com/1.1/%s.json"
+    :format "json"
+
+--- The STATUS command is used to periodically poll for updates of media processing operation.
+_M.get_upload_status = GET "media/upload"
+    :args{
+        command = required "string",  -- only STATUS
+        media_id = required "integer",
+    }
+    :type "media_upload_status"
+    :base_url "https://upload.twitter.com/1.1/%s.json"
+    :default_args{
+        command = "STATUS",
+    }
 
 --( Search )--
 

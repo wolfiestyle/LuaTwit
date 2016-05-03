@@ -272,6 +272,11 @@ function resource_builder_mt:stream()
     return self
 end
 
+function resource_builder_mt:default_args(t)
+    self.default_args = t
+    return self
+end
+
 function resource_builder_mt:format(fmt)
     self.request_format = fmt
     return self
