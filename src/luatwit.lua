@@ -123,7 +123,14 @@ function api:raw_call(decl, args, defaults)
     local base_url = decl.base_url or self.resources._base_url
     local url, request = build_request(base_url, decl.path, args, rules, defaults)
 
-    local req_url, req_body, req_headers = oauth.build_request(decl.method, url, request, self.oauth_config, decl.multipart)
+    local tmp_request, content_type = request
+    if decl.multipart then
+        content_type = "multipart/form-data"
+    elseif decl.request_format == "json" then
+        content_type = "application/json"
+        tmp_request = json.encode(request)
+    end
+    local req_url, req_body, req_headers = oauth.build_request(decl.method, url, tmp_request, self.oauth_config, content_type)
 
     local function parse_response(body, res_code, headers)
         local data, err, code = self:_parse_response(body, res_code, headers, decl.res_type)

@@ -272,6 +272,11 @@ function resource_builder_mt:stream()
     return self
 end
 
+function resource_builder_mt:format(fmt)
+    self.request_format = fmt
+    return self
+end
+
 function resource_builder_mt:finish(res_name, mt)
     self.name = res_name
     return setmetatable(self, mt)

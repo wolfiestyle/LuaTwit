@@ -19,7 +19,7 @@ dependencies = {
     "lua >= 5.1",
     "dkjson >= 2.5",
     "lua-curl >= 0.3.1",
-    "oauth_light >= 0.1",
+    "oauth_light >= 0.2.1",
 }
 
 build = {
