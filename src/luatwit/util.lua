@@ -133,7 +133,7 @@ end
 -- @return          The current pipe object with an updated chain.
 function pipe:add(f)
     local g = self.chain
-    self.chain = function(...) return f(g(...)) end
+    self.chain = g == ident and f or function(...) return f(g(...)) end
     return self
 end
 
