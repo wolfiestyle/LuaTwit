@@ -62,6 +62,7 @@ _M.get_mentions = GET "statuses/mentions_timeline"
         trim_user = "boolean",
         contributor_details = "boolean",
         include_entities = "boolean",
+        tweet_mode = "string",
     }
     :type "tweet_list"
 
@@ -77,6 +78,7 @@ _M.get_user_timeline = GET "statuses/user_timeline"
         exclude_replies = "boolean",
         contributor_details = "boolean",
         include_rts = "boolean",
+        tweet_mode = "string",
     }
     :type "tweet_list"
 
@@ -90,6 +92,7 @@ _M.get_home_timeline = GET "statuses/home_timeline"
         exclude_replies = "boolean",
         contributor_details = "boolean",
         include_entities = "boolean",
+        tweet_mode = "string",
     }
     :type "tweet_list"
 
@@ -124,6 +127,7 @@ _M.get_tweet = GET "statuses/show/:id"
         include_my_retweet = "boolean",
         include_entities = "boolean",
         include_ext_alt_text = "boolean",
+        tweet_mode = "string",
     }
     :type "tweet"
 
