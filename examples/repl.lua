@@ -25,7 +25,7 @@ function client.objects.tweet:__tostring()
         rt = "[RT] "
         self = self.retweeted_status
     end
-    local text = self.text:gsub("&(%a+);", { lt = "<", gt = ">", amp = "&" })
+    local text = (self.full_text or self.text):gsub("&(%a+);", { lt = "<", gt = ">", amp = "&" })
     return string.format("%s<%s> %s" , rt, self.user.screen_name, text)
 end
 
